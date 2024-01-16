@@ -48,9 +48,9 @@ public class MemberService {
     public Optional<Member> findById(Long id) {
         Optional<Member> findMembers = memberRepository.findById(id);
         if (findMembers.isPresent()) {
-            LOGGER.info("[validateDuplicateMember] member data dose existed : {}", findMembers.toString());
+            LOGGER.info("[findById] member data dose existed : {}", findMembers.toString());
         }
-        LOGGER.info("[validateDuplicateMember] member data dose not existed, id: {}", id);
+        LOGGER.info("[findById] member data dose not existed, id: {}", id);
         return findMembers;
     }
 
