@@ -1,6 +1,7 @@
 package com.pj.oil.service;
 
 import com.pj.oil.dto.LoginRequestDto;
+import com.pj.oil.dto.MemberUpdateFormDto;
 import com.pj.oil.entity.Member;
 import com.pj.oil.repository.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -69,5 +70,22 @@ public class MemberService {
         Long loginMemberId = memberRepository.findMemberByUserIdAndAndPassword(userId, password).get().getId();
         LOGGER.info("[login] member data dose exited, login member id: {}", loginMemberId);
         return loginMemberId;
+    }
+
+    public Long updateMember(String userId, MemberUpdateFormDto dto) {
+        LOGGER.info("[updateMember] update data: {}", dto.toString());
+        Optional<Member> memberByUserId = memberRepository.findMemberByUserId(userId);
+        if(memberByUserId.isEmpty()) {
+            LOGGER.info("[updateMember] userId data dose not existed");
+            //예외처리 구문
+        }
+        LOGGER.info("[updateMember] member data dose existed, member: {}", memberByUserId);
+        Long updateRequestMemberId = memberByUserId.get().getId();
+        LOGGER.info("[updateMember] member data dose existed, member id: {}", updateRequestMemberId);
+
+        Member updateMember = memberByUserId.get();
+        updateMember.updateNickname(dto.getNickname());
+        updateMember.updatePassword(dto.getPassword());
+        return updateMember.getId();
     }
 }

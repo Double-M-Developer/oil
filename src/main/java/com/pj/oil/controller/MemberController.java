@@ -1,6 +1,7 @@
 package com.pj.oil.controller;
 
 import com.pj.oil.dto.LoginRequestDto;
+import com.pj.oil.dto.MemberUpdateFormDto;
 import com.pj.oil.entity.Member;
 import com.pj.oil.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -79,6 +80,29 @@ public class MemberController {
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/v1/member/{id}")
                 .buildAndExpand(loginMemberId)
+                .toUri();
+
+        // 생성한 member 뿐만 아니라 모든 member 를 조회할 수 있는 link 를 entityModel 에 담기
+        EntityModel<Member> entityModel = EntityModel.of(loginMember.get());
+        WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).findAllMembers());
+        entityModel.add(link.withRel("all-members"));
+
+        return ResponseEntity.created(location).body(entityModel);
+    }
+
+    @PatchMapping(value = "/v1/member/{id}")
+    public ResponseEntity<EntityModel<Member>> updateNicknameAndPassword(@PathVariable String userId, @RequestBody MemberUpdateFormDto memberUpdateFormDto) {
+        Long updateMemberId = memberService.updateMember(userId, memberUpdateFormDto);
+
+        Optional<Member> loginMember = memberService.findById(updateMemberId);
+        if (loginMember.isEmpty()) { // 예외처리 구문
+//            throw new UserNotFoundException("id:" + loginMemberId);
+        }
+
+        // 수정한 member 를 조회할 수 있는 uri 를 Location 헤더에 담기
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("")
+                .buildAndExpand(updateMemberId)
                 .toUri();
 
         // 생성한 member 뿐만 아니라 모든 member 를 조회할 수 있는 link 를 entityModel 에 담기
