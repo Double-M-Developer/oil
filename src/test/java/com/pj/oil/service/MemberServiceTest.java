@@ -1,6 +1,7 @@
 package com.pj.oil.service;
 
 import com.pj.oil.dto.LoginRequestDto;
+import com.pj.oil.dto.MemberUpdateFormDto;
 import com.pj.oil.entity.Member;
 import com.pj.oil.entity.Role;
 import com.pj.oil.entity.UserStatus;
@@ -33,6 +34,8 @@ public class MemberServiceTest {
 
     @BeforeEach
     public void init() {
+        memberRepository.deleteAll();
+        //로그인용
         Member member = Member.builder()
                 .id(1L)
                 .userId("test1")
@@ -44,12 +47,13 @@ public class MemberServiceTest {
                 .issueDate(LocalDate.now())
                 .userStatus(UserStatus.NORMAL)
                 .build();
+        //수정용
         Member member2 = Member.builder()
-                .id(3L)
-                .userId("test3")
+                .id(2L)
+                .userId("test2")
                 .password("pw")
-                .username("name3")
-                .nickname("nickname3")
+                .username("name2")
+                .nickname("nickname2")
                 .email("email@email.com")
                 .role(Role.USER)
                 .issueDate(LocalDate.now())
@@ -69,11 +73,11 @@ public class MemberServiceTest {
     public void 회원가입() throws Exception {
         //given
         Member member = Member.builder()
-                .id(2L)
-                .userId("test2")
+                .id(3L)
+                .userId("test3")
                 .password("pw")
                 .username("name")
-                .nickname("nickname2")
+                .nickname("nickname3")
                 .email("email@email.com")
                 .role(Role.USER)
                 .issueDate(LocalDate.now())
@@ -114,7 +118,7 @@ public class MemberServiceTest {
         //when
         Optional<Member> member = memberService.findById(1L);
         //then
-        member.ifPresent(value -> assertEquals(value.getUserId(), "test1"));
+        member.ifPresent(value -> assertEquals("test1", value.getUserId()));
     }
 
     @Test
@@ -137,5 +141,20 @@ public class MemberServiceTest {
         Optional<Member> member = memberService.findById(loginMemberId);
         //then
         assertFalse(member.isEmpty());
+    }
+
+    @Test
+    public void 사용자수정() throws Exception {
+        String userId = "test2";
+        MemberUpdateFormDto dto = MemberUpdateFormDto.builder()
+                .nickname("new")
+                .password("newpw")
+                .build();
+        Long updateMemberId = memberService.updateMember(userId, dto);
+
+        Optional<Member> member = memberService.findById(updateMemberId);
+        System.out.println(member.toString());
+        //then
+        assertEquals(dto.getNickname(), member.get().getNickname());
     }
 }
