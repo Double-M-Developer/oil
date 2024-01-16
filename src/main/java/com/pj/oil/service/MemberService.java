@@ -4,17 +4,18 @@ import com.pj.oil.dto.LoginRequestDto;
 import com.pj.oil.dto.MemberUpdateFormDto;
 import com.pj.oil.entity.Member;
 import com.pj.oil.repository.MemberRepository;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -27,6 +28,7 @@ public class MemberService {
         return members;
     }
 
+    @Transactional
     public Long signup(Member member) {
         LOGGER.info("[signup] request member: {}", member.toString());
         validateDuplicateMember(member); // 중복 회원 검증
@@ -72,6 +74,7 @@ public class MemberService {
         return loginMemberId;
     }
 
+    @Transactional
     public Long updateMember(String userId, MemberUpdateFormDto dto) {
         LOGGER.info("[updateMember] update data: {}", dto.toString());
         Optional<Member> memberByUserId = memberRepository.findMemberByUserId(userId);

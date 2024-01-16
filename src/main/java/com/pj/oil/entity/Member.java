@@ -1,9 +1,7 @@
 package com.pj.oil.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -23,8 +21,10 @@ public class Member {
     private String username;
     private String nickname;
     private String email;
+    @Enumerated(EnumType.STRING)
     private Role role;
     private LocalDate issueDate;
+    @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 
     @Builder
