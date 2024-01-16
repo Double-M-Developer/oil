@@ -34,7 +34,6 @@ public class MemberServiceTest {
 
     @BeforeEach
     public void init() {
-        memberRepository.deleteAll();
         //로그인용
         Member member = Member.builder()
                 .id(1L)
