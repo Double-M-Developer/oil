@@ -2,6 +2,8 @@ package com.pj.oil.service;
 
 import com.pj.oil.dto.GasStationPriceDto;
 import com.pj.oil.entity.GasStation;
+import com.pj.oil.entity.PollDivCode;
+import com.pj.oil.entity.ProductCode;
 import com.pj.oil.repository.GasStationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,7 +66,7 @@ class GasStationServiceTest {
 
     @Test
     void 주유소_제품에_해당하는_주유소_가격_조회() {
-        List<GasStationPriceDto> gasStations = gasStationService.findByProdcd("B027");
+        List<GasStationPriceDto> gasStations = gasStationService.findByProdcd(ProductCode.B027);
         printGasStationPriceDtoList(gasStations);
         assertFalse(gasStations.isEmpty());
     }
@@ -86,7 +88,7 @@ class GasStationServiceTest {
 
     @Test
     void 주유소_상표에_해당하는_주유소_조회() {
-        List<GasStation> gasStations = gasStationService.findByPollDivCd("SKE");
+        List<GasStation> gasStations = gasStationService.findByPollDivCd(PollDivCode.SKE);
         //then
         printGasStationList(gasStations);
         assertFalse(gasStations.isEmpty());
