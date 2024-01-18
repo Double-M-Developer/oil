@@ -1,9 +1,12 @@
 package com.pj.oil.service;
 
 import com.pj.oil.dto.GasStationPriceDto;
+import com.pj.oil.dto.SimpleAreaDto;
+import com.pj.oil.entity.Area;
 import com.pj.oil.entity.GasStation;
 import com.pj.oil.entity.PollDivCode;
 import com.pj.oil.entity.ProductCode;
+import com.pj.oil.repository.AreaRepository;
 import com.pj.oil.repository.GasStationRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +25,7 @@ import java.util.Optional;
 public class GasStationService {
 
     private final GasStationRepository gasStationRepository;
-    private final Logger LOGGER = LoggerFactory.getLogger(GasStationService.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     //주유소_전체_및_가격_조회
     public List<GasStation> findAllGasStations() {
@@ -45,7 +49,7 @@ public class GasStationService {
 
     //주유소_제품에_해당하는_주유소_가격_조회 휘발유:B027, 경유:D047, 고급휘발유: B034, 실내등유:C004, 자동차부탄: K015
     public List<GasStationPriceDto> findByProdcd(ProductCode prodcd) {
-        List<GasStationPriceDto> findGasStations = gasStationRepository.findByProdcd(prodcd.getKey());
+        List<GasStationPriceDto> findGasStations = gasStationRepository.findByProdcd(prodcd);
         if (findGasStations.isEmpty()) {
             LOGGER.info("[findByProdcd] gas station data dose not existed");
         }
@@ -75,7 +79,7 @@ public class GasStationService {
 
     //주유소_상표에_해당하는_주유소_조회
     public List<GasStation> findByPollDivCd(PollDivCode pollDivCd) {
-        List<GasStation> findGasStations = gasStationRepository.findByPollDivCd(pollDivCd.getKey());
+        List<GasStation> findGasStations = gasStationRepository.findByPollDivCd(pollDivCd);
         if (findGasStations.isEmpty()) {
             LOGGER.info("[findByPollDivCd] gas station data dose not existed");
         }
@@ -102,5 +106,4 @@ public class GasStationService {
         LOGGER.info("[findLatestPrices] gas station data dose existed, gas station size: {}", findGasStations.size());
         return findGasStations;
     }
-
 }
