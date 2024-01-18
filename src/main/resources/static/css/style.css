@@ -1,0 +1,170 @@
+/* 전체 페이지 스타일 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #e9ecef;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+body.index{
+    font-family: 'Arial', sans-serif;
+    background-color: #e9ecef;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* 로그인 컨테이너 */
+.login-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    text-align: center;
+}
+
+/* 로고 스타일 */
+.login-container div {
+    font-size: 30px;
+    color: #007bff;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* 폼 그룹 */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* 라벨 스타일 */
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 입력 필드 스타일 */
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-top: 5px;
+}
+
+/* 버튼 스타일 */
+button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#gas-station-info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.gas-station {
+    background-color: white;
+    border: 1px solid #ddd;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 5px;
+    flex-basis: calc(33% - 20px);
+    text-align: center;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 600px) {
+    .gas-station {
+        flex-basis: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 400px) {
+    .gas-station {
+        flex-basis: 100%;
+    }
+}
+
+
+
+
+
+header {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+#gas-station-info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+.gas-station {
+    background-color: white;
+    border: 1px solid #ddd;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: calc(33% - 20px);
+    text-align: center;
+}
+
+h2 {
+    color: #007bff;
+    font-size: 20px;
+    margin-top: 0;
+}
+
+p {
+    font-size: 16px;
+    margin-bottom: 0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 800px) {
+    .gas-station {
+        width: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 500px) {
+    .gas-station {
+        width: 100%;
+    }
+}
