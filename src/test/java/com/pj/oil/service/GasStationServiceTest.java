@@ -73,7 +73,7 @@ class GasStationServiceTest {
 
     @Test
     void 시구군에_해당하는_주유소_전체_조회() {
-        List<GasStation> gasStations = gasStationService.findByArea("서울");
+        List<GasStation> gasStations = gasStationService.findByArea("01");
         printGasStationList(gasStations);
         assertFalse(gasStations.isEmpty());
     }
