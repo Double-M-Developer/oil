@@ -4,23 +4,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
 @Schema(description = "일 평균가격 확정 수치이며, 전일부터 7일간의 전국 일일 상표별 평균가격")
-@Getter @Setter
-public class PollAverageRecentPriceDTO {
+@Getter @Setter @ToString
+public class PollAverageRecentPriceDto extends ApiBaseDto {
     @JsonProperty("RESULT")
-    private AreaDto.Result result;
+    private Result result;
 
-    @Getter @Setter
+    @Getter @Setter @ToString
     public static class Result {
         @JsonProperty("OIL")
-        private List<AreaDto.Oil> oil;
+        private List<Oil> oil;
     }
-
-    @Getter @Setter
-    public static class Oil {
+    @Getter @Setter @ToString
+    public static class Oil{
         @Schema(description = "기준일자")
         @JsonProperty("DATE")
         private String date;

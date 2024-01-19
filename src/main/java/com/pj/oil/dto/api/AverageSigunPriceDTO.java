@@ -4,23 +4,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
 @Schema(description = "현재 오피넷에 게시되고 있는 시/군/구별 주유소 평균 가격")
-@Getter @Setter
-public class AverageSigunPriceDTO {
+@Getter @Setter @ToString
+public class AverageSigunPriceDto extends ApiBaseDto {
     @JsonProperty("RESULT")
-    private AreaDto.Result result;
+    private Result result;
 
-    @Getter @Setter
+    @Getter @Setter @ToString
     public static class Result {
         @JsonProperty("OIL")
-        private List<AreaDto.Oil> oil;
+        private List<Oil> oil;
     }
-
-    @Getter @Setter
-    public static class Oil {
+    @Getter @Setter @ToString
+    public static class Oil{
         @Schema(description = "시군구 구분코드")
         @JsonProperty("SIGUNCD")
         private String areaCd;

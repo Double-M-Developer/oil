@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +15,7 @@ import java.util.List;
 public class JsonUtil {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtil.class);
     /**
      * JSON 문자열을 지정된 대상 클래스의 객체로 변환합니다.
      *

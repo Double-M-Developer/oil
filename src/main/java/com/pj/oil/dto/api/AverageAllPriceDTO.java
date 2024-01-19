@@ -2,24 +2,25 @@ package com.pj.oil.dto.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Schema(description = "현재 오피넷에 게시되고 있는 전국 주유소 평균 가격")
-@Getter @Setter
-public class AverageAllPriceDTO {
-    @JsonProperty("RESULT")
-    private AreaDto.Result result;
+@Getter @Setter @ToString
+public class AverageAllPriceDto extends ApiBaseDto{
 
-    @Getter @Setter
+    @JsonProperty("RESULT")
+    private Result result;
+
+    @Getter @Setter @ToString
     public static class Result {
         @JsonProperty("OIL")
-        private List<AreaDto.Oil> oil;
+        private List<Oil> oil;
     }
 
-    @Getter @Setter
+    @Getter @Setter @ToString
+    @AllArgsConstructor
     public static class Oil {
         @Schema(description = "해당일자")
         @JsonProperty("TRADE_DT")
@@ -28,7 +29,8 @@ public class AverageAllPriceDTO {
         @JsonProperty("PRODCD")
         private String prodcd;
         @Schema(description = "제품명")
-        private String PRODNM;
+        @JsonProperty("PRODNM")
+        private String prodNm;
         @Schema(description = "평균가격")
         @JsonProperty("PRICE")
         private String avgPrice;
