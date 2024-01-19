@@ -8,22 +8,20 @@ import lombok.ToString;
 
 import java.util.List;
 
-@Setter
-@Getter
-@ToString
-public class AreaDto {
+@Schema(description = "오피넷 데이터 관련 지역코드")
+@Getter @Setter @ToString
+public class AreaDto extends ApiBaseDto {
 
     @JsonProperty("RESULT")
     private Result result;
 
-    @Getter @Setter
+    @Getter @Setter @ToString
     public static class Result {
         @JsonProperty("OIL")
         private List<Oil> oil;
     }
-
-    @Getter @Setter
-    public static class Oil {
+    @Getter @Setter @ToString
+    public static class Oil{
         @Schema(description = "지역코드")
         @JsonProperty("AREA_CD")
         private String areaCd;

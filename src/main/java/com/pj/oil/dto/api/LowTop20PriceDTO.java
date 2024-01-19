@@ -4,23 +4,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
 @Schema(description = "전국 또는 지역별 최저가 주유소 TOP20")
-@Getter @Setter
-public class LowTop20PriceDTO {
+@Getter @Setter @ToString
+public class LowTop20PriceDto extends ApiBaseDto {
     @JsonProperty("RESULT")
-    private AreaDto.Result result;
+    private Result result;
 
-    @Getter @Setter
+    @Getter @Setter @ToString
     public static class Result {
         @JsonProperty("OIL")
-        private List<AreaDto.Oil> oil;
+        private List<Oil> oil;
     }
-
-    @Getter @Setter
-    public static class Oil {
+    @Getter @Setter @ToString
+    public static class Oil{
         @Schema(description = "주유소코드")
         @JsonProperty("UNI_ID")
         private String uniId;

@@ -5,22 +5,23 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
 @Schema(description = "최근 1주의 주간 평균유가(전국/시도별)")
-@Getter @Setter
-public class AreaAverageLastWeekPriceDTO {
-    @JsonProperty("RESULT")
-    private AreaDto.Result result;
+@Getter @Setter @ToString
+public class AreaAverageLastWeekPriceDto extends ApiBaseDto {
 
-    @Getter @Setter
+    @JsonProperty("RESULT")
+    private Result result;
+
+    @Getter @Setter @ToString
     public static class Result {
         @JsonProperty("OIL")
-        private List<AreaDto.Oil> oil;
+        private List<Oil> oil;
     }
-
-    @Getter @Setter
+    @Getter @Setter @ToString
     public static class Oil {
         @Schema(description = "기준 주 (EX. 6월 3주 : 2016063)")
         @JsonPropertyOrder("WEEK")
