@@ -1,4 +1,4 @@
-package com.pj.oil.gasStation;
+package com.pj.oil.gasStation.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
