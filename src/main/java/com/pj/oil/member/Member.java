@@ -1,61 +1,70 @@
 package com.pj.oil.member;
 
-
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.pj.oil.token.Token;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 
-@Schema(description = "db에 저장된 사용자 정보")
 @Getter
-@Entity
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@DynamicUpdate
-public class Member {
+@Entity
+@Table(name = "members")
+public class Member implements UserDetails {
 
-    @Schema(description = "사용자 id")
-    @Id @GeneratedValue
-    private Long id;
-    @Schema(description = "사용자 로그인 id")
-    private String userId;
-    @Schema(description = "사용자 로그인 pw")
-    private String password;
-    @Schema(description = "사용자 이름")
-    private String username;
-    @Schema(description = "사용자 닉네임")
-    private String nickname;
-    @Schema(description = "사용자 이메일")
+    @Id
+    @GeneratedValue
+    private Integer id;
     private String email;
-    @Schema(description = "사용자 권한")
+    private String name;
+    @Setter
+    private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @Schema(description = "사용자 가입일")
-    private LocalDate issueDate;
-    @Schema(description = "사용자 계정 상태 - 일반, 삭제, 휴면")
-    @Enumerated(EnumType.STRING)
-    private UserStatus userStatus;
+
+    @OneToMany(mappedBy = "member")
+    private List<Token> tokens;
 
     @Builder
-    protected Member(Long id, String userId, String password, String username, String nickname, String email, Role role, LocalDate issueDate, UserStatus userStatus) {
+    public Member(Integer id, String email, String name, String password, Role role) {
         this.id = id;
-        this.userId = userId;
-        this.password = password;
-        this.username = username;
-        this.nickname = nickname;
         this.email = email;
-        this.role = role;
-        this.issueDate = issueDate;
-        this.userStatus = userStatus;
-    }
-
-    public void updateNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void updatePassword(String password) {
+        this.name = name;
         this.password = password;
+        this.role = role;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() { // 사용자 권한 리스트
+        return role.getAuthorities();
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
