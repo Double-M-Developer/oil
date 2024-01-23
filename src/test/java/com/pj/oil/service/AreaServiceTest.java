@@ -1,7 +1,8 @@
 package com.pj.oil.service;
 
-import com.pj.oil.dto.SimpleAreaDto;
-import com.pj.oil.entity.Area;
+import com.pj.oil.gasStation.AreaService;
+import com.pj.oil.gasStation.SimpleAreaDto;
+import com.pj.oil.gasStation.Area;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

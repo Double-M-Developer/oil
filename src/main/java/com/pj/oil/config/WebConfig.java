@@ -1,6 +1,5 @@
 package com.pj.oil.config;
 
-import com.pj.oil.service.GasStationHttpInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;

@@ -1,6 +1,8 @@
 package com.pj.oil.service;
 
+import com.pj.oil.config.GasStationHttpInterface;
 import com.pj.oil.config.PropertyConfiguration;
+import com.pj.oil.gasStationApi.GasStationApiService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
