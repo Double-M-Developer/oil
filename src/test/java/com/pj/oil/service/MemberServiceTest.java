@@ -1,11 +1,8 @@
 package com.pj.oil.service;
 
-import com.pj.oil.dto.LoginRequestDto;
-import com.pj.oil.dto.MemberUpdateFormDto;
-import com.pj.oil.entity.Member;
-import com.pj.oil.entity.Role;
-import com.pj.oil.entity.UserStatus;
-import com.pj.oil.repository.MemberRepository;
+import com.pj.oil.auth.LoginRequestDto;
+import com.pj.oil.member.MemberUpdateFormDto;
+import com.pj.oil.member.*;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
