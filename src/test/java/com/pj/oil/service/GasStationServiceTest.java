@@ -1,10 +1,6 @@
 package com.pj.oil.service;
 
-import com.pj.oil.dto.GasStationPriceDto;
-import com.pj.oil.entity.GasStation;
-import com.pj.oil.entity.PollDivCode;
-import com.pj.oil.entity.ProductCode;
-import com.pj.oil.repository.GasStationRepository;
+import com.pj.oil.gasStation.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
