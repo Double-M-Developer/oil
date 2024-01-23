@@ -1,5 +1,6 @@
 package com.pj.oil.gasStation;
 
+import com.pj.oil.gasStation.entity.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,133 +18,67 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/gas-station")
 public class GasStationController {
 
     private final GasStationService gasStationService;
-
-    /**
-     * 모든 GasStation 를 조회할 수 있는 link 를 entityModel 에 담기
-     * @param findGasStations
-     * @return EntityModel<GasStation>
-     */
-    private EntityModel<GasStation> getGasStationEntityModel(Optional<GasStation> findGasStations) {
-        EntityModel<GasStation> entityModel = EntityModel.of(findGasStations.get());
-        WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).findAllGasStations());
-        entityModel.add(link.withRel("all-gas-station"));
-        return entityModel;
-    }
-
-    /**
-     * 모든 GasStation 를 조회할 수 있는 link 를 entityModel 에 담기
-     * @param findGasStations
-     * @return EntityModel<List<GasStationPriceDto>>
-     */
-    private EntityModel<List<GasStationPriceDto>> getListEntityModel(List<GasStationPriceDto> findGasStations) {
-        EntityModel<List<GasStationPriceDto>> entityModel = EntityModel.of(findGasStations);
-        WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).findAllGasStations());
-        entityModel.add(link.withRel("all-gas-station"));
-        return entityModel;
-    }
-
-    /**
-     * 모든 GasStation 를 조회할 수 있는 link 를 entityModel 에 담기
-     * @param findGasStations
-     * @return EntityModel<List<GasStation>>
-     */
-    private EntityModel<List<GasStation>> getEntityModel(List<GasStation> findGasStations) {
-        EntityModel<List<GasStation>> entityModel = EntityModel.of(findGasStations);
-        WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).findAllGasStations());
-        entityModel.add(link.withRel("all-gas-station"));
-        return entityModel;
-    }
-
-    @Operation(summary = "주유소_전체_및_가격조회", description = "db에 있는 주유소_전체_및_가격 데이터 조회")
-    @ApiResponse(content = @Content(schema = @Schema(implementation = GasStation.class)))
-    @GetMapping(value = "/v1/gas-station")
-    public ResponseEntity<List<GasStation>> findAllGasStations() {
-        List<GasStation> findGasStations = gasStationService.findAllGasStations();
-        if (findGasStations.isEmpty()) { // 예외처리 구문
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(findGasStations);
-    }
-
-    @Operation(summary = "주유소_코드에_해당하는_주유소_조회", description = "주유소_코드에_해당하는_주유소 데이터 db에서 조회")
-    @ApiResponse(content = @Content(schema = @Schema(implementation = GasStation.class)))
-    @GetMapping(value = "/v1/gas-station/uni-id/{uniId}")
-    public ResponseEntity<EntityModel<GasStation>> findByUniId(@PathVariable String uniId) {
-        Optional<GasStation> findGasStations = gasStationService.findByUniId(uniId);
-        if (findGasStations.isEmpty()) { // 예외처리 구문
-            return ResponseEntity.noContent().build();
-        }
-        EntityModel<GasStation> entityModel = getGasStationEntityModel(findGasStations);
-
-        return ResponseEntity.ok(entityModel);
-    }
-
-    @Operation(summary = "주유소_제품에_해당하는_주유소_가격_조회", description = "주유소_제품에_해당하는_주유소 데이터 db에서 조회")
-    @ApiResponse(content = @Content(schema = @Schema(implementation = GasStation.class)))
-    @GetMapping(value = "/v1/gas-station/prodcd/{prodcd}")
-    public ResponseEntity<EntityModel<List<GasStationPriceDto>>> findByProdcd(@PathVariable ProductCode prodcd) {
-        List<GasStationPriceDto> findGasStations = gasStationService.findByProdcd(prodcd);
-        if (findGasStations.isEmpty()) { // 예외처리 구문
-            return ResponseEntity.noContent().build();
-        }
-        EntityModel<List<GasStationPriceDto>> entityModel = getListEntityModel(findGasStations);
-
-        return ResponseEntity.ok(entityModel);
-    }
-
-    @Operation(summary = "지역코드로 주유소 검색", description = "지역코드로 db에 있는 주유소 데이터 조회")
-    @ApiResponse(content = @Content(schema = @Schema(implementation = GasStation.class)))
-    @GetMapping(value = "/v1/gas-station/area-cd/{areaCd}")
-    public ResponseEntity<EntityModel<List<GasStation>>> findByArea(@PathVariable String areaCd) {
-        List<GasStation> findGasStations = gasStationService.findByArea(areaCd);
-        if (findGasStations.isEmpty()) { // 예외처리 구문
-            return ResponseEntity.noContent().build();
-        }
-        EntityModel<List<GasStation>> entityModel = getEntityModel(findGasStations);
-
-        return ResponseEntity.ok(entityModel);
-    }
-
-    @Operation(summary = "주유소 좌표로 주유소 검색", description = "주유소 좌표로 db에 있는 주유소 데이터 조회")
-    @ApiResponse(content = @Content(schema = @Schema(implementation = GasStation.class)))
-    @GetMapping(value = "/v1/gas-station/gis-coor/{gisXCoor}/{gisYCoor}")
-    public ResponseEntity<EntityModel<GasStation>> findByGisCoor(@PathVariable double gisXCoor, @PathVariable double gisYCoor) {
-        Optional<GasStation> findGasStations = gasStationService.findByGisCoor(gisXCoor, gisYCoor);
-        if (findGasStations.isEmpty()) { // 예외처리 구문
-            return ResponseEntity.noContent().build();
-        }
-        EntityModel<GasStation> entityModel = getGasStationEntityModel(findGasStations);
-
-        return ResponseEntity.ok(entityModel);
-    }
-
-    @Operation(summary = "주유소 상표로 주유소 검색", description = "주유소 상표로 db에 있는 주유소 데이터 조회")
-    @ApiResponse(content = @Content(schema = @Schema(implementation = GasStation.class)))
-    @GetMapping(value = "/v1/gas-station/poll-div-cd/{pollDivCd}")
-    public ResponseEntity<EntityModel<List<GasStation>>> findByPollDivCd(@PathVariable PollDivCode pollDivCd) {
-        List<GasStation> findGasStations = gasStationService.findByPollDivCd(pollDivCd);
-        if (findGasStations.isEmpty()) { // 예외처리 구문
-            return ResponseEntity.noContent().build();
-        }
-        EntityModel<List<GasStation>> entityModel = getEntityModel(findGasStations);
-
-        return ResponseEntity.ok(entityModel);
-    }
-
-    @Operation(summary = "주유소 상호로 주유소 검색", description = "주유소 상호로 db에 있는 주유소 데이터 조회")
-    @ApiResponse(content = @Content(schema = @Schema(implementation = GasStation.class)))
-    @GetMapping(value = "/v1/gas-station/os-nm/{osNm}")
-    public ResponseEntity<EntityModel<GasStation>> findByOsNm(@PathVariable String osNm) {
-        Optional<GasStation> findGasStations = gasStationService.findByOsNm(osNm);
-        if (findGasStations.isEmpty()) { // 예외처리 구문
-            return ResponseEntity.noContent().build();
-        }
-        EntityModel<GasStation> entityModel = getGasStationEntityModel(findGasStations);
-
-        return ResponseEntity.ok(entityModel);
-    }
+//
+//    /**
+//     * 일 평균가격 확정 수치이며, 전일부터 7일간의 전국 일일 지역별 평균가격
+//     * @param baseDate
+//     * @return
+//     */
+//    @GetMapping("/area-average-recent-price")
+//    public List<AreaAverageRecentPrice> findAreaAverageRecentPriceByBaseDate(String baseDate) {
+//        List<AreaAverageRecentPrice> entity = gasStationService.findAreaAverageRecentPriceByBaseDate(baseDate);
+////        if (entity.isEmpty()) {
+////            LOGGER.info("[findAreaAverageRecentPrice] AreaAverageRecentPrice data dose not existed");
+////        }
+////        LOGGER.info("[findAreaAverageRecentPrice] AreaAverageRecentPrice data dose existed, AreaAverageRecentPrice size: {}", entity.size());
+//        return entity;
+//    }
+//
+//    /**
+//     * 현재 오피넷에 게시되고 있는 전국 주유소 평균 가격
+//     * @param tradeDate
+//     * @return
+//     */
+//    @GetMapping("/area-average-all-price")
+//    public Optional<AverageAllPrice> findAverageAllPriceByTradeDate(String tradeDate) {
+//        Optional<AverageAllPrice> entity = gasStationService.findAverageAllPriceByTradeDate(tradeDate);
+////        if (entity.isEmpty()) {
+////            LOGGER.info("[findAverageAllPriceByTradeDate] AverageAllPrice data dose not existed");
+////        }
+////        LOGGER.info("[findAverageAllPriceByTradeDate] AverageAllPrice data dose existed, AverageAllPrice entity: {}", entity);
+//        return entity;
+//    }
+//
+//    /**
+//     * 현재 오피넷에 게시되고 있는 시도별 주유소 평균 가격
+//     * @param areaCode
+//     * @return
+//     */
+//    public List<AverageSidoPrice> findAverageSidoPriceByAreaCode(String areaCode) {
+//        List<AverageSidoPrice> entity = gasStationService.findAverageSidoPriceByAreaCode(areaCode);
+////        if (entity.isEmpty()) {
+////            LOGGER.info("[findAverageSidoPriceByAreaCode] AverageSidoPrice data dose not existed");
+////        }
+////        LOGGER.info("[findAverageSidoPriceByAreaCode] AverageSidoPrice data dose existed, AverageSidoPrice size: {}", entity.size());
+//        return entity;
+//    }
+//
+//    /**
+//     * 전국 또는 지역별 최저가 주유소 TOP20
+//     * @param areaCode
+//     * @return
+//     */
+//    public List<LowTop20Price> findLowTop20PriceByAreaCode(String areaCode) {
+//        List<LowTop20Price> entity = gasStationService.findLowTop20PriceByAreaCode(areaCode);
+////        if (entity.isEmpty()) {
+////            LOGGER.info("[findLowTop20PriceByAreaCode] LowTop20Price data dose not existed");
+////        }
+////        LOGGER.info("[findLowTop20PriceByAreaCode] LowTop20Price data dose existed, LowTop20Price size: {}", entity.size());
+//        return entity;
+//    }
 
 }
