@@ -1,8 +1,7 @@
 package com.pj.oil.service;
 
 import com.pj.oil.gasStation.AreaService;
-import com.pj.oil.gasStation.SimpleAreaDto;
-import com.pj.oil.gasStation.Area;
+import com.pj.oil.gasStation.entity.Area;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @Transactional
 class AreaServiceTest {
 
-    public static void printSimpleAreaDto(SimpleAreaDto object) {
+    public static void printAreaDto(Area object) {
         System.out.println(object.toString());
     }
     public static void printAreaList(List<Area> list) {
@@ -42,16 +41,9 @@ class AreaServiceTest {
 
     @Test
     void DB에_있는_지역_데이터_1곳_조회() {
-        Optional<SimpleAreaDto> area = areaService.findAreaByAreaCd("01");
-        printSimpleAreaDto(area.get());
-        area.ifPresent(value -> assertEquals("서울", value.getAreaNm()));
-    }
-
-    @Test
-    void DB에_있는_지역_데이터_및_하위_지역_조회() {
-        List<Area> area = areaService.findAreaWithParentByAreaCd("01");
-        printAreaList(area);
-        assertFalse(area.isEmpty());
+        Optional<Area> area = areaService.findAreaByAreaCd("01");
+        printAreaDto(area.get());
+        area.ifPresent(value -> assertEquals("서울", value.getAreaName()));
     }
 
 }
