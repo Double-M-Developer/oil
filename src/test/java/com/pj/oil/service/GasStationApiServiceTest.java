@@ -37,8 +37,6 @@ public class GasStationApiServiceTest {
     private final String mockApiKey = "test-api-key";
     private final String mockBaseUrl = "base";
 
-    // 키 스왑만 하자
-
     @BeforeEach
     public void setUp() throws IOException {
         MockitoAnnotations.initMocks(this);
