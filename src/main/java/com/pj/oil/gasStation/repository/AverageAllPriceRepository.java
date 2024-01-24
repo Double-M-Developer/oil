@@ -4,6 +4,7 @@ import com.pj.oil.gasStation.entity.AverageAllPrice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -12,5 +13,5 @@ import java.util.Optional;
 @Repository
 public interface AverageAllPriceRepository extends JpaRepository<AverageAllPrice, Long> {
 
-//    Optional<AverageAllPrice> findByTrade_date(String tradeDate);
+    List<AverageAllPrice> findByTradeDate(String tradeDate);
 }
