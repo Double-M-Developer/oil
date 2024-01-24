@@ -20,11 +20,11 @@ public class RefreshToken implements Serializable {
     @Id
     private String token;
     @Indexed
-    private Integer memberId;
+    private String email;
 
     @Builder
-    public RefreshToken(String token, Integer memberId) {
+    public RefreshToken(String token, String email) {
         this.token = token;
-        this.memberId = memberId;
+        this.email = email;
     }
 }

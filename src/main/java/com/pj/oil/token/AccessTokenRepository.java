@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AccessTokenRepository extends JpaRepository<Token, Integer> {
+public interface AccessTokenRepository extends JpaRepository<Token, Long> {
 
     @Query("select t " +
             "from Token t " +
@@ -16,7 +16,7 @@ public interface AccessTokenRepository extends JpaRepository<Token, Integer> {
             "on t.member.id = m.id " +
             "where m.id = :memberId " +
             "and (t.expired = false or t.revoked = false)")
-    List<Token> findAllValidTokensByMember(Integer memberId);
+    List<Token> findAllValidTokensByMember(Long memberId);
 
     Optional<Token> findByToken(String token);
 }
