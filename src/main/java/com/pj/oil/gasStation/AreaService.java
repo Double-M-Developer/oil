@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,5 +28,15 @@ public class AreaService {
         }
         LOGGER.info("[findAreaByAreaCd] area data dose existed, area: {}", findAreas);
         return findAreas;
+    }
+
+    //DB에_있는_지역_데이터_전체_조회
+    public List<Area> findAllArea(String areaCode) {
+        List<Area> entity = areaRepository.findAll();
+        if (entity.isEmpty()) {
+            LOGGER.info("[findAreaByAreaCd] area data dose not existed");
+        }
+        LOGGER.info("[findAreaByAreaCd] area data dose existed, area size: {}", entity.size());
+        return entity;
     }
 }

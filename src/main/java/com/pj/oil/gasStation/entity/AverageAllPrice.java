@@ -23,7 +23,7 @@ public class AverageAllPrice {
     private Long id;
     @Schema(description = "해당일자")
     @Column(name = "trade_date")
-    private String trade_date;
+    private String tradeDate;
     @Schema(description = "제품구분")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "productCode")
