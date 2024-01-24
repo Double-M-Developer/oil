@@ -6,14 +6,12 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class RegisterRequest {
-    private final String name;
+public class LoginRequest {
     private final String email;
     private final String password;
 
     @Builder
-    public RegisterRequest(String name, String email, String password) {
-        this.name = name;
+    public LoginRequest(String email, String password) {
         this.email = email;
         this.password = password;
     }

@@ -11,7 +11,7 @@ import lombok.*;
 public class Token {
 
     @Id @GeneratedValue
-    private Integer id;
+    private Long id;
     private String token;
     @Enumerated(EnumType.STRING)
     private TokenType tokenType;
@@ -25,7 +25,7 @@ public class Token {
     private Member member;
 
     @Builder
-    public Token(Integer id, String token, TokenType tokenType, boolean expired, boolean revoked, Member member) {
+    public Token(Long id, String token, TokenType tokenType, boolean expired, boolean revoked, Member member) {
         this.id = id;
         this.token = token;
         this.tokenType = tokenType;
