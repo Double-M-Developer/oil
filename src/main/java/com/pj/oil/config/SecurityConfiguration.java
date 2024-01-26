@@ -32,7 +32,8 @@ public class SecurityConfiguration {
             "configuration/security",
             "/swagger-ui/**",
             "/webjars/**",
-            "/swagger-ui.html"};
+            "/swagger-ui.html",
+            "/*"};
     // 주입된 커스텀 JWT 인증 필터
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
