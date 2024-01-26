@@ -14,25 +14,25 @@ import static com.pj.oil.member.Permission.*;
 @Getter
 @RequiredArgsConstructor
 public enum Role {
-    USER(Collections.emptySet()),
+    GUEST(Collections.emptySet()),
     ADMIN(
             Set.of(
                     ADMIN_READ,
                     ADMIN_CREATE,
                     ADMIN_UPDATE,
                     ADMIN_DELETE,
-                    MANAGER_READ,
-                    MANAGER_CREATE,
-                    MANAGER_UPDATE,
-                    MANAGER_DELETE
+                    USER_READ,
+                    USER_CREATE,
+                    USER_UPDATE,
+                    USER_DELETE
             )
     ),
-    MANAGER(
+    USER(
             Set.of(
-                    MANAGER_READ,
-                    MANAGER_CREATE,
-                    MANAGER_UPDATE,
-                    MANAGER_DELETE
+                    USER_READ,
+                    USER_CREATE,
+                    USER_UPDATE,
+                    USER_DELETE
             )
     );
 
