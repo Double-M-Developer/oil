@@ -1,15 +1,14 @@
 package com.pj.oil.gasStation;
 
-import com.pj.oil.auth.AuthenticationResponse;
-import com.pj.oil.auth.SignupRequest;
-import com.pj.oil.gasStation.entity.*;
+import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
+import com.pj.oil.gasStation.entity.maria.AverageAllPrice;
+import com.pj.oil.gasStation.entity.maria.AverageSidoPrice;
+import com.pj.oil.gasStation.entity.maria.LowTop20Price;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor

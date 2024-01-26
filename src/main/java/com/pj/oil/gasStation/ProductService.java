@@ -3,8 +3,9 @@ package com.pj.oil.gasStation;
 
 
 
-import com.pj.oil.gasStation.entity.Product;
-import com.pj.oil.gasStation.repository.ProductRepository;
+import com.pj.oil.gasStation.entity.maria.Product;
+import com.pj.oil.gasStation.entity.redis.ProductRedis;
+import com.pj.oil.gasStation.repository.jpa.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -40,6 +42,13 @@ public class ProductService {
         }
         LOGGER.info("[findProductByProductCode] product data dose existed, size: {}", entity.size());
         return entity;
+    }
+
+    // Product 객체를 ProductRedis 객체로 변환
+    public List<ProductRedis> toRedisEntities(List<Product> products) {
+        return products.stream()
+                .map(product -> new ProductRedis(product.getProductCode().getKey(), product.getProductCode().getTitle()))
+                .collect(Collectors.toList());
     }
 
 }

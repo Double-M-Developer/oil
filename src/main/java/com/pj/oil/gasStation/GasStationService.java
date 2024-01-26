@@ -1,7 +1,7 @@
 package com.pj.oil.gasStation;
 
-import com.pj.oil.gasStation.entity.*;
-import com.pj.oil.gasStation.repository.*;
+import com.pj.oil.gasStation.entity.maria.*;
+import com.pj.oil.gasStation.repository.jpa.*;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;

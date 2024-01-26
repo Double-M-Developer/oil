@@ -1,5 +1,6 @@
-package com.pj.oil.gasStation.entity;
+package com.pj.oil.gasStation.entity.maria;
 
+import com.pj.oil.gasStation.entity.redis.AreaRedis;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,4 +37,8 @@ public class Area {
                 '}';
     }
 
+    public Area(String areaCode, String areaName) {
+        this.areaCode = areaCode;
+        this.areaName = areaName;
+    }
 }

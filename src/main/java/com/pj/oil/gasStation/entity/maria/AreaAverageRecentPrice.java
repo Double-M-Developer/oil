@@ -1,15 +1,15 @@
-package com.pj.oil.gasStation.entity;
+package com.pj.oil.gasStation.entity.maria;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * 일 평균가격 확정 수치이며, 전일부터 7일간의 전국 일일 지역별 평균가격
  */
 @Schema(description = "일 평균가격 확정 수치이며, 전일부터 7일간의 전국 일일 지역별 평균가격")
 @Getter @ToString
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class AreaAverageRecentPrice {
 
@@ -30,4 +30,12 @@ public class AreaAverageRecentPrice {
         @Schema(description = "평균가격")
         private String averagePrice;
 
+        @Builder
+        public AreaAverageRecentPrice(Long id, String baseDate, Area area, Product product, String averagePrice) {
+                this.id = id;
+                this.baseDate = baseDate;
+                this.area = area;
+                this.product = product;
+                this.averagePrice = averagePrice;
+        }
 }

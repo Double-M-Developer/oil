@@ -1,14 +1,12 @@
-package com.pj.oil.gasStation.entity;
+package com.pj.oil.gasStation.entity.maria;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pj.oil.gasStation.entity.PollDivCode;
 import com.pj.oil.gasStationApi.dto.ApiBaseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.List;
 
 /**
  * 전국 또는 지역별 최저가 주유소 TOP20

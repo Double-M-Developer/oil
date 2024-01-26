@@ -1,6 +1,6 @@
-package com.pj.oil.gasStation.repository;
+package com.pj.oil.gasStation.repository.jpa;
 
-import com.pj.oil.gasStation.entity.Area;
+import com.pj.oil.gasStation.entity.maria.Area;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 /**

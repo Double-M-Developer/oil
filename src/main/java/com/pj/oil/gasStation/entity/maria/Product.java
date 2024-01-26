@@ -1,5 +1,10 @@
-package com.pj.oil.gasStation.entity;
+package com.pj.oil.gasStation.entity.maria;
 
+import com.pj.oil.gasStation.entity.ProductCode;
+import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
+import com.pj.oil.gasStation.entity.maria.AverageAllPrice;
+import com.pj.oil.gasStation.entity.maria.AverageSidoPrice;
+import com.pj.oil.gasStation.entity.maria.LowTop20Price;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -29,4 +34,7 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<LowTop20Price> lowTop20Prices;
 
+    public Product(ProductCode productCode) {
+        this.productCode = productCode;
+    }
 }

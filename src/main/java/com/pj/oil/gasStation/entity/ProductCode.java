@@ -15,4 +15,13 @@ public enum ProductCode {
     private final String key;
     private final String title;
 
+    public static ProductCode findByTitle(String title) {
+        for (ProductCode code : ProductCode.values()) {
+            if (code.getTitle().equalsIgnoreCase(title)) {
+                return code;
+            }
+        }
+        throw new IllegalArgumentException("No matching constant for [" + title + "]");
+    }
+
 }

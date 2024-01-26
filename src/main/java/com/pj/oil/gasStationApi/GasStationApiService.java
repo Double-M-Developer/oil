@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class GasStationApiService {
@@ -31,6 +33,23 @@ public class GasStationApiService {
             return dto;
         }
         LOGGER.info("data dose existed, dto: {}", dto);
+        return dto;
+    }
+
+    /**
+     * 공통 로직
+     *
+     * @param dto
+     * @param notExistedLogMessage
+     * @param <T>
+     * @return
+     */
+    public <T extends ApiBaseDto> List<T> processDtoList(List<T> dto, String notExistedLogMessage) {
+        if (dto.isEmpty()) {
+            LOGGER.info(notExistedLogMessage);
+            return dto;
+        }
+        LOGGER.info("data dose existed, dto size: {}", dto.size());
         return dto;
     }
 
@@ -90,16 +109,15 @@ public class GasStationApiService {
      * @param date
      * @return AreaAverageRecentPriceDto
      */
-    public AreaAverageRecentPriceDto getAreaAvgRecentNDateAllProdPrice(String areaCd, String date) {
+    public List<AreaAverageRecentPriceDto> getAreaAvgRecentNDateAllProdPrice(String areaCd, String date) {
         LOGGER.info("[getAreaAvgRecentNDateAllProdPrice]");
-        AreaAverageRecentPriceDto dto = JsonUtil.convertJsonStringToObject(
+        List<AreaAverageRecentPriceDto> dto = JsonUtil.convertJsonStringToList(
                 service.getAreaAvgRecentNDateAllProdPrice(
                         properties.getApiKey(),
                         areaCd,
                         date
                 ), AreaAverageRecentPriceDto.class);
-
-        return processDto(dto, "data does not exist");
+        return processDtoList(dto, "data does not exist");
     }
 
 

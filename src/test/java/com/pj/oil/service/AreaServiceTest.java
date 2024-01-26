@@ -1,7 +1,7 @@
 package com.pj.oil.service;
 
 import com.pj.oil.gasStation.AreaService;
-import com.pj.oil.gasStation.entity.Area;
+import com.pj.oil.gasStation.entity.maria.Area;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
