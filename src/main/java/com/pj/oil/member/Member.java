@@ -16,9 +16,9 @@ import java.util.List;
 @Table(name = "members")
 public class Member implements UserDetails {
 
-    @Id
-    @GeneratedValue
-    private Integer id;
+    @Id @GeneratedValue
+    @Column(name = "member_id")
+    private Long id;
     private String email;
     private String name;
     @Setter
@@ -30,7 +30,7 @@ public class Member implements UserDetails {
     private List<Token> tokens;
 
     @Builder
-    public Member(Integer id, String email, String name, String password, Role role) {
+    public Member(Long id, String email, String name, String password, Role role) {
         this.id = id;
         this.email = email;
         this.name = name;

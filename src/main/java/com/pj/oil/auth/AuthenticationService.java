@@ -9,6 +9,8 @@ import com.pj.oil.token.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,6 +26,8 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RequiredArgsConstructor
 public class AuthenticationService {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -37,7 +41,7 @@ public class AuthenticationService {
      * @param request - 사용자 정보
      * @return AuthenticationResponse 사용자 정보로 만든 토큰(JWT)
      */
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(SignupRequest request) {
         var member = Member.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -61,7 +65,7 @@ public class AuthenticationService {
      * @param request - 사용자 인증 데이터
      * @return 사용자 인증 정보로 만든 토큰(JWT)
      */
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponse login(LoginRequest request) {
         authenticationManager.authenticate( // 사용자 인증
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -73,7 +77,7 @@ public class AuthenticationService {
         var accessToken = jwtService.generateToken(member); // JWT 토큰 생성
         var refreshToken = jwtService.generateRefreshToken(member);
         saveMemberRefreshToken(member, refreshToken);
-        revokeAllMemberTokens(member);
+        revokeAllMemberAccessTokens(member);
         saveMemberAccessToken(member, accessToken);
         return AuthenticationResponse.builder()
                 .accessToken(accessToken)
@@ -85,7 +89,7 @@ public class AuthenticationService {
      * DB에 저장된 AccessToken 의 권한을 취소시킴
      * @param member
      */
-    private void revokeAllMemberTokens(Member member) {
+    private void revokeAllMemberAccessTokens(Member member) {
         var validMemberToken = accessTokenRepository.findAllValidTokensByMember(member.getId());
         if (validMemberToken.isEmpty()) return;
         validMemberToken.forEach(t -> {
@@ -114,7 +118,7 @@ public class AuthenticationService {
 
     private void saveMemberRefreshToken(Member member, String refreshToken) {
         var token = RefreshToken.builder()
-                .memberId(member.getId())
+                .email(member.getEmail())
                 .token(refreshToken)
                 .build();
         refreshTokenRepository.save(token);
@@ -128,30 +132,35 @@ public class AuthenticationService {
         }
         final String refreshToken = authHeader.substring(7);
         final String memberId = jwtService.extractUsername(refreshToken);
-        if (memberId != null) {
+        if (memberId != null) { // 존재하는 사용자
             var member = memberRepository.findByEmail(memberId)
                     .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
 
-            if (!redisRefreshTokenService.isRefreshTokenPresent(refreshToken)) {
+            if (!redisRefreshTokenService.isRefreshTokenPresent(refreshToken)) { // 존재하는 refreshToken
                 sendErrorResponse(response, SC_UNAUTHORIZED, "Invalid or expired refresh token!");
                 return;
             }
-
-            if (jwtService.isTokenValid(refreshToken, member)) { // refreshToken 유효성 검증 성공시 토큰 재발급
-                var accessToken = jwtService.generateToken(member);
-                revokeAllMemberTokens(member);
-                saveMemberAccessToken(member, accessToken);
+            // 인증된 사용자이므로 일단 accessToken 재발급
+            var accessToken = jwtService.generateToken(member);
+            revokeAllMemberAccessTokens(member);
+            saveMemberAccessToken(member, accessToken);
+            // refreshToken 유효성 검사
+            if (jwtService.isTokenValid(refreshToken, member)) { // refreshToken 유효성 검증 성공시 refreshToken 재발급 필요x
                 var authResponse = AuthenticationResponse.builder()
                         .accessToken(accessToken)
                         .refreshToken(refreshToken)
                         .build();
                 response.setStatus(SC_OK);
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
-            } else { // refreshToken 유효성 검증 실패시 재발급
-                // 자동으로 재발급
+            } else { // refreshToken 유효성 검증 실패시 refreshToken 재발급
                 var newRefreshToken = jwtService.generateRefreshToken(member); // refresh 토큰 생성
                 saveMemberRefreshToken(member, newRefreshToken);
-                sendErrorResponse(response, SC_UNAUTHORIZED, "Invalid token!");
+                var authResponse = AuthenticationResponse.builder()
+                        .accessToken(accessToken)
+                        .refreshToken(newRefreshToken)
+                        .build();
+                response.setStatus(SC_OK);
+                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
         }
     }
@@ -160,5 +169,9 @@ public class AuthenticationService {
         response.setStatus(statusCode);
         response.setContentType("application/json");
         response.getWriter().write(message);
+    }
+
+    public boolean isEmailUnique(String email) {
+        return memberRepository.findByEmail(email).isEmpty();
     }
 }
