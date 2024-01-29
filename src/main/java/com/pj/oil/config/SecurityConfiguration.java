@@ -1,5 +1,7 @@
 package com.pj.oil.config;
 
+import com.pj.oil.auth.LoginFailHandler;
+import com.pj.oil.auth.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +24,8 @@ import static com.pj.oil.member.Role.*;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**",
+    private static final String[] WHITE_LIST_URL = {
+            "/api/v1/auth/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -33,7 +36,13 @@ public class SecurityConfiguration {
             "/swagger-ui/**",
             "/webjars/**",
             "/swagger-ui.html",
-            "/*"};
+            "/assets/**",
+            "/templates/**",
+            "/js/**",
+            "/css/**",
+            "/brand/**",
+            "/api/v1/**",
+            "/"};
     // 주입된 커스텀 JWT 인증 필터
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -53,7 +62,7 @@ public class SecurityConfiguration {
                                 WHITE_LIST_URL
                         )
                         .permitAll()
-                        .requestMatchers("/api/v1/auth/**").permitAll()// "/api/v1/auth/**" 경로는 인증 없이 허용
+//                        .requestMatchers("/api/v1/auth/**").permitAll()// "/api/v1/auth/**" 경로는 인증 없이 허용
                         .requestMatchers("/api/v1/gas-station/**").permitAll()// "/api/v1/gas-station/**" 경로는 인증 없이 허용
                         .requestMatchers("/api/v1/admin/**").hasAnyRole(ADMIN.name())
                         .requestMatchers("/api/v1/member/**").hasAnyRole(ADMIN.name(), USER.name())

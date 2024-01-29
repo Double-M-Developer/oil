@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <script th:src="@{/assets/js/color-modes.js}"></script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.118.2">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+    <link rel="stylesheet" th:href="@{/assets/dist/css/bootstrap.min.css}">
+    <!-- 각 페이지의 css가 작성될 위치 -->
+    <th:block layout:fragment="css"></th:block>
+    <link rel="stylesheet" th:href="@{/css/color-modes.css}">
+</head>
+<body>
+<div th:insert="~{fragments/color-modes::color-modes}"></div>
+<th:block layout:fragment="header"></th:block>
+<th:block layout:fragment="svg"></th:block>
+<div layout:fragment="content"></div>
+<div th:insert="~{fragments/footer::footer}"></div>
+<script th:src="@{/assets/dist/js/bootstrap.bundle.min.js}"></script>
+<!-- 각 페이지의 script가 작성될 위치 -->
+<th:block layout:fragment="script"></th:block>
+</body>
+</html>
