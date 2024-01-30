@@ -41,7 +41,7 @@ public class AuthenticationService {
      * @param request - 사용자 정보
      * @return AuthenticationResponse 사용자 정보로 만든 토큰(JWT)
      */
-    public AuthenticationResponse register(SignupRequest request) {
+    public AuthenticationResponse signup(SignupRequest request) {
         var member = Member.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -59,6 +59,18 @@ public class AuthenticationService {
                 .build(); // 생성된 토큰으로 AuthenticationResponse 반환
     }
 
+
+    public Member authenticatedMember(LoginRequest request) {
+        authenticationManager.authenticate( // 사용자 인증
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+        return memberRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+    }
+
     /**
      * 사용자 인증 및 토큰(JWT) 발급
      *
@@ -66,19 +78,17 @@ public class AuthenticationService {
      * @return 사용자 인증 정보로 만든 토큰(JWT)
      */
     public AuthenticationResponse login(LoginRequest request) {
-        authenticationManager.authenticate( // 사용자 인증
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-        var member = memberRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("Member not found")); // 사용자 조회
+        LOGGER.info("[login]");
+        var member = authenticatedMember(request);
         var accessToken = jwtService.generateToken(member); // JWT 토큰 생성
         var refreshToken = jwtService.generateRefreshToken(member);
+        LOGGER.info("[login] access-token: {}, refresh-token: {}", accessToken, refreshToken);
         saveMemberRefreshToken(member, refreshToken);
+        LOGGER.info("[save-refresh-token]");
         revokeAllMemberAccessTokens(member);
+        LOGGER.info("[revoke-access-token]");
         saveMemberAccessToken(member, accessToken);
+        LOGGER.info("[save-access-token]");
         return AuthenticationResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -169,9 +179,5 @@ public class AuthenticationService {
         response.setStatus(statusCode);
         response.setContentType("application/json");
         response.getWriter().write(message);
-    }
-
-    public boolean isEmailUnique(String email) {
-        return memberRepository.findByEmail(email).isEmpty();
     }
 }
