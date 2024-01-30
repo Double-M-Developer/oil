@@ -11,13 +11,17 @@ import com.pj.oil.gasStation.repository.redis.AreaRedisRepository;
 import com.pj.oil.gasStation.repository.redis.ProductRedisRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CacheService {
+public class GasStationCacheService {
 
     private final AreaRedisRepository areaRedisRepository; // area cache
     private final ProductRedisRepository productRedisRepository; // product cache
@@ -61,5 +65,13 @@ public class CacheService {
         }
 
         throw new EntityNotFoundException("Product not found with code: " + productCodeStr);
+    }
+
+    public void saveAllArea(List<AreaRedis> areaRedisEntities) {
+        areaRedisRepository.saveAll(areaRedisEntities);
+    }
+
+    public void saveAllProduct(List<ProductRedis> productRedisEntities) {
+        productRedisRepository.saveAll(productRedisEntities);
     }
 }

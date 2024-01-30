@@ -1,12 +1,9 @@
 package com.pj.oil.batch.apiConfig;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pj.oil.batch.GenericBatchConfig;
 import com.pj.oil.batch.process.AreaAverageRecentPriceProcess;
-import com.pj.oil.cache.CacheService;
-import com.pj.oil.gasStation.entity.maria.Area;
+import com.pj.oil.cache.GasStationCacheService;
 import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
-import com.pj.oil.gasStation.entity.maria.Product;
 import com.pj.oil.gasStationApi.GasStationApiService;
 import com.pj.oil.gasStationApi.dto.AreaAverageRecentPriceDto;
 import com.pj.oil.util.DateUtil;
@@ -31,14 +28,14 @@ public abstract class AreaAverageRecentPriceBatchConfig extends GenericBatchConf
             PlatformTransactionManager platformTransactionManager,
             DataSource dataSource,
             GasStationApiService gasStationApiService,
-            CacheService cacheService)
+            GasStationCacheService gasStationCacheService)
     {
         super(
                 jobRepository,
                 platformTransactionManager,
                 dataSource,
                 gasStationApiService,
-                cacheService
+                gasStationCacheService
         );
     }
 
@@ -72,8 +69,8 @@ public abstract class AreaAverageRecentPriceBatchConfig extends GenericBatchConf
 
 
     @Override
-    protected ItemProcessor<AreaAverageRecentPriceDto, AreaAverageRecentPrice> getItemProcessor(CacheService cacheService) {
-        return new AreaAverageRecentPriceProcess(cacheService);
+    protected ItemProcessor<AreaAverageRecentPriceDto, AreaAverageRecentPrice> getItemProcessor(GasStationCacheService gasStationCacheService) {
+        return new AreaAverageRecentPriceProcess(gasStationCacheService);
     }
 
     @Override

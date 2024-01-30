@@ -1,11 +1,14 @@
 package com.pj.oil.token;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class RedisRefreshTokenService {
+public class RefreshTokenRedisService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -19,5 +22,9 @@ public class RedisRefreshTokenService {
 
     public boolean isRefreshTokenPresent(String refreshToken) {
         return refreshTokenRepository.findById(refreshToken).isPresent();
+    }
+
+    public void save(RefreshToken token) {
+        refreshTokenRepository.save(token);
     }
 }

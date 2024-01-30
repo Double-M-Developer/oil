@@ -33,8 +33,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final AccessTokenRepository accessTokenRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
-    private final RedisRefreshTokenService redisRefreshTokenService;
+    private final RefreshTokenRedisService refreshTokenRedisService;
     /**
      * 사용자 등록 및 토큰(JWT) 발급
      *
@@ -121,7 +120,7 @@ public class AuthenticationService {
                 .email(member.getEmail())
                 .token(refreshToken)
                 .build();
-        refreshTokenRepository.save(token);
+        refreshTokenRedisService.save(token);
     }
 
     public void processAccessTokenRefresh(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -136,7 +135,7 @@ public class AuthenticationService {
             var member = memberRepository.findByEmail(memberId)
                     .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
 
-            if (!redisRefreshTokenService.isRefreshTokenPresent(refreshToken)) { // 존재하는 refreshToken
+            if (!refreshTokenRedisService.isRefreshTokenPresent(refreshToken)) { // 존재하는 refreshToken
                 sendErrorResponse(response, SC_UNAUTHORIZED, "Invalid or expired refresh token!");
                 return;
             }

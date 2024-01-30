@@ -6,8 +6,6 @@ import com.pj.oil.gasStation.entity.maria.Area;
 import com.pj.oil.gasStation.entity.maria.Product;
 import com.pj.oil.gasStation.entity.redis.AreaRedis;
 import com.pj.oil.gasStation.entity.redis.ProductRedis;
-import com.pj.oil.gasStation.repository.redis.AreaRedisRepository;
-import com.pj.oil.gasStation.repository.redis.ProductRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.annotation.Async;
@@ -24,8 +22,7 @@ public class GasStationCacheInitializer implements CommandLineRunner {
 
     private final AreaService areaService;
     private final ProductService productService;
-    private final AreaRedisRepository areaRedisRepository;
-    private final ProductRedisRepository productRedisRepository;
+    private final GasStationCacheService gasStationCacheService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -37,11 +34,11 @@ public class GasStationCacheInitializer implements CommandLineRunner {
         // Area 객체를 Redis에 캐싱
         List<Area> areas = areaService.findAllArea();
         List<AreaRedis> areaRedisEntities = areaService.toRedisEntities(areas);
-        areaRedisRepository.saveAll(areaRedisEntities);
+        gasStationCacheService.saveAllArea(areaRedisEntities);
 
         // Product 객체를 Redis에 캐싱
         List<Product> products = productService.findAllProduct();
         List<ProductRedis> productRedisEntities = productService.toRedisEntities(products);
-        productRedisRepository.saveAll(productRedisEntities);
+        gasStationCacheService.saveAllProduct(productRedisEntities);
     }
 }

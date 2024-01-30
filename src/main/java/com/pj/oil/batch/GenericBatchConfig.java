@@ -1,6 +1,6 @@
 package com.pj.oil.batch;
 
-import com.pj.oil.cache.CacheService;
+import com.pj.oil.cache.GasStationCacheService;
 import com.pj.oil.gasStationApi.GasStationApiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -27,9 +27,9 @@ public abstract class GenericBatchConfig<T, U> {
     private final PlatformTransactionManager platformTransactionManager;
     private final DataSource dataSource;
     private final GasStationApiService gasStationApiService;
-    private final CacheService cacheService;
+    private final GasStationCacheService gasStationCacheService;
     protected abstract ItemReader<T> getItemReader(GasStationApiService service);
-    protected abstract ItemProcessor<T, U> getItemProcessor(CacheService cacheService);
+    protected abstract ItemProcessor<T, U> getItemProcessor(GasStationCacheService gasStationCacheService);
     protected abstract JdbcBatchItemWriter<U> getJdbcBatchItemWriter();
     protected abstract String getWriterSql();
     protected abstract String getJobName();
@@ -55,7 +55,7 @@ public abstract class GenericBatchConfig<T, U> {
 
     @Bean
     public ItemProcessor<T,U> itemProcessor() {
-        return getItemProcessor(cacheService);
+        return getItemProcessor(gasStationCacheService);
     }
 
     @Bean
