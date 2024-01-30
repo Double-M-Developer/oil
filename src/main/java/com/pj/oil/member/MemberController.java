@@ -4,15 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
-@RestController
-@RequestMapping("/api/v1/member")
+@Controller
+@RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
 
@@ -22,7 +22,7 @@ public class MemberController {
 
     @PatchMapping
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request, Principal connectedMember) {
-        LOGGER.info("[changePassword]PATCH \"/api/v1/member\", parameters={}", request.toString());
+        LOGGER.info("[changePassword]PATCH \"/member\", parameters={}", request.toString());
         memberService.changePassword(request, connectedMember);
         return ResponseEntity.ok().build();
     }
