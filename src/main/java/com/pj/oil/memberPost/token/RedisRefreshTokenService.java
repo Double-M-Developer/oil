@@ -1,4 +1,4 @@
-package com.pj.oil.token;
+package com.pj.oil.memberPost.token;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
