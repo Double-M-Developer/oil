@@ -51,14 +51,7 @@ public class GasStationApiService {
     /*
     * 전국 주유소 최근 일주일 평균 가격
     * */
-    public AverageWeekPriceDto getAvgWeekPrice(){
-        LOGGER.info("[getAvgWeekPrice]");
-        AverageWeekPriceDto dto = JsonUtil.convertJsonStringToObject(
-                service.getWeekAveragePrice(
-                        properties.getApiKey()
-                ), AverageWeekPriceDto.class);
-        return processDto(dto, "data does not exist");
-    }
+
 
     /**
      * 시도별 주유소 평균가격 - 전체 시도, 전체 제품
