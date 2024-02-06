@@ -1,8 +1,8 @@
 package com.pj.oil.auth;
 
 import com.pj.oil.util.CookieUtil;
+import com.pj.oil.util.JwtUtil;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-
 @Controller
 @RequiredArgsConstructor
 public class AuthenticationController {
@@ -25,10 +23,7 @@ public class AuthenticationController {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final AuthenticationService authenticationService;
     private final CookieUtil cookieUtil;
-    @Value("${application.security.jwt.expiration}")
-    private long jwtExpiration;
-    @Value("${application.security.jwt.refresh-token.expiration}")
-    private long refreshExpiration;
+    private final JwtUtil jwtUtil;
 
     @GetMapping("/signup")
     public String signupPage(Model model) {
@@ -46,10 +41,9 @@ public class AuthenticationController {
             LOGGER.info("[signup] validate fail, redirect signup page");
             return "signup";
         }
-        AuthenticationResponse authenticationToken;
+        long memberId;
         try {
-            // 토큰을 유연하게 활용하기 위해 객체에 저장
-            authenticationToken = authenticationService.signup(signupRequest);
+            memberId = authenticationService.signup(signupRequest);
         } catch (DataIntegrityViolationException e) {
             LOGGER.warn("[signup] warn: {}", String.valueOf(e));
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
@@ -59,12 +53,6 @@ public class AuthenticationController {
             bindingResult.reject("signupFailed", e.getMessage());
             return "signup";
         }
-        // Refresh 토큰과 Access 토큰을 쿠키에 저장
-        Cookie refreshCookie = cookieUtil.createCookie("refresh_token", authenticationToken.getRefreshToken(), (int) refreshExpiration);
-        Cookie accessCookie = cookieUtil.createCookie("access_token", authenticationToken.getAccessToken(), (int) jwtExpiration);
-        // HttpServletResponse 에 쿠키 추가
-        response.addCookie(refreshCookie);
-        response.addCookie(accessCookie);
 
         LOGGER.info("[signup] success, redirect login page");
         return "redirect:/login"; // 회원가입 성공 시 로그인 페이지로 리다이렉트
@@ -104,8 +92,8 @@ public class AuthenticationController {
         }
 
         // Refresh 토큰과 Access 토큰을 쿠키에 저장
-        Cookie refreshCookie = cookieUtil.createCookie("refresh_token", authenticationToken.getRefreshToken(), (int) refreshExpiration);
-        Cookie accessCookie = cookieUtil.createCookie("access_token", authenticationToken.getAccessToken(), (int) jwtExpiration);
+        Cookie refreshCookie = cookieUtil.createTokenCookie("refresh_token", authenticationToken.getRefreshToken(), jwtUtil.getRefreshExpirationSecond());
+        Cookie accessCookie = cookieUtil.createTokenCookie("access_token", authenticationToken.getAccessToken(), jwtUtil.getJwtExpirationSecond());
 
         // HttpServletResponse 에 쿠키 추가
         response.addCookie(refreshCookie);
@@ -115,16 +103,4 @@ public class AuthenticationController {
         return "redirect:/"; // 성공 시 홈 페이지로 리다이렉트
     }
 
-    @PostMapping("/refresh-token")
-    public String refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Model model
-    ) throws IOException {
-        LOGGER.info("[refreshToken]POST \"/api/v1/auth/refresh-token\", parameters={}", request.toString());
-        authenticationService.processAccessTokenRefresh(request, response);
-        // 필요한 경우, 모델 데이터 추가
-        // model.addAttribute("key", "value");
-        return "refreshTokenResult"; // Thymeleaf 템플릿 이름
-    }
 }
