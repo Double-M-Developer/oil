@@ -27,7 +27,7 @@ import java.util.Map;
 @EntityScan("com.pj.oil.memberPost")
 public class DataSourceConfig2 {
 
-    @Bean
+    @Bean(name = "memberPostDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.member-post")
     public DataSource memberPostDataSource() {
         return DataSourceBuilder.create().build();
@@ -56,6 +56,8 @@ public class DataSourceConfig2 {
     }
 
     @Bean
+//    @Qualifier("transactionManager")
+    @Qualifier("memberPostTransactionManager")
     public PlatformTransactionManager memberPostTransactionManager(
             @Qualifier("memberPostEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();

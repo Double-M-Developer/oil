@@ -6,6 +6,15 @@ import com.pj.oil.gasStation.entity.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+//import org.springframework.batch.core.Job;
+//import org.springframework.batch.core.JobParameters;
+//import org.springframework.batch.core.JobParametersBuilder;
+//import org.springframework.batch.core.JobParametersInvalidException;
+//import org.springframework.batch.core.configuration.JobLocator;
+//import org.springframework.batch.core.launch.JobLauncher;
+//import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+//import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+//import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -15,10 +24,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/gas-station")
 public class GasStationController {
+//
+//    private final JobLauncher jobLauncher;
+//    private final Job job;
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     private final GasStationService gasStationService;
+
+//    private final JobLocator jobLocator;
 
     /**
      * 일 평균가격 확정 수치이며, 전일부터 7일간의 전국 일일 지역별 평균가격
@@ -78,5 +92,34 @@ public class GasStationController {
         LOGGER.info("[findLowTop20PriceByAreaCodeAndProductCode] LowTop20Price data dose existed, LowTop20Price size: {}", entity.size());
         return entity;
     }
+//
+//    @PostMapping("/batch")
+//    public void importCsvToDBJob() {
+//        JobParameters jobParameters = new JobParametersBuilder()
+//                .addLong("startAt", System.currentTimeMillis())
+//                .toJobParameters();
+//        try{
+//            jobLauncher.run(job, jobParameters);
+//        } catch (JobInstanceAlreadyCompleteException
+//                 | JobExecutionAlreadyRunningException
+//                 | JobParametersInvalidException
+//                 | JobRestartException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    @PostMapping("/batch/run")
+//    public String runJob() throws Exception {
+////    public String runJob(@RequestParam("jobName") String jobName) throws Exception {
+//        String jobName = "importGasStation";
+//        Job job = jobLocator.getJob(jobName);
+//        JobParameters jobParameters = new JobParametersBuilder()
+//                .addLong("time", System.currentTimeMillis())
+//                .toJobParameters();
+//
+//        jobLauncher.run(job, jobParameters);
+//
+//        return "Job started: " + jobName;
+//    }
 
 }
