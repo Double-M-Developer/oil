@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false, transactionManager = "gasStationTransactionManager")
 @RequiredArgsConstructor
 public class GasStationService {
 
@@ -72,6 +72,7 @@ public class GasStationService {
         LOGGER.info("[findLowTop20PriceByAreaCode] LowTop20Price data dose existed, LowTop20Price size: {}", entity.size());
         return entity;
     }
+
 
 
 }

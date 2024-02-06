@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -27,7 +28,7 @@ import java.util.Map;
 @EntityScan("com.pj.oil.gasStation")
 public class DataSourceConfig {
 
-    @Bean
+    @Bean(name = "gasStationDataSource")
     @ConfigurationProperties(prefix = "spring.datasource.gas-station")
     public DataSource gasStationDataSource() {
         return DataSourceBuilder.create().build();
@@ -55,7 +56,8 @@ public class DataSourceConfig {
                 .build();
     }
 
-    @Bean
+    @Bean(name = "gasStationTransactionManager")
+//    @Qualifier("gasStationTransactionManager")
     public PlatformTransactionManager gasStationTransactionManager(
             @Qualifier("gasStationEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
