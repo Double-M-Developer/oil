@@ -12,6 +12,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,6 +24,7 @@ import java.util.Map;
 @EnableTransactionManagement
 @EnableJpaRepositories(
         basePackages = "com.pj.oil.gasStation",
+        transactionManagerRef = "gasStationTransactionManager",
         entityManagerFactoryRef = "gasStationEntityManagerFactory"
 )
 @EntityScan("com.pj.oil.gasStation")
@@ -52,12 +54,11 @@ public class DataSourceConfig {
                 .dataSource(dataSource)
                 .properties(jpaProperties)
                 .packages("com.pj.oil.gasStation")
-//                .persistenceUnit("gasStationPersistenceUnit")
+                .persistenceUnit("gasStation")
                 .build();
     }
 
     @Bean(name = "gasStationTransactionManager")
-//    @Qualifier("gasStationTransactionManager")
     public PlatformTransactionManager gasStationTransactionManager(
             @Qualifier("gasStationEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
