@@ -1,12 +1,9 @@
 package com.pj.oil.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pj.oil.config.JwtService;
 import com.pj.oil.memberPost.member.Member;
 import com.pj.oil.memberPost.member.MemberRepository;
 import com.pj.oil.memberPost.member.Role;
-import com.pj.oil.memberPost.token.*;
-import jakarta.servlet.http.HttpServletRequest;
+import com.pj.oil.memberPost.token.TokenService;
 import com.pj.oil.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
