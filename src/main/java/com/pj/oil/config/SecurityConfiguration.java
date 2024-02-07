@@ -1,7 +1,5 @@
 package com.pj.oil.config;
 
-import com.pj.oil.auth.LoginFailHandler;
-import com.pj.oil.auth.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +13,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
-
-import static com.pj.oil.member.Role.*;
 
 @Configuration
 @EnableWebSecurity // Spring Security 활성화
@@ -42,7 +38,7 @@ public class SecurityConfiguration {
             "/css/**",
             "/brand/**",
             "/api/v1/**",
-            "/"};
+            "/*"};
     // 주입된 커스텀 JWT 인증 필터
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -58,15 +54,16 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 보호 비활성화
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                WHITE_LIST_URL
-                        )
-                        .permitAll()
-//                        .requestMatchers("/api/v1/auth/**").permitAll()// "/api/v1/auth/**" 경로는 인증 없이 허용
-                        .requestMatchers("/api/v1/gas-station/**").permitAll()// "/api/v1/gas-station/**" 경로는 인증 없이 허용
-                        .requestMatchers("/api/v1/admin/**").hasAnyRole(ADMIN.name())
-                        .requestMatchers("/api/v1/member/**").hasAnyRole(ADMIN.name(), USER.name())
-                        .anyRequest().authenticated()) // 그 외 모든 요청은 인증 필요
+                        .anyRequest().permitAll())
+//                        .requestMatchers(
+//                                WHITE_LIST_URL
+//                        )
+//                        .permitAll()
+////                        .requestMatchers("/api/v1/auth/**").permitAll()// "/api/v1/auth/**" 경로는 인증 없이 허용
+//                        .requestMatchers("/api/v1/gas-station/**").permitAll()// "/api/v1/gas-station/**" 경로는 인증 없이 허용
+//                        .requestMatchers("/api/v1/admin/**").hasAnyRole(ADMIN.name())
+//                        .requestMatchers("/api/v1/member/**").hasAnyRole(ADMIN.name(), USER.name())
+//                        .anyRequest().authenticated()) // 그 외 모든 요청은 인증 필요
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션을 사용하지 않고, Stateless하게 설정
                 .authenticationProvider(authenticationProvider) // 커스텀 AuthenticationProvider 설정

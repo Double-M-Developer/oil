@@ -1,4 +1,4 @@
-package com.pj.oil.member;
+package com.pj.oil.memberPost.member;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

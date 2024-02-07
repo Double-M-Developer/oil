@@ -1,6 +1,6 @@
 package com.pj.oil.auditing;
 
-import com.pj.oil.member.Member;
+import com.pj.oil.memberPost.member.Member;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;

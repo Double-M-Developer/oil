@@ -1,4 +1,4 @@
-package com.pj.oil.token;
+package com.pj.oil.memberPost.token;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

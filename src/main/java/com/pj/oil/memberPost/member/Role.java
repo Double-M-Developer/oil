@@ -1,4 +1,4 @@
-package com.pj.oil.member;
+package com.pj.oil.memberPost.member;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,30 +9,28 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.pj.oil.member.Permission.*;
-
 @Getter
 @RequiredArgsConstructor
 public enum Role {
     GUEST(Collections.emptySet()),
     ADMIN(
             Set.of(
-                    ADMIN_READ,
-                    ADMIN_CREATE,
-                    ADMIN_UPDATE,
-                    ADMIN_DELETE,
-                    USER_READ,
-                    USER_CREATE,
-                    USER_UPDATE,
-                    USER_DELETE
+                    Permission.ADMIN_READ,
+                    Permission.ADMIN_CREATE,
+                    Permission.ADMIN_UPDATE,
+                    Permission.ADMIN_DELETE,
+                    Permission.USER_READ,
+                    Permission.USER_CREATE,
+                    Permission.USER_UPDATE,
+                    Permission.USER_DELETE
             )
     ),
     USER(
             Set.of(
-                    USER_READ,
-                    USER_CREATE,
-                    USER_UPDATE,
-                    USER_DELETE
+                    Permission.USER_READ,
+                    Permission.USER_CREATE,
+                    Permission.USER_UPDATE,
+                    Permission.USER_DELETE
             )
     );
 

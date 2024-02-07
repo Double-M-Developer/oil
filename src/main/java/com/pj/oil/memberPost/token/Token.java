@@ -1,6 +1,6 @@
-package com.pj.oil.token;
+package com.pj.oil.memberPost.token;
 
-import com.pj.oil.member.Member;
+import com.pj.oil.memberPost.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,6 +1,6 @@
 package com.pj.oil.config;
 
-import com.pj.oil.token.AccessTokenRepository;
+import com.pj.oil.memberPost.token.AccessTokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
