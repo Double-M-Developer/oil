@@ -1,6 +1,6 @@
-package com.pj.oil.member;
+package com.pj.oil.memberPost.member;
 
-import com.pj.oil.token.Token;
+import com.pj.oil.memberPost.token.Token;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "members")
-public class Member implements UserDetails {
+public class Member implements UserDetails{
 
     @Id @GeneratedValue
     @Column(name = "member_id")

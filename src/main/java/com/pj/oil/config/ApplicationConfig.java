@@ -1,7 +1,7 @@
 package com.pj.oil.config;
 
 import com.pj.oil.auditing.ApplicationAuditAware;
-import com.pj.oil.member.MemberRepository;
+import com.pj.oil.memberPost.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

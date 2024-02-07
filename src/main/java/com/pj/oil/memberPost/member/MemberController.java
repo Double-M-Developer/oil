@@ -1,4 +1,4 @@
-package com.pj.oil.member;
+package com.pj.oil.memberPost.member;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
