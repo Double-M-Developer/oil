@@ -5,19 +5,23 @@ import com.pj.oil.gasStation.entity.maria.AverageAllPrice;
 import com.pj.oil.gasStation.entity.maria.AverageSidoPrice;
 import com.pj.oil.gasStation.entity.maria.LowTop20Price;
 import lombok.RequiredArgsConstructor;
+import com.pj.oil.gasStation.GasStationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/gas-station")
+@RequestMapping("/gas-station")
 public class GasStationController {
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     private final GasStationService gasStationService;
+
 
     /**
      * 일 평균가격 확정 수치이며, 전일부터 7일간의 전국 일일 지역별 평균가격
@@ -77,5 +81,15 @@ public class GasStationController {
         LOGGER.info("[findLowTop20PriceByAreaCodeAndProductCode] LowTop20Price data dose existed, LowTop20Price size: {}", entity.size());
         return entity;
     }
+
+    @GetMapping("/avg")
+    public void avgDay(){
+        gasStationService.avgDay();
+    }
+
+    public void sendGasStationRank(){
+        gasStationService.findRank();
+    }
+
 
 }

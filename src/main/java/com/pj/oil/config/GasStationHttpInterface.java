@@ -71,4 +71,8 @@ public interface GasStationHttpInterface { //HttpServiceProxyFactory
     @GetExchange("areaCode.do?out=json&code={apiKey}")
     String getSido(@PathVariable String apiKey);
 
+
+    @GetExchange("avgWeekPrice.do?out=json&code={apiKey}")
+    String getWeekAveragePrice(@PathVariable String apiKey);
+
 }

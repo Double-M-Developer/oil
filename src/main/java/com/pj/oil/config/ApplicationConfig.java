@@ -1,7 +1,7 @@
 package com.pj.oil.config;
 
 import com.pj.oil.auditing.ApplicationAuditAware;
-import com.pj.oil.member.MemberRepository;
+import com.pj.oil.memberPost.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +24,7 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> memberRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Member not Found"));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
     }
 
     @Bean
