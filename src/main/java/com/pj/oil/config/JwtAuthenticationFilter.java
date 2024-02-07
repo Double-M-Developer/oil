@@ -1,10 +1,10 @@
 package com.pj.oil.config;
 
-import com.pj.oil.member.Member;
-import com.pj.oil.member.MemberRepository;
-import com.pj.oil.token.AccessTokenRepository;
-import com.pj.oil.token.RefreshTokenRepository;
-import com.pj.oil.token.TokenService;
+import com.pj.oil.memberPost.member.Member;
+import com.pj.oil.memberPost.member.MemberRepository;
+import com.pj.oil.memberPost.token.AccessTokenRepository;
+import com.pj.oil.memberPost.token.RefreshTokenRepository;
+import com.pj.oil.memberPost.token.TokenService;
 import com.pj.oil.util.CookieUtil;
 import com.pj.oil.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
