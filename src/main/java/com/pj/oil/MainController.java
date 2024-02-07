@@ -13,6 +13,10 @@ public class MainController {
         return "index";
     }
 
+    @RequestMapping("/map")
+    public String map() {
+        return "sidoMap";
+    }
     @GetMapping("/home")
     public String home(){
         return "dashboard";

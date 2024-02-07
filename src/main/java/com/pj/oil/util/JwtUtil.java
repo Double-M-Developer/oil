@@ -1,13 +1,16 @@
-package com.pj.oil.config;
+package com.pj.oil.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
@@ -15,16 +18,41 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-@Service
-public class JwtService {
+@Component
+public class JwtUtil {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     // 비밀 키, JWT 서명에 사용되는 비밀 키입니다.
     @Value("${application.security.jwt.secret-key}")
     private String SECRET_KEY;
     @Value("${application.security.jwt.expiration}")
-    private long jwtExpiration;
+    public long jwtExpirationSecond;
     @Value("${application.security.jwt.refresh-token.expiration}")
-    private long refreshExpiration;
+    public long refreshExpirationSecond;
+    public long jwtExpiration;
+    public long refreshExpiration;
+    @PostConstruct
+    public void init() {
+        this.jwtExpiration = jwtExpirationSecond * 1000;
+        this.refreshExpiration = refreshExpirationSecond * 1000;
+    }
+
+    public long getJwtExpirationSecond() {
+        return jwtExpirationSecond;
+    }
+
+    public long getRefreshExpirationSecond() {
+        return refreshExpirationSecond;
+    }
+
+    public long getJwtExpiration() {
+        return jwtExpiration;
+    }
+
+    public long getRefreshExpiration() {
+        return refreshExpiration;
+    }
+
     /**
      * JWT에서 username을 저장하고 있는
      * 페이로드의 SUB 내용 추출
@@ -71,6 +99,7 @@ public class JwtService {
      * @return token
      */
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        System.out.println(jwtExpiration);
         return buildToken(extraClaims, userDetails, jwtExpiration);
     }
 
@@ -78,6 +107,7 @@ public class JwtService {
         return buildToken(new HashMap<>(), userDetails, refreshExpiration);
     }
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long expiration) {
+        LOGGER.info("[buildToken] create token, expiration: {}", expiration);
         return Jwts
                 .builder()
                 .setClaims(extraClaims) // 추가 정보를 담을 객체
