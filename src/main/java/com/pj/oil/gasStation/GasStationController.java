@@ -4,6 +4,7 @@ import com.pj.oil.auth.AuthenticationResponse;
 import com.pj.oil.auth.SignupRequest;
 import com.pj.oil.gasStation.entity.*;
 import lombok.RequiredArgsConstructor;
+import com.pj.oil.gasStation.GasStationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //import org.springframework.batch.core.Job;
@@ -16,13 +17,14 @@ import org.slf4j.LoggerFactory;
 //import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 //import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/gas-station")
+@RequestMapping("/gas-station")
 public class GasStationController {
 //
 //    private final JobLauncher jobLauncher;
@@ -92,34 +94,15 @@ public class GasStationController {
         LOGGER.info("[findLowTop20PriceByAreaCodeAndProductCode] LowTop20Price data dose existed, LowTop20Price size: {}", entity.size());
         return entity;
     }
-//
-//    @PostMapping("/batch")
-//    public void importCsvToDBJob() {
-//        JobParameters jobParameters = new JobParametersBuilder()
-//                .addLong("startAt", System.currentTimeMillis())
-//                .toJobParameters();
-//        try{
-//            jobLauncher.run(job, jobParameters);
-//        } catch (JobInstanceAlreadyCompleteException
-//                 | JobExecutionAlreadyRunningException
-//                 | JobParametersInvalidException
-//                 | JobRestartException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-//    @PostMapping("/batch/run")
-//    public String runJob() throws Exception {
-////    public String runJob(@RequestParam("jobName") String jobName) throws Exception {
-//        String jobName = "importGasStation";
-//        Job job = jobLocator.getJob(jobName);
-//        JobParameters jobParameters = new JobParametersBuilder()
-//                .addLong("time", System.currentTimeMillis())
-//                .toJobParameters();
-//
-//        jobLauncher.run(job, jobParameters);
-//
-//        return "Job started: " + jobName;
-//    }
+
+    @GetMapping("/avg")
+    public void avgDay(){
+        gasStationService.avgDay();
+    }
+
+    public void sendGasStationRank(){
+        gasStationService.findRank();
+    }
+
 
 }

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional(readOnly = false, transactionManager = "gasStationTransactionManager")
 @RequiredArgsConstructor
 public class GasStationService {
 
@@ -24,6 +23,8 @@ public class GasStationService {
 
     private final AreaRepository areaRepository;
     private final ProductRepository productRepository;
+
+    private final GasStationRepository gasStationRepository;
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
@@ -74,5 +75,11 @@ public class GasStationService {
     }
 
 
+    public void findRank() {
+    }
 
+    public void avgDay(){
+        System.out.println("여기까진 왔엉");
+        List<GasStation> all = gasStationRepository.findAll();
+    }
 }

@@ -22,6 +22,7 @@ import java.util.Map;
 @EnableTransactionManagement
 @EnableJpaRepositories(
         basePackages = "com.pj.oil.memberPost",
+        transactionManagerRef = "memberPostTransactionManager",
         entityManagerFactoryRef = "memberPostEntityManagerFactory"
 )
 @EntityScan("com.pj.oil.memberPost")
@@ -51,13 +52,11 @@ public class DataSourceConfig2 {
                 .dataSource(dataSource)
                 .properties(jpaProperties)
                 .packages("com.pj.oil.memberPost")
-//                .persistenceUnit("gasStationPersistenceUnit")
+                .persistenceUnit("memberPost")
                 .build();
     }
 
-    @Bean
-//    @Qualifier("transactionManager")
-    @Qualifier("memberPostTransactionManager")
+    @Bean(name = "memberPostTransactionManager")
     public PlatformTransactionManager memberPostTransactionManager(
             @Qualifier("memberPostEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
