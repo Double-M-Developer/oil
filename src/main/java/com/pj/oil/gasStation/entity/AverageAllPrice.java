@@ -25,14 +25,9 @@ public class AverageAllPrice {
     @Column(name = "trade_date")
     private String tradeDate;
     @Schema(description = "제품구분")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "productCode")
-    private Product product;
+    @Column(name = "productCode")
+    private String productCode;
     @Schema(description = "평균가격")
     @Column(name = "average_price")
-    private String averagePrice;
-    @Schema(description = "전일대비 등락값")
-    @JsonProperty("price_change")
-    private String priceChange;
-
+    private int averagePrice;
 }

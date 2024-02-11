@@ -1,27 +1,27 @@
 /* globals Chart:false */
 // AJAX 요청을 처리하는 함수
 const colorSet = ['#007bff', '#ff007b', '#ff7b00', '#00ff7b']
+
 const fetchChartData = () => {
-    fetch('/path-to-data-endpoint') // 서버 엔드포인트 경로
+    fetch('/gas-station/avg') // 서버 엔드포인트 경로
         .then(response => response.json())
         .then(data => {
-            // 차트 데이터셋 업데이트
+            // 서버로부터 받은 labels을 차트의 labels로 설정
             myChart.data.labels = data.labels;
-            data.forEach((priceList, index) => {
-                // 각 데이터셋에 새로운 데이터 할당
-                // 전국 평균, 시도별 평균
+
+            // 각 데이터셋에 서버로부터 받은 평균 가격 데이터 할당
+            data.prices.forEach((priceObj, index) => {
                 if (myChart.data.datasets[index]) {
-                    myChart.data.datasets[index].data = priceList;
-                    myChart.data.datasets[index].borderColor = colorSet[index];
-                    myChart.data.datasets[index].pointBackgroundColor = colorSet[index];
+                    myChart.data.datasets[index].data = priceObj.averagePrice;
                 }
-            })
+            });
+
+            // 차트 업데이트
             myChart.update();
         })
         .catch(error => console.error('Error fetching data:', error));
-}
-// (() => {
-// 'use strict'
+};
+
 
 // Graphs
 const ctx = document.getElementById('myChart')
@@ -41,13 +41,7 @@ const myChart = new Chart(ctx, {
         datasets: [
             {
                 data: [
-                    15339,
-                    21345,
-                    18483,
-                    24003,
-                    23489,
-                    24092,
-                    12034
+
                 ],
                 lineTension: 0, // 0 고정
                 backgroundColor: 'transparent',
@@ -56,20 +50,23 @@ const myChart = new Chart(ctx, {
                 pointBackgroundColor: '#007bff'
             }, {
                 data: [
-                    21300,
-                    15339,
-                    21345,
-                    12034,
-                    13489,
-                    14003,
-                    16092
+
                 ],
                 lineTension: 0, // 0 고정
                 backgroundColor: 'transparent',
                 borderColor: '#ff007b',
                 borderWidth: 4, // 그래프 곡선 두께
                 pointBackgroundColor: '#ff007b'
-            },
+            },{
+                data: [
+
+                ],
+                lineTension: 0, // 0 고정
+                backgroundColor: 'transparent',
+                borderColor: 'rgba(119,255,0,0.66)',
+                borderWidth: 4, // 그래프 곡선 두께
+                pointBackgroundColor: '#ff007b'
+            }
         ]
     },
     options: {

@@ -1,26 +1,12 @@
 package com.pj.oil.gasStation;
 
-import com.pj.oil.auth.AuthenticationResponse;
-import com.pj.oil.auth.SignupRequest;
 import com.pj.oil.gasStation.entity.*;
 import lombok.RequiredArgsConstructor;
-import com.pj.oil.gasStation.GasStationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import org.springframework.batch.core.Job;
-//import org.springframework.batch.core.JobParameters;
-//import org.springframework.batch.core.JobParametersBuilder;
-//import org.springframework.batch.core.JobParametersInvalidException;
-//import org.springframework.batch.core.configuration.JobLocator;
-//import org.springframework.batch.core.launch.JobLauncher;
-//import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-//import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-//import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -86,23 +72,23 @@ public class GasStationController {
      * @param areaCode
      * @return
      */
-    public List<LowTop20Price> findLowTop20PriceByAreaCodeAndProductCode(String areaCode, String productCode) {
-        List<LowTop20Price> entity = gasStationService.findLowTop20PriceByAreaCodeAndProductCode(areaCode, productCode);
-        if (entity.isEmpty()) {
-            LOGGER.info("[findLowTop20PriceByAreaCodeAndProductCode] LowTop20Price data dose not existed");
-        }
-        LOGGER.info("[findLowTop20PriceByAreaCodeAndProductCode] LowTop20Price data dose existed, LowTop20Price size: {}", entity.size());
-        return entity;
-    }
+//    public List<LowTop20Price> findLowTop20PriceByAreaCodeAndProductCode(String areaCode, String productCode) {
+//        List<LowTop20Price> entity = gasStationService.findLowTop20PriceByAreaCodeAndProductCode(areaCode, productCode);
+//        if (entity.isEmpty()) {
+//            LOGGER.info("[findLowTop20PriceByAreaCodeAndProductCode] LowTop20Price data dose not existed");
+//        }
+//        LOGGER.info("[findLowTop20PriceByAreaCodeAndProductCode] LowTop20Price data dose existed, LowTop20Price size: {}", entity.size());
+//        return entity;
+//    }
 
     @GetMapping("/avg")
-    public void avgDay(){
-        gasStationService.avgDay();
+    public Map<String, Object> avgDay(){
+        Map<String, Object> avgDay = gasStationService.avgDay();
+        return avgDay;
     }
 
-    public void sendGasStationRank(){
-        gasStationService.findRank();
-    }
+
+
 
 
 }

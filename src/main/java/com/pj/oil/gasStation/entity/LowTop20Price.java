@@ -47,10 +47,10 @@ public class LowTop20Price extends ApiBaseDto {
     /**
      * 반환되는 값이 없으므로, 호출시 사용한 매개변수를 사용하여 값을 지정해줘야 함
      */
-    @Schema(description = "제품구분")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product")
-    private Product product;
+//    @Schema(description = "제품구분")
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "product")
+//    private Product product;
     /**
      * 반환되는 값이 없으므로, 호출시 사용한 매개변수를 사용하여 값을 지정해줘야 함
      */
