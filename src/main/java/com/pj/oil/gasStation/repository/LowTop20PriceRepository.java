@@ -21,5 +21,5 @@ import java.util.Optional;
 @Repository
 public interface LowTop20PriceRepository extends JpaRepository<LowTop20Price, Long> {
 
-    List<LowTop20Price> findLowTop20PriceByAreaAndProduct(Optional<Area> area, Optional<Product> product);
+//    List<LowTop20Price> findLowTop20PriceByAreaAndProduct(Optional<Area> area, Optional<Product> product);
 }
