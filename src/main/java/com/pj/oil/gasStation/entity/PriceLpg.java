@@ -1,30 +1,20 @@
 package com.pj.oil.gasStation.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter @Setter
+@Getter
+@Setter
 @ToString
 @Entity
-public class GasStation {
+public class PriceLpg {
 
     @Id
     private String id;
 
-    private String area;
-
-    private String brand;
-
-    private String addr;
-
-    private String brand2;
-
-    private String self;
+    private int lpg;
 
 }
-
-

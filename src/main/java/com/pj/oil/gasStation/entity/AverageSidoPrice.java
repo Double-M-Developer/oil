@@ -24,10 +24,10 @@ public class AverageSidoPrice {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "areaCode")
     private Area area;
-    @Schema(description = "제품구분")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "productCode")
-    private Product product;
+//    @Schema(description = "제품구분")
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "productCode")
+//    private Product product;
     @Schema(description = "평균가격")
     private String averagePrice;
     @Schema(description = "전일대비 등락값")
