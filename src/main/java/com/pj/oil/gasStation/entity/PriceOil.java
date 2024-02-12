@@ -15,9 +15,12 @@ public class PriceOil {
     @Id
     private String id;
 
-    private int oil1;
+    // 고급 휘발유
+    private int preGasoline;
 
-    private int oil2;
+    // 휘발유
+    private int gasoline;
 
-    private int oil3;
+    // 경유
+    private int diesel;
 }
