@@ -7,6 +7,8 @@ const fetchChartData = () => {
         .then(response => response.json())
         .then(data => {
             // 서버로부터 받은 labels을 차트의 labels로 설정
+
+            console.log(data);
             myChart.data.labels = data.labels;
 
             // 각 데이터셋에 서버로부터 받은 평균 가격 데이터 할당
@@ -65,7 +67,16 @@ const myChart = new Chart(ctx, {
                 backgroundColor: 'transparent',
                 borderColor: 'rgba(119,255,0,0.66)',
                 borderWidth: 4, // 그래프 곡선 두께
-                pointBackgroundColor: '#ff007b'
+                pointBackgroundColor: 'rgba(119,255,0,0.66)'
+            },{
+                data: [
+
+                ],
+                lineTension: 0, // 0 고정
+                backgroundColor: 'transparent',
+                borderColor: 'rgba(183,0,255,0.66)',
+                borderWidth: 4, // 그래프 곡선 두께
+                pointBackgroundColor: 'rgba(183,0,255,0.66)'
             }
         ]
     },

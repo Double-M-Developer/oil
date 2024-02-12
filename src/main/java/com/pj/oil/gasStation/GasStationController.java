@@ -69,7 +69,7 @@ public class GasStationController {
 
     /**
      * 전국 또는 지역별 최저가 주유소 TOP20
-     * @param areaCode
+     * @param
      * @return
      */
 //    public List<LowTop20Price> findLowTop20PriceByAreaCodeAndProductCode(String areaCode, String productCode) {
@@ -87,8 +87,13 @@ public class GasStationController {
         return avgDay;
     }
 
+    @GetMapping("/save_avg")
+    public void saveAvg(){
+        gasStationService.saveAveragePrice();
+    }
 
+    @GetMapping("/rank")
+    public void rankGasStations(){
 
-
-
+    }
 }
