@@ -178,9 +178,9 @@
                         <tbody>
                         <tr th:each="gasStation:${gasStations}">
                             <td th:text="${gasStation.count}">0</td>
-                            <td th:text="${gasStation.osNm}"></td>
-                            <td th:text="${gasStation.pollDivCd.title}"></td>
-                            <td th:text="${gasStation.product.title}"></td>
+                            <td th:text="${gasStation.preGasoline}"></td>
+                            <td th:text="${gasStation.gasoline}"></td>
+                            <td th:text="${gasStation.diesel}"></td>
                         </tr>
                         </tbody>
                     </table>

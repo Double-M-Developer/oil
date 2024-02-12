@@ -1,8 +1,7 @@
 package com.pj.oil.gasStation.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,6 +23,16 @@ public class GasStation {
     private String brand2;
 
     private String self;
+
+    @OneToOne
+    @JoinColumn(name = "price_oil", referencedColumnName = "id")
+    @Nullable
+    private PriceOil price_oil;
+
+    @OneToOne
+    @JoinColumn(name = "price_lpg", referencedColumnName = "id")
+    @Nullable
+    private PriceLpg price_lpg;
 
 }
 
