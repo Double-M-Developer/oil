@@ -21,11 +21,14 @@ public class GasStationService {
     private final AreaAverageRecentPriceRepository areaAverageRecentPriceRepository;
     private final AverageAllPriceRepository averageAllPriceRepository;
     private final AverageSidoPriceRepository averageSidoPriceRepository;
-    private final LowTop20PriceRepository lowTop20PriceRepository;
 
     private final AreaRepository areaRepository;
 
     private final GasStationRepository gasStationRepository;
+
+    private final PriceLpgRepository priceLpgRepository;
+
+    private final PriceOilRepository priceOilRepository;
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
@@ -91,6 +94,7 @@ public class GasStationService {
         List<Double> avgPricesOil1 = new ArrayList<>(Collections.nCopies(labels.size(), null));
         List<Double> avgPricesOil2 = new ArrayList<>(Collections.nCopies(labels.size(), null));
         List<Double> avgPricesOil3 = new ArrayList<>(Collections.nCopies(labels.size(), null));
+        List<Double> avgPricesOil4 = new ArrayList<>(Collections.nCopies(labels.size(), null));
 
         // 데이터베이스에서 모든 AverageAllPrice 객체를 불러옴
         List<AverageAllPrice> allPrices = averageAllPriceRepository.findAll();
@@ -103,15 +107,18 @@ public class GasStationService {
             if (index != -1) { // 해당 날짜가 labels 리스트에 존재하는 경우
                 double averagePrice = item.getAveragePrice();
                 switch (item.getProductCode()) {
-                    case "oil1":
-                        avgPricesOil1.set(index, averagePrice);
-                        break;
-                    case "oil2":
-                        avgPricesOil2.set(index, averagePrice);
-                        break;
-                    case "oil3":
-                        avgPricesOil3.set(index, averagePrice);
-                        break;
+                        case "oil1":
+                            avgPricesOil1.set(index, averagePrice);
+                            break;
+                        case "oil2":
+                            avgPricesOil2.set(index, averagePrice);
+                            break;
+                        case "oil3":
+                            avgPricesOil3.set(index, averagePrice);
+                            break;
+                        case "oil4":
+                            avgPricesOil4.set(index, averagePrice);
+                            break;
                 }
             }
         });
@@ -121,6 +128,7 @@ public class GasStationService {
         prices.add(Collections.singletonMap("averagePrice", avgPricesOil1));
         prices.add(Collections.singletonMap("averagePrice", avgPricesOil2));
         prices.add(Collections.singletonMap("averagePrice", avgPricesOil3));
+        prices.add(Collections.singletonMap("averagePrice", avgPricesOil4));
 
         // 최종 응답 구조 생성
         response.put("labels", labels);
@@ -130,10 +138,28 @@ public class GasStationService {
     }
 
 
-    // 객체 저장
-    private AverageAllPrice saveAveragePrice(String productCode, double averagePrice, String tradeDate) {
-        AverageAllPrice averageAllPrice = new AverageAllPrice();
+    // 자정마다 전국 평균 저장
+    public void saveAveragePrice() {
+        // 평균 가격 계산
+        int averagePreGasoline = priceOilRepository.findAveragePreGasoline();
+        int averageGasoline = priceOilRepository.findAverageGasoline();
+        int averageDiesel = priceOilRepository.findAverageDiesel();
+        int averageLpg = priceLpgRepository.findAverageLpg();
 
-        return averageAllPrice; // 저장된 객체 반환
+        List<Integer> averagePrices = Arrays.asList(averagePreGasoline, averageGasoline, averageDiesel, averageLpg);
+        List<String> productCodes = Arrays.asList("oil1", "oil2", "oil3", "oil4");
+
+        // 현재 날짜를 "yyyyMMdd" 형식으로 포맷
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String formattedDate = LocalDate.now().format(formatter);
+
+        // 평균 가격과 제품 코드를 이용해 AverageAllPrice 인스턴스 생성 및 저장
+        for (int i = 0; i < averagePrices.size(); i++) {
+            AverageAllPrice averageAllPrice = new AverageAllPrice();
+            averageAllPrice.setTradeDate(formattedDate);
+            averageAllPrice.setProductCode(productCodes.get(i));
+            averageAllPrice.setAveragePrice(averagePrices.get(i));
+            averageAllPriceRepository.save(averageAllPrice);
+        }
     }
 }
