@@ -1,6 +1,8 @@
 package com.pj.oil.gasStation;
 
-import com.pj.oil.gasStation.entity.*;
+import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
+import com.pj.oil.gasStation.entity.maria.AverageAllPrice;
+import com.pj.oil.gasStation.entity.maria.LowTop20Price;
 import com.pj.oil.gasStation.repository.*;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.geom.Area;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -20,15 +23,14 @@ public class GasStationService {
 
     private final AreaAverageRecentPriceRepository areaAverageRecentPriceRepository;
     private final AverageAllPriceRepository averageAllPriceRepository;
-    private final AverageSidoPriceRepository averageSidoPriceRepository;
-
-    private final AreaRepository areaRepository;
 
     private final GasStationRepository gasStationRepository;
 
     private final PriceLpgRepository priceLpgRepository;
 
     private final PriceOilRepository priceOilRepository;
+
+    private final LowTop20PriceRepository lowTop20PriceRepository;
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
@@ -51,32 +53,19 @@ public class GasStationService {
         return entity;
     }
 
-    // 현재 오피넷에 게시되고 있는 시도별 주유소 평균 가격
-    public List<AverageSidoPrice> findAverageSidoPriceByAreaCode(String areaCode) {
 
-        Optional<Area> area = areaRepository.findById(areaCode);
+    // 전국 또는 지역별 최저가 주유소 TOP20
+    public List<LowTop20Price> findLowTop20PriceByAreaCodeAndProductCode(String areaCode, String productCode) {
 
-        List<AverageSidoPrice> entity = averageSidoPriceRepository.findByArea(area);
+
+        List<LowTop20Price> entity = lowTop20PriceRepository.findLowTop20PriceByAreaCodeAndProductCode(areaCode, productCode);
+
         if (entity.isEmpty()) {
-            LOGGER.info("[findAverageSidoPriceByAreaCode] AverageSidoPrice data dose not existed");
+            LOGGER.info("[findLowTop20PriceByAreaCode] LowTop20Price data dose not existed");
         }
-        LOGGER.info("[findAverageSidoPriceByAreaCode] AverageSidoPrice data dose existed, AverageSidoPrice size: {}", entity.size());
+        LOGGER.info("[findLowTop20PriceByAreaCode] LowTop20Price data dose existed, LowTop20Price size: {}", entity.size());
         return entity;
     }
-//    // 전국 또는 지역별 최저가 주유소 TOP20
-//    public List<LowTop20Price> findLowTop20PriceByAreaCodeAndProductCode(String areaCode, String productCode) {
-//
-//        Optional<Area> area = areaRepository.findById(areaCode);
-//        Optional<Product> product = productRepository.findById(productCode);
-//
-//        List<LowTop20Price> entity = lowTop20PriceRepository.findLowTop20PriceByAreaAndProduct(area, product);
-//
-//        if (entity.isEmpty()) {
-//            LOGGER.info("[findLowTop20PriceByAreaCode] LowTop20Price data dose not existed");
-//        }
-//        LOGGER.info("[findLowTop20PriceByAreaCode] LowTop20Price data dose existed, LowTop20Price size: {}", entity.size());
-//        return entity;
-//    }
 
 
     public void findRank() {
@@ -105,7 +94,7 @@ public class GasStationService {
                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             int index = labels.indexOf(formattedDate);
             if (index != -1) { // 해당 날짜가 labels 리스트에 존재하는 경우
-                double averagePrice = item.getAveragePrice();
+                double averagePrice = item.getPriceAverage();
                 switch (item.getProductCode()) {
                         case "oil1":
                             avgPricesOil1.set(index, averagePrice);
@@ -138,28 +127,5 @@ public class GasStationService {
     }
 
 
-    // 자정마다 전국 평균 저장
-    public void saveAveragePrice() {
-        // 평균 가격 계산
-        int averagePreGasoline = priceOilRepository.findAveragePreGasoline();
-        int averageGasoline = priceOilRepository.findAverageGasoline();
-        int averageDiesel = priceOilRepository.findAverageDiesel();
-        int averageLpg = priceLpgRepository.findAverageLpg();
 
-        List<Integer> averagePrices = Arrays.asList(averagePreGasoline, averageGasoline, averageDiesel, averageLpg);
-        List<String> productCodes = Arrays.asList("oil1", "oil2", "oil3", "oil4");
-
-        // 현재 날짜를 "yyyyMMdd" 형식으로 포맷
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        String formattedDate = LocalDate.now().format(formatter);
-
-        // 평균 가격과 제품 코드를 이용해 AverageAllPrice 인스턴스 생성 및 저장
-        for (int i = 0; i < averagePrices.size(); i++) {
-            AverageAllPrice averageAllPrice = new AverageAllPrice();
-            averageAllPrice.setTradeDate(formattedDate);
-            averageAllPrice.setProductCode(productCodes.get(i));
-            averageAllPrice.setAveragePrice(averagePrices.get(i));
-            averageAllPriceRepository.save(averageAllPrice);
-        }
-    }
 }

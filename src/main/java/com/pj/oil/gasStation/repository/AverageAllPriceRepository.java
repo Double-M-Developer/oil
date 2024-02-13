@@ -1,11 +1,10 @@
 package com.pj.oil.gasStation.repository;
 
-import com.pj.oil.gasStation.entity.AverageAllPrice;
+import com.pj.oil.gasStation.entity.maria.AverageAllPrice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 현재 오피넷에 게시되고 있는 전국 주유소 평균 가격
