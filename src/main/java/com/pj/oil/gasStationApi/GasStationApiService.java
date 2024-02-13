@@ -1,6 +1,6 @@
 package com.pj.oil.gasStationApi;
 
-import com.pj.oil.cache.GasStationCacheService;
+//import com.pj.oil.cache.GasStationCacheService;
 import com.pj.oil.config.PropertyConfiguration;
 import com.pj.oil.config.GasStationHttpInterface;
 import com.pj.oil.gasStation.entity.maria.*;
@@ -19,7 +19,7 @@ public class GasStationApiService {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final PropertyConfiguration properties;
     private final GasStationHttpInterface httpInterface;
-    private final GasStationCacheService gasStationCacheService;
+//    private final GasStationCacheService gasStationCacheService;
 
     /**
      * 공통 로직
@@ -121,8 +121,8 @@ public class GasStationApiService {
 
         // 조회된 Product와 Area를 각 LowTop20Price 객체에 설정
         for (LowTop20Price dto : dtoList) {
-            dto.setProduct(prodcd);
-            dto.setArea(areaCd);
+            dto.setProductCode(prodcd);
+            dto.setAreaCode(areaCd);
         }
 
         return dtoList;

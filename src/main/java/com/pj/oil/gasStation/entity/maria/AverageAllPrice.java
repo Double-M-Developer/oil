@@ -29,7 +29,7 @@ public class AverageAllPrice extends GasStationBase {
     @JsonProperty("PRODCD")
     private String productCode;
     @Schema(description = "평균가격")
-    @Column(name = "average_price")
+    @Column(name = "price_average")
     @JsonProperty("PRICE")
     private String priceAverage;
     @Schema(description = "전일대비 등락값")

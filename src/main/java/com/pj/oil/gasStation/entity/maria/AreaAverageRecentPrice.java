@@ -14,7 +14,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AreaAverageRecentPrice extends GasStationBase{
+public class AreaAverageRecentPrice extends GasStationBase {
 
         @Schema(description = "일 평균가격 id")
         @Column(name = "area_average_recent_price_id")
@@ -33,16 +33,16 @@ public class AreaAverageRecentPrice extends GasStationBase{
         @JsonProperty("PRODCD")
         private String productCode;
         @Schema(description = "평균가격")
-        @Column(name = "average_price")
+        @Column(name = "price_average")
         @JsonProperty("PRICE")
-        private String averagePrice;
+        private String priceAverage;
 
         @Builder
-        public AreaAverageRecentPrice(Long id, String baseDate, String areaCode, String productCode, String averagePrice) {
+        public AreaAverageRecentPrice(Long id, String baseDate, String areaCode, String productCode, String priceAverage) {
                 this.id = id;
                 this.baseDate = baseDate;
                 this.areaCode = areaCode;
                 this.productCode = productCode;
-                this.averagePrice = averagePrice;
+                this.priceAverage = priceAverage;
         }
 }

@@ -2,22 +2,31 @@ package com.pj.oil.gasStation;
 
 import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
 import com.pj.oil.gasStation.entity.maria.AverageAllPrice;
+import com.pj.oil.gasStation.entity.maria.GasStation;
 import com.pj.oil.gasStation.entity.maria.LowTop20Price;
+import com.pj.oil.gasStation.repository.GasStationRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/gas-station")
 public class GasStationController {
+//
+//    private final JobLauncher jobLauncher;
+//    private final Job job;
 
+    private final GasStationRepository gasStationRepository;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     private final GasStationService gasStationService;
 
+//    private final JobLocator jobLocator;
 
     /**
      * 일 평균가격 확정 수치이며, 전일부터 7일간의 전국 일일 지역별 평균가격
@@ -50,9 +59,11 @@ public class GasStationController {
         return entity;
     }
 
+
+
     /**
      * 전국 또는 지역별 최저가 주유소 TOP20
-     * @param areaCode
+     * @param
      * @return
      */
     public List<LowTop20Price> findLowTop20PriceByAreaCodeAndProductCode(String areaCode, String productCode) {
@@ -65,13 +76,29 @@ public class GasStationController {
     }
 
     @GetMapping("/avg")
-    public void avgDay(){
-        gasStationService.avgDay();
-    }
-
-    public void sendGasStationRank(){
-        gasStationService.findRank();
+    public Map<String, Object> avgDay(){
+        Map<String, Object> avgDay = gasStationService.avgDay();
+        return avgDay;
     }
 
 
+    @GetMapping("/rank/preGasoline")
+    public ResponseEntity<List<GasStation>> getTopPreGasolineStations() {
+        return ResponseEntity.ok(gasStationRepository.findTop5ByPreGasolinePrice());
+    }
+
+    @GetMapping("/rank/gasoline")
+    public ResponseEntity<List<GasStation>> getTopGasolineStations() {
+        return ResponseEntity.ok(gasStationRepository.findTop5ByGasolinePrice());
+    }
+
+    @GetMapping("/rank/diesel")
+    public ResponseEntity<List<GasStation>> getTopDieselStations() {
+        return ResponseEntity.ok(gasStationRepository.findTop5ByDieselPrice());
+    }
+
+    @GetMapping("/rank/lpg")
+    public ResponseEntity<List<GasStation>> getTopLpgStations() {
+        return ResponseEntity.ok(gasStationRepository.findTop5ByLpgPrice());
+    }
 }
