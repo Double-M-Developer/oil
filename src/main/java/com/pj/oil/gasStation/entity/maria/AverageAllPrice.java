@@ -1,4 +1,4 @@
-package com.pj.oil.gasStation.entity;
+package com.pj.oil.gasStation.entity.maria;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,6 +1,6 @@
 package com.pj.oil.gasStation.repository;
 
-import com.pj.oil.gasStation.entity.PriceLpg;
+import com.pj.oil.gasStation.entity.maria.PriceLpg;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

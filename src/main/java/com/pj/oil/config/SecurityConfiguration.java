@@ -1,7 +1,5 @@
 package com.pj.oil.config;
 
-import com.pj.oil.auth.LoginFailHandler;
-import com.pj.oil.auth.LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+
+import static com.pj.oil.memberPost.member.Role.ADMIN;
+import static com.pj.oil.memberPost.member.Role.USER;
 
 @Configuration
 @EnableWebSecurity // Spring Security 활성화
