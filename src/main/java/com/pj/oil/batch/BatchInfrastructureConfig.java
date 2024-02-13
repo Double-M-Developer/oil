@@ -52,6 +52,7 @@ public class BatchInfrastructureConfig {
         factory.setIsolationLevelForCreate("ISOLATION_SERIALIZABLE");
         factory.setTablePrefix("BATCH_");
 
+
         // 데이터베이스 유형을 설정
         factory.setDatabaseType(DatabaseType.MARIADB.name());
 

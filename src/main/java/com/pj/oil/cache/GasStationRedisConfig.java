@@ -6,14 +6,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.RedisKeyValueAdapter;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
 @Configuration
 @EnableRedisRepositories(
-        basePackages = "com.pj.oil.gasStation.repository.redis",
+        basePackages = "com.pj.oil.gasStation",
         redisTemplateRef = "gasStationRedisTemplate",
         enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP
 )
@@ -24,8 +23,7 @@ public class GasStationRedisConfig {
     @Value("${spring.gas-station.redis.port}")
     private int redisPort;
 
-    @Bean
-    @Qualifier("gasStationConnectionFactory")
+    @Bean(name = "gasStationConnectionFactory")
     public LettuceConnectionFactory gasStationConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
         return new LettuceConnectionFactory(config);

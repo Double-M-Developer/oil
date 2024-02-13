@@ -3,10 +3,12 @@ package com.pj.oil.batch.apiConfig;
 import com.pj.oil.batch.process.LowTop20PriceProcess;
 import com.pj.oil.gasStation.entity.maria.LowTop20Price;
 import com.pj.oil.gasStation.repository.jpa.LowTop20PriceRepository;
-import com.pj.oil.util.DateUtil;
+import com.pj.oil.gasStationApi.GasStationApiService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.annotation.JobScope;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -17,35 +19,61 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 @Configuration
 @EnableBatchProcessing(
         dataSourceRef = "gasStationDataSource",
         transactionManagerRef = "gasStationTransactionManager")
 public class LowTop20PriceBatchConfig {
 
-    private static String[] areas = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "14", "15", "16", "17", "18", "19"};
-    private static String date = DateUtil.getYesterdayDateString();
+    private static String[] areas = {"01"};
+//    private static String[] areas = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "14", "15", "16", "17", "18", "19"};
+    private static String[] prods = {"B027"};
+//    private static String[] prods = {"B027", "D047", "B034", "C004", "K015"};
 
     private final PlatformTransactionManager platformTransactionManager;
     private final LowTop20PriceRepository repository;
     private final JobRepository jobRepository;
+    private final GasStationApiService gasStationApiService;
+
     public LowTop20PriceBatchConfig(
             @Qualifier("gasStationJobRepository") JobRepository jobRepository,
             @Qualifier("gasStationTransactionManager") PlatformTransactionManager platformTransactionManager,
-            LowTop20PriceRepository repository
+            LowTop20PriceRepository repository,
+            GasStationApiService gasStationApiService
     ) {
         this.platformTransactionManager = platformTransactionManager;
         this.jobRepository = jobRepository;
         this.repository = repository;
+        this.gasStationApiService = gasStationApiService;
     }
 
     @Bean(name = "lowTop20PriceReader")
+    @JobScope
     public ItemReader<LowTop20Price> reader() {
-
         return new ItemReader<LowTop20Price>() {
+            private Iterator<LowTop20Price> dataIterator;
+            {
+                List<LowTop20Price> data = new ArrayList<>();
+                for (String area : areas) {
+                    for (String prod : prods) {
+                        List<LowTop20Price> areaLowTop20ProdPrice = gasStationApiService.getAreaLowTop20ProdPrice(prod, area);
+                        data.addAll(areaLowTop20ProdPrice);
+                    }
+                }
+                this.dataIterator = data.iterator();
+            }
+
             @Override
             public LowTop20Price read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-                return null;
+                if (dataIterator.hasNext()) {
+                    return dataIterator.next();
+                } else {
+                    return null; // 데이터의 끝에 도달했을 때 null을 반환하여 읽기 종료를 알림
+                }
             }
         };
     }
@@ -60,7 +88,7 @@ public class LowTop20PriceBatchConfig {
 
         RepositoryItemWriter<LowTop20Price> writer = new RepositoryItemWriter<>();
         writer.setRepository(repository);
-        writer.setMethodName("lowTop20PriceSave");
+        writer.setMethodName("save");
         return writer;
     }
 

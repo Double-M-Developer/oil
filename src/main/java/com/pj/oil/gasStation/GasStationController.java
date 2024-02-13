@@ -2,14 +2,10 @@ package com.pj.oil.gasStation;
 
 import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
 import com.pj.oil.gasStation.entity.maria.AverageAllPrice;
-import com.pj.oil.gasStation.entity.maria.AverageSidoPrice;
 import com.pj.oil.gasStation.entity.maria.LowTop20Price;
 import lombok.RequiredArgsConstructor;
-import com.pj.oil.gasStation.GasStationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -51,20 +47,6 @@ public class GasStationController {
             LOGGER.info("[findAverageAllPriceByTradeDate] AverageAllPrice data dose not existed");
         }
         LOGGER.info("[findAverageAllPriceByTradeDate] AverageAllPrice data dose existed, AverageAllPrice entity size: {}", entity.size());
-        return entity;
-    }
-
-    /**
-     * 현재 오피넷에 게시되고 있는 시도별 주유소 평균 가격
-     * @param areaCode
-     * @return
-     */
-    public List<AverageSidoPrice> findAverageSidoPriceByAreaCode(String areaCode) {
-        List<AverageSidoPrice> entity = gasStationService.findAverageSidoPriceByAreaCode(areaCode);
-        if (entity.isEmpty()) {
-            LOGGER.info("[findAverageSidoPriceByAreaCode] AverageSidoPrice data dose not existed");
-        }
-        LOGGER.info("[findAverageSidoPriceByAreaCode] AverageSidoPrice data dose existed, AverageSidoPrice size: {}", entity.size());
         return entity;
     }
 
