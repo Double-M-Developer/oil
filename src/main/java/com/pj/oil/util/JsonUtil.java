@@ -1,10 +1,10 @@
 package com.pj.oil.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,8 +52,26 @@ public class JsonUtil {
             CollectionType listType = TypeFactory.defaultInstance().constructCollectionType(ArrayList.class, clazz);
             return objectMapper.readValue(jsonString, listType);
         } catch (IOException e) {
-            // 예외 처리 및 로깅 추가
+            // 적절한 예외 처리 및 로깅 추가
             throw new RuntimeException("Error converting JSON string to list", e);
+        }
+    }
+
+    // JSON 문자열에서 "OIL" 배열 부분만 추출하여 변환
+    public static <T> List<T> convertOilJsonToList(String fullJsonString, Class<T> clazz) {
+        try {
+            JsonNode rootNode = objectMapper.readTree(fullJsonString);
+            JsonNode oilNodes = rootNode.path("RESULT").path("OIL");
+            if (oilNodes.isMissingNode()) {
+                // "OIL" 노드가 없는 경우, 빈 리스트 반환
+                return new ArrayList<>();
+            } else {
+                // "OIL" 배열을 문자열로 변환하여 convertJsonStringToList 메서드에 전달
+                String oilJsonString = oilNodes.toString();
+                return convertJsonStringToList(oilJsonString, clazz);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Error extracting 'OIL' array from JSON", e);
         }
     }
 }

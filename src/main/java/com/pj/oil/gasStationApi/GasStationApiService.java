@@ -1,13 +1,16 @@
 package com.pj.oil.gasStationApi;
 
+//import com.pj.oil.cache.GasStationCacheService;
 import com.pj.oil.config.PropertyConfiguration;
 import com.pj.oil.config.GasStationHttpInterface;
-import com.pj.oil.gasStationApi.dto.*;
+import com.pj.oil.gasStation.entity.maria.*;
 import com.pj.oil.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -15,7 +18,8 @@ public class GasStationApiService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final PropertyConfiguration properties;
-    private final GasStationHttpInterface service;
+    private final GasStationHttpInterface httpInterface;
+//    private final GasStationCacheService gasStationCacheService;
 
     /**
      * 공통 로직
@@ -25,7 +29,7 @@ public class GasStationApiService {
      * @param <T>
      * @return
      */
-    public <T extends ApiBaseDto> T processDto(T dto, String notExistedLogMessage) {
+    public <T extends GasStationBase> T processDto(T dto, String notExistedLogMessage) {
         if (dto == null) {
             LOGGER.info(notExistedLogMessage);
             return dto;
@@ -34,57 +38,45 @@ public class GasStationApiService {
         return dto;
     }
 
+    public <T extends GasStationBase> List<T> processDto(List<T> dto, String notExistedLogMessage) {
+        if (dto == null) {
+            LOGGER.info(notExistedLogMessage);
+            return dto;
+        }
+        LOGGER.info("data dose existed, dto size: {}", dto.size());
+        LOGGER.info("data: {}", dto.toString());
+        return dto;
+    }
+
+
+    /**
+     * 공통 로직
+     *
+     * @param dto
+     * @param notExistedLogMessage
+     * @param <T>
+     * @return
+     */
+    public <T extends GasStationBase> List<T> processDtoList(List<T> dto, String notExistedLogMessage) {
+        if (dto.isEmpty()) {
+            LOGGER.info(notExistedLogMessage);
+            return dto;
+        }
+        LOGGER.info("data dose existed, dto size: {}", dto.size());
+        return dto;
+    }
+
     /**
      * 전국 주유소 평균가격
      *
      * @return AverageAllPriceDto
      */
-    public AverageAllPriceDto getAvgAllPrice() {
+    public List<AverageAllPrice> getAvgAllPrice() {
         LOGGER.info("[getAvgAllPrice]");
-        AverageAllPriceDto dto = JsonUtil.convertJsonStringToObject(
-                service.getAvgAllPrice(
+        List<AverageAllPrice> dto = JsonUtil.convertOilJsonToList(
+                httpInterface.getAvgAllPrice(
                         properties.getApiKey()
-                ), AverageAllPriceDto.class);
-        return processDto(dto, "data does not exist");
-    }
-
-    /*
-    * 전국 주유소 최근 일주일 평균 가격
-    * */
-
-
-    /**
-     * 시도별 주유소 평균가격 - 전체 시도, 전체 제품
-     *
-     * @return AverageSidoPriceDto
-     */
-    public AverageSidoPriceDto getAvgAllSidoAllProdPrice() {
-        LOGGER.info("[getAvgAllSidoAllProdPrice]");
-        AverageSidoPriceDto dto = JsonUtil.convertJsonStringToObject(
-                service.getAvgAllSidoAllProdPrice(
-                        properties.getApiKey()
-                ), AverageSidoPriceDto.class);
-
-        return processDto(dto, "data does not exist");
-    }
-
-
-    /**
-     * 시도별 주유소 평균가격 - 특정 시도, 특정 제품
-     *
-     * @param areaCd
-     * @param prodcd
-     * @return AverageSidoPriceDto
-     */
-    public AverageSidoPriceDto getAvgSidoProdPrice(String areaCd, String prodcd) {
-        LOGGER.info("[getAvgSidoAllProdPrice]");
-        AverageSidoPriceDto dto = JsonUtil.convertJsonStringToObject(
-                service.getAvgSidoProdPrice(
-                        properties.getApiKey(),
-                        areaCd,
-                        prodcd
-                ), AverageSidoPriceDto.class);
-
+                ), AverageAllPrice.class);
         return processDto(dto, "data does not exist");
     }
 
@@ -95,19 +87,16 @@ public class GasStationApiService {
      * @param date
      * @return AreaAverageRecentPriceDto
      */
-    public AreaAverageRecentPriceDto getAreaAvgRecentNDateAllProdPrice(String areaCd, String date) {
+    public List<AreaAverageRecentPrice> getAreaAvgRecentNDateAllProdPrice(String areaCd, String date) {
         LOGGER.info("[getAreaAvgRecentNDateAllProdPrice]");
-        AreaAverageRecentPriceDto dto = JsonUtil.convertJsonStringToObject(
-                service.getAreaAvgRecentNDateAllProdPrice(
+        List<AreaAverageRecentPrice> dto = JsonUtil.convertOilJsonToList(
+                httpInterface.getAreaAvgRecentNDateAllProdPrice(
                         properties.getApiKey(),
                         areaCd,
                         date
-                ), AreaAverageRecentPriceDto.class);
-
-        return processDto(dto, "data does not exist");
+                ), AreaAverageRecentPrice.class);
+        return processDtoList(dto, "data does not exist");
     }
-
-
 
     /**
      * 특정 지역 특정 제품 최저가 주유소(TOP20)
@@ -116,31 +105,27 @@ public class GasStationApiService {
      * @param areaCd
      * @return LowTop20PriceDto
      */
-    public LowTop20PriceDto getAreaLowTop20ProdPrice(String prodcd, String areaCd) {
+    public List<LowTop20Price> getAreaLowTop20ProdPrice(String prodcd, String areaCd) {
         LOGGER.info("[getAreaLowTop20ProdPrice]");
-        LowTop20PriceDto dto = JsonUtil.convertJsonStringToObject(
-                service.getAreaLowTop20ProdPrice(
+        List<LowTop20Price> dtoList = JsonUtil.convertOilJsonToList(
+                httpInterface.getAreaLowTop20ProdPrice(
                         properties.getApiKey(),
                         prodcd,
                         areaCd
-                ), LowTop20PriceDto.class);
-
+                ), LowTop20Price.class);
+        List<LowTop20Price> dto = setProductAndAreaInfo(dtoList, prodcd, areaCd);
         return processDto(dto, "data does not exist");
     }
+    public List<LowTop20Price> setProductAndAreaInfo(List<LowTop20Price> dtoList, String prodcd, String areaCd) {
+        // Product와 Area 엔티티를 조회
 
-    /**
-     * 오피넷 데이터 관련 시/도 지역코드 조회
-     *
-     * @return AreaDto
-     */
-    public AreaDto getSido() {
-        LOGGER.info("[getSido]");
-        AreaDto dto = JsonUtil.convertJsonStringToObject(
-                service.getSido(
-                        properties.getApiKey()
-                ), AreaDto.class);
+        // 조회된 Product와 Area를 각 LowTop20Price 객체에 설정
+        for (LowTop20Price dto : dtoList) {
+            dto.setProductCode(prodcd);
+            dto.setAreaCode(areaCd);
+        }
 
-        return processDto(dto, "data does not exist");
+        return dtoList;
     }
 
 }
