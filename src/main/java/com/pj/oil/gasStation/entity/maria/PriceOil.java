@@ -20,10 +20,9 @@ public class PriceOil {
     @Id @GeneratedValue
     private Long id;
 
-
     @Schema(description = "주유쇼 id")
     @Column(name = "uni_id")
-    private String uni_id;
+    private String uniId;
 
     // 고급 휘발유
     @Schema(description = "고급 휘발유 가격")
