@@ -10,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,24 +84,10 @@ public class GasStationController {
         return avgDay;
     }
 
-
-    @GetMapping("/rank/preGasoline")
-    public ResponseEntity<List<GasStation>> getTopPreGasolineStations() {
-        return ResponseEntity.ok(gasStationRepository.findTop5ByPreGasolinePrice());
+    @GetMapping("/ranks")
+    public Map<String, List<String>> getFuelTypeRanks() {
+        return gasStationService.getTopBrandsByFuelType();
     }
 
-    @GetMapping("/rank/gasoline")
-    public ResponseEntity<List<GasStation>> getTopGasolineStations() {
-        return ResponseEntity.ok(gasStationRepository.findTop5ByGasolinePrice());
-    }
 
-    @GetMapping("/rank/diesel")
-    public ResponseEntity<List<GasStation>> getTopDieselStations() {
-        return ResponseEntity.ok(gasStationRepository.findTop5ByDieselPrice());
-    }
-
-    @GetMapping("/rank/lpg")
-    public ResponseEntity<List<GasStation>> getTopLpgStations() {
-        return ResponseEntity.ok(gasStationRepository.findTop5ByLpgPrice());
-    }
 }

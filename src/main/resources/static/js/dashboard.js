@@ -32,16 +32,11 @@ const myChart = new Chart(ctx, {
     type: 'line',
     data: {
         labels: [
-            'Sunday',
-            'Monday',
-            'Tuesday',
-            'Wednesday',
-            'Thursday',
-            'Friday',
-            'Saturday'
+
         ],
         datasets: [
             {
+                label: '고급 휘발유',
                 data: [
 
                 ],
@@ -51,6 +46,7 @@ const myChart = new Chart(ctx, {
                 borderWidth: 4, // 그래프 곡선 두께
                 pointBackgroundColor: '#007bff'
             }, {
+                label: '휘발유',
                 data: [
 
                 ],
@@ -60,6 +56,7 @@ const myChart = new Chart(ctx, {
                 borderWidth: 4, // 그래프 곡선 두께
                 pointBackgroundColor: '#ff007b'
             },{
+                label: '경유',
                 data: [
 
                 ],
@@ -69,6 +66,7 @@ const myChart = new Chart(ctx, {
                 borderWidth: 4, // 그래프 곡선 두께
                 pointBackgroundColor: 'rgba(119,255,0,0.66)'
             },{
+                label: 'lpg',
                 data: [
 
                 ],
@@ -83,7 +81,8 @@ const myChart = new Chart(ctx, {
     options: {
         plugins: {
             legend: {
-                display: false
+                display: true,
+                position : 'bottom'
             },
             tooltip: {
                 boxPadding: 3
@@ -97,44 +96,64 @@ const myChart = new Chart(ctx, {
 fetchChartData();
 
 // 예시 데이터, 실제로는 백엔드에서 가져온 데이터를 사용합니다.
-const rankData = {
-    preGasoline: ["brand1", "brand3", "brand2"],
-    gasoline: ["brand2", "brand1", "brand3"],
-    diesel: ["brand2", "brand2", "brand1"]
-};
 
-function generateRankTable(data) {
-    const table = document.createElement("table");
-    table.style.width = '100%';
-    table.setAttribute('border', '1');
-    const thead = table.createTHead();
-    const tbody = table.createTBody();
 
-    // 헤더 생성
-    const headerRow = thead.insertRow();
-    const firstHeaderCell = document.createElement("th");
-    firstHeaderCell.textContent = "종류 / 순위";
-    headerRow.appendChild(firstHeaderCell);
-    Object.keys(data).forEach(fuelType => {
-        const headerCell = document.createElement("th");
-        headerCell.textContent = fuelType;
-        headerRow.appendChild(headerCell);
-    });
+// 페이지 로드 시 차트 데이터 업데이트 및 순위 테이블 생성
+fetch('/gas-station/ranks') // 백엔드 엔드포인트 경로 수정
+    .then(response => response.json())
+    .then(rankData => {
+        console.log(rankData);
+        generateRankTable(rankData); // 순위 데이터를 사용하여 테이블 생성
+    })
+    .catch(error => console.error('Error fetching data:', error));
 
-    // 데이터 채우기
-    const rowCount = data[Object.keys(data)[0]].length; // 순위 개수
-    for (let i = 0; i < rowCount; i++) {
-        const row = tbody.insertRow();
-        const firstCell = row.insertCell();
-        firstCell.textContent = `${i + 1}위`;
-        Object.values(data).forEach(fuelRanks => {
-            const cell = row.insertCell();
-            cell.textContent = fuelRanks[i]; // 각 연료 종류별 순위에 따른 브랜드
-        });
+
+function generateRankTable(rankData) {
+    // 테이블을 추가할 부모 요소를 찾거나 지정합니다.
+    const tableContainer = document.getElementById('rankTableContainer');
+    if (!tableContainer) {
+        console.error('Table container element not found!');
+        return;
     }
 
-    document.getElementById("fuelRankTable").appendChild(table);
-}
+    // 기존에 테이블이 있으면 삭제합니다.
+    while (tableContainer.firstChild) {
+        tableContainer.removeChild(tableContainer.firstChild);
+    }
 
-// 테이블 생성 함수 호출
-generateRankTable(rankData);
+    // 새 테이블 요소를 생성합니다.
+    const table = document.createElement('table');
+    table.classList.add('rank-table'); // 스타일을 위한 클래스 추가 (옵션)
+
+    // 테이블 헤더를 생성합니다.
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    ['종류', '1위', '2위', '3위'].forEach(text => {
+        const th = document.createElement('th');
+        th.textContent = text;
+        headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // 테이블 본문을 생성합니다.
+    const tbody = document.createElement('tbody');
+    Object.keys(rankData).forEach(fuelType => {
+        const row = document.createElement('tr');
+        const fuelTypeCell = document.createElement('td');
+        fuelTypeCell.textContent = fuelType;
+        row.appendChild(fuelTypeCell);
+
+        rankData[fuelType].forEach(brand => {
+            const cell = document.createElement('td');
+            cell.textContent = brand;
+            row.appendChild(cell);
+        });
+
+        tbody.appendChild(row);
+    });
+    table.appendChild(tbody);
+
+    // 생성한 테이블을 페이지에 추가합니다.
+    tableContainer.appendChild(table);
+}
