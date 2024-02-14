@@ -3,13 +3,18 @@ package com.pj.oil.gasStation;
 import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
 import com.pj.oil.gasStation.entity.maria.AverageAllPrice;
 import com.pj.oil.gasStation.entity.maria.LowTop20Price;
-import com.pj.oil.gasStation.repository.jpa.*;
+import com.pj.oil.gasStation.repository.*;
 import org.springframework.stereotype.Service;
+
+import org.springframework.data.domain.PageRequest;
+
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.geom.Area;
+import java.awt.print.Pageable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -93,19 +98,23 @@ public class GasStationService {
                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             int index = labels.indexOf(formattedDate);
             if (index != -1) { // 해당 날짜가 labels 리스트에 존재하는 경우
-                double averagePrice = item.getPriceAverage();
+
+                Double priceAverage = item.getPriceAverage();
+                if(priceAverage ==null) {
+                    priceAverage = 0.0; // 기본값 설정
+                }
                 switch (item.getProductCode()) {
-                        case "oil1":
-                            avgPricesOil1.set(index, averagePrice);
+                        case "preGasoline":
+                            avgPricesOil1.set(index, priceAverage);
                             break;
-                        case "oil2":
-                            avgPricesOil2.set(index, averagePrice);
+                        case "gasoline":
+                            avgPricesOil2.set(index, priceAverage);
                             break;
-                        case "oil3":
-                            avgPricesOil3.set(index, averagePrice);
+                        case "diesel":
+                            avgPricesOil3.set(index, priceAverage);
                             break;
-                        case "oil4":
-                            avgPricesOil4.set(index, averagePrice);
+                        case "lpg":
+                            avgPricesOil4.set(index, priceAverage);
                             break;
                 }
             }
@@ -123,6 +132,17 @@ public class GasStationService {
         response.put("prices", prices);
 
         return response;
+    }
+
+
+    public Map<String, List<String>> getTopBrandsByFuelType() {
+        Map<String, List<String>> rankData = new HashMap<>();
+        rankData.put("고급 휘발유", gasStationRepository.findTopBrandsByPreGasolinePrice(PageRequest.of(0, 3)));
+        rankData.put("휘발유", gasStationRepository.findTopBrandsByGasolinePrice(PageRequest.of(0, 3)));
+        rankData.put("경유", gasStationRepository.findTopBrandsByDieselPrice(PageRequest.of(0, 3)));
+        rankData.put("LPG", gasStationRepository.findTopBrandsByLpgPrice(PageRequest.of(0, 3)));
+
+        return rankData;
     }
 
 
