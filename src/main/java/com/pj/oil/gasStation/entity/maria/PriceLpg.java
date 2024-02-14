@@ -21,7 +21,7 @@ public class PriceLpg {
 
     @Schema(description = "주유쇼 id")
     @Column(name = "uni_id")
-    private String uni_id;
+    private String uniId;
 
     @Schema(description = "주유쇼 id")
     @Column(name = "lpg")
