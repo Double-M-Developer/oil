@@ -13,6 +13,9 @@ import lombok.*;
 @Getter @Setter @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(indexes = {
+        @Index(name = "low_top_price",columnList = "price_current"),
+})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LowTop20Price extends GasStationBase {
 

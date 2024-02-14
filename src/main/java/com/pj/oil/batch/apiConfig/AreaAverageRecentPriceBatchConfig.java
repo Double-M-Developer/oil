@@ -1,8 +1,8 @@
 package com.pj.oil.batch.apiConfig;
 
+import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.process.AreaAverageRecentPriceProcess;
 import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
-import com.pj.oil.gasStation.entity.maria.LowTop20Price;
 import com.pj.oil.gasStation.repository.jpa.AreaAverageRecentPriceRepository;
 import com.pj.oil.gasStationApi.GasStationApiService;
 import com.pj.oil.util.DateUtil;
@@ -10,7 +10,6 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobScope;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
 @Configuration
 @EnableBatchProcessing(
         dataSourceRef = "gasStationDataSource",
@@ -39,13 +37,15 @@ public class AreaAverageRecentPriceBatchConfig {
     private final JobRepository jobRepository;
     private final GasStationApiService gasStationApiService;
     private final DateUtil dateUtil;
+    private final BeforeJobExecutionListener beforeJobExecutionListener;
 
     public AreaAverageRecentPriceBatchConfig(
             @Qualifier("gasStationJobRepository") JobRepository jobRepository,
             @Qualifier("gasStationTransactionManager") PlatformTransactionManager platformTransactionManager,
             AreaAverageRecentPriceRepository repository,
             GasStationApiService gasStationApiService,
-            DateUtil dateUtil
+            DateUtil dateUtil,
+            BeforeJobExecutionListener beforeJobExecutionListener
     ) {
         this.platformTransactionManager = platformTransactionManager;
         this.jobRepository = jobRepository;
@@ -53,6 +53,7 @@ public class AreaAverageRecentPriceBatchConfig {
         this.gasStationApiService = gasStationApiService;
         this.dateUtil = dateUtil;
         this.yesterday = dateUtil.getYesterdayDateString();
+        this.beforeJobExecutionListener = beforeJobExecutionListener;
     }
 
     @Bean(name = "areaAverageRecentPriceReader")
@@ -92,7 +93,7 @@ public class AreaAverageRecentPriceBatchConfig {
 
         RepositoryItemWriter<AreaAverageRecentPrice> writer = new RepositoryItemWriter<>();
         writer.setRepository(repository);
-        writer.setMethodName("areaAverageRecentPriceSave");
+        writer.setMethodName("save");
         return writer;
     }
 
@@ -107,7 +108,7 @@ public class AreaAverageRecentPriceBatchConfig {
                 .build();
     }
 
-    //    @Bean
+//    @Bean
 //    public TaskExecutor taskExecutor() {
 //        SimpleAsyncTaskExecutor asyncTaskExecutor = new SimpleAsyncTaskExecutor();
 //        asyncTaskExecutor.setConcurrencyLimit(10); // 비동기 작업 수 설정, -1은 동시성 제한 없는 것
@@ -117,6 +118,7 @@ public class AreaAverageRecentPriceBatchConfig {
     public Job runJob() {
         return new JobBuilder("importAreaAverageRecentPrice", jobRepository)
                 .start(importStep()) // .next 를 사용하여 다음 작업 수행할 수도 있음
+                .listener(beforeJobExecutionListener)
                 .build();
     }
 }

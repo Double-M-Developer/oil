@@ -3,14 +3,13 @@ package com.pj.oil.gasStation;
 import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
 import com.pj.oil.gasStation.entity.maria.AverageAllPrice;
 import com.pj.oil.gasStation.entity.maria.LowTop20Price;
-import com.pj.oil.gasStation.repository.*;
+import com.pj.oil.gasStation.repository.jpa.*;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.geom.Area;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;

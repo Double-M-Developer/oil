@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface LowTop20PriceRepository extends JpaRepository<LowTop20Price, Long> {
 
-    List<LowTop20Price> findLowTop20PriceByAreaAndProduct(String area, String product);
+    List<LowTop20Price> findLowTop20PriceByAreaCodeAndProductCode(String areaCode, String productCode);
 
 }

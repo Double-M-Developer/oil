@@ -1,0 +1,50 @@
+package com.pj.oil.batch;
+
+import com.pj.oil.gasStation.repository.jpa.*;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobExecutionListener;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class BeforeJobExecutionListener implements JobExecutionListener {
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private final LowTop20PriceRepository lowTop20PriceRepository;
+    private final AreaAverageRecentPriceRepository areaAverageRecentPriceRepository;
+    private final AverageAllPriceRepository averageAllPriceRepository;
+    private final PriceOilRepository priceOilRepository;
+    private final PriceLpgRepository priceLpgRepository;
+
+    @Override
+    public void beforeJob(JobExecution jobExecution) {
+        String jobName = jobExecution.getJobInstance().getJobName();
+        switch (jobName) {
+            case "importPriceLpg":
+                priceLpgRepository.deleteAll();
+                LOGGER.info("Deleted all data from PriceLpgRepository before starting the job: {}", jobName);
+                break;
+            case "importPriceOil":
+                priceOilRepository.deleteAll();
+                LOGGER.info("Deleted all data from PriceOilRepository before starting the job: {}", jobName);
+                break;
+            case "importLowTop20Price":
+                lowTop20PriceRepository.deleteAll();
+                LOGGER.info("Deleted all data from LowTop20PriceRepository before starting the job: {}", jobName);
+                break;
+            case "importAverageAllPrice":
+                averageAllPriceRepository.deleteAll();
+                LOGGER.info("Deleted all data from AverageAllPriceRepository before starting the job: {}", jobName);
+                break;
+            case "importAreaAverageRecentPrice":
+                areaAverageRecentPriceRepository.deleteAll();
+                LOGGER.info("Deleted all data from AreaAverageRecentPriceRepository before starting the job: {}", jobName);
+                break;
+            default:
+                LOGGER.warn("No specific pre-processing required for this job: {}", jobName);
+                break;
+        }
+    }
+}

@@ -1,4 +1,4 @@
-package com.pj.oil.gasStation.repository;
+package com.pj.oil.gasStation.repository.jpa;
 
 import com.pj.oil.gasStation.entity.maria.PriceOil;
 import org.springframework.data.jpa.repository.JpaRepository;

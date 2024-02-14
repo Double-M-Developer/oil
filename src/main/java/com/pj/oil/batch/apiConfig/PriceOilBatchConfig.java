@@ -1,8 +1,10 @@
 package com.pj.oil.batch.apiConfig;
 
-import com.pj.oil.batch.process.GasStationOILProcess;
-import com.pj.oil.gasStation.entity.GasStation;
-import com.pj.oil.gasStation.repository.GasStationRepository;
+import com.pj.oil.batch.BeforeJobExecutionListener;
+import com.pj.oil.batch.CustomSkipPolicy;
+import com.pj.oil.batch.process.PriceOilProcess;
+import com.pj.oil.gasStation.entity.maria.PriceOil;
+import com.pj.oil.gasStation.repository.jpa.PriceOilRepository;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -30,53 +32,58 @@ import org.springframework.transaction.PlatformTransactionManager;
 @EnableBatchProcessing(
         dataSourceRef = "gasStationDataSource",
         transactionManagerRef = "gasStationTransactionManager")
-public class OILPriceBatchConfig {
+public class PriceOilBatchConfig {
 
     private final PlatformTransactionManager platformTransactionManager;
-    private final GasStationRepository repository;
+    private final PriceOilRepository repository;
     private final JobRepository jobRepository;
     private final DateUtil dateUtil;
     private final String READER_PATH;
+    private final BeforeJobExecutionListener beforeJobExecutionListener;
 
-    public OILPriceBatchConfig(@Qualifier("gasStationTransactionManager") PlatformTransactionManager platformTransactionManager,
+    public PriceOilBatchConfig(@Qualifier("gasStationTransactionManager") PlatformTransactionManager platformTransactionManager,
                                @Qualifier("gasStationJobRepository") JobRepository jobRepository,
-                               GasStationRepository repository,
-                               DateUtil dateUtil
+                               PriceOilRepository repository,
+                               DateUtil dateUtil,
+                               BeforeJobExecutionListener beforeJobExecutionListener
     ) {
         this.platformTransactionManager = platformTransactionManager;
         this.jobRepository = jobRepository;
         this.repository = repository;
         this.dateUtil = dateUtil;
         this.READER_PATH = "src/main/resources/csv/" + dateUtil.getTodayDateString() + "/" + dateUtil.getTodayDateString() + "-";
+        this.beforeJobExecutionListener = beforeJobExecutionListener;
     }
 
-    @Bean(name = "oilPriceReader")
-    @JobScope
-    public ItemReader<GasStation> reader() {
-        FlatFileItemReader<GasStation> itemReader = new FlatFileItemReader<>();
+    @Bean(name = "priceOilReader")
+    @StepScope
+    public FlatFileItemReader<PriceOil> reader() {
+        FlatFileItemReader<PriceOil> itemReader = new FlatFileItemReader<>();
         String path = READER_PATH + "current-price-oil.csv";
         itemReader.setResource(new FileSystemResource(path)); // api 나 파일로부터 작업을 처리하도록 할 수 있음
         itemReader.setName("csvReader"); // itemReader 이름 설정
+        itemReader.setEncoding("UTF-8");
         itemReader.setLinesToSkip(1); // 건너뛸 줄 설정
         itemReader.setLineMapper(lineMapper());
         return itemReader;
     }
 
-    @Bean(name = "oilPriceProcess")
-    public GasStationOILProcess processor() {
-        return new GasStationOILProcess();
+    @Bean(name = "priceOilProcess")
+    public PriceOilProcess processor() {
+        return new PriceOilProcess();
     }
 
 
-    private LineMapper<GasStation> lineMapper() {
-        DefaultLineMapper<GasStation> lineMapper = new DefaultLineMapper<>();
+    private LineMapper<PriceOil> lineMapper() {
+        DefaultLineMapper<PriceOil> lineMapper = new DefaultLineMapper<>();
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
         lineTokenizer.setDelimiter(","); // 데이터 쉼표로 구분
         lineTokenizer.setStrict(false);
-        lineTokenizer.setNames("id", "content"); // 요소의 열을 구분
+        lineTokenizer.setIncludedFields(0, 6, 7, 8); // csv 에서 특정 열을 선택
+        lineTokenizer.setNames("uniId", "preGasoline", "gasoline", "diesel"); // 요소의 열을 구분
 //        고유번호,지역,상호,주소,상표,셀프여부,고급휘발유,휘발유,경유,실내등유
-        BeanWrapperFieldSetMapper<GasStation> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
-        fieldSetMapper.setTargetType(GasStation.class); // 파일을 객체로 변환할 수 있도록 도와주는 객체
+        BeanWrapperFieldSetMapper<PriceOil> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+        fieldSetMapper.setTargetType(PriceOil.class); // 파일을 객체로 변환할 수 있도록 도와주는 객체
 
         lineMapper.setLineTokenizer(lineTokenizer);
         lineMapper.setFieldSetMapper(fieldSetMapper);
@@ -84,35 +91,38 @@ public class OILPriceBatchConfig {
         return lineMapper;
     }
 
-    @Bean(name = "oilPriceWriter")
-    public ItemWriter<GasStation> writer() {
-        RepositoryItemWriter<GasStation> writer = new RepositoryItemWriter<>();
+    @Bean(name = "priceOilWriter")
+    public ItemWriter<PriceOil> writer() {
+        RepositoryItemWriter<PriceOil> writer = new RepositoryItemWriter<>();
         writer.setRepository(repository);
         writer.setMethodName("save");
         return writer;
     }
 
-    @Bean(name = "oilPriceImportStep")
+    @Bean(name = "priceOilImportStep")
     public Step importStep() {
-        return new StepBuilder("oilPriceCsvImport", jobRepository)
-                .<GasStation, GasStation>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
+        return new StepBuilder("priceOilCsvImport", jobRepository)
+                .<PriceOil, PriceOil>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())
+                .faultTolerant()
+                .skipPolicy(new CustomSkipPolicy())
 //                .taskExecutor(taskExecutor())
                 .build();
     }
 
-    //    @Bean
+//    @Bean
 //    public TaskExecutor taskExecutor() {
 //        SimpleAsyncTaskExecutor asyncTaskExecutor = new SimpleAsyncTaskExecutor();
 //        asyncTaskExecutor.setConcurrencyLimit(10); // 비동기 작업 수 설정, -1은 동시성 제한 없는 것
 //        return asyncTaskExecutor;
 //    }
-    @Bean(name = "oilPriceJob")
+    @Bean(name = "priceOilJob")
     public Job runJob() {
-        return new JobBuilder("importOilPrice", jobRepository)
+        return new JobBuilder("importPriceOil", jobRepository)
                 .start(importStep()) // .next 를 사용하여 다음 작업 수행할 수도 있음
+                .listener(beforeJobExecutionListener)
                 .build();
     }
 }

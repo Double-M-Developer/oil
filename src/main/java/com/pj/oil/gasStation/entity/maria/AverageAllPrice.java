@@ -13,6 +13,9 @@ import lombok.*;
 @Getter @Setter @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(indexes = {
+        @Index(name = "avg_all_price_td",columnList = "trade_date"),
+})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AverageAllPrice extends GasStationBase {
 
@@ -31,14 +34,14 @@ public class AverageAllPrice extends GasStationBase {
     @Schema(description = "평균가격")
     @Column(name = "price_average")
     @JsonProperty("PRICE")
-    private String priceAverage;
+    private double priceAverage;
     @Schema(description = "전일대비 등락값")
     @Column(name = "price_change")
     @JsonProperty("DIFF")
-    private String priceChange;
+    private double priceChange;
 
     @Builder
-    public AverageAllPrice(Long id, String tradeDate, String productCode, String priceAverage, String priceChange) {
+    public AverageAllPrice(Long id, String tradeDate, String productCode, double priceAverage, double priceChange) {
         this.id = id;
         this.tradeDate = tradeDate;
         this.productCode = productCode;
