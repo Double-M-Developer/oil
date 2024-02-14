@@ -4,7 +4,7 @@ import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
 import com.pj.oil.gasStation.entity.maria.AverageAllPrice;
 import com.pj.oil.gasStation.entity.maria.GasStation;
 import com.pj.oil.gasStation.entity.maria.LowTop20Price;
-import com.pj.oil.gasStation.repository.GasStationRepository;
+import com.pj.oil.gasStation.repository.jpa.GasStationRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

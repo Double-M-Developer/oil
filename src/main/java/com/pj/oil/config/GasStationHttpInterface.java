@@ -42,8 +42,8 @@ public interface GasStationHttpInterface { //HttpServiceProxyFactory
      * http://www.opinet.co.kr/api/areaAvgRecentPrice.do?out=json&code={apiKey}&area={areaCd}&date={date}
      *
      * @param apiKey
-     * @param areaCd
-     * @param date
+     * @param areaCd nn
+     * @param date yyyyMMdd
      * @return AreaAverageRecentPriceDto
      */
     @GetExchange("areaAvgRecentPrice.do?out=json&code={apiKey}&area={areaCd}&date={date}")

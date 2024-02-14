@@ -13,6 +13,9 @@ import lombok.*;
 @Getter @Setter @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(indexes = {
+        @Index(name = "area_avg_rec_price_bd",columnList = "base_date"),
+})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AreaAverageRecentPrice extends GasStationBase {
 

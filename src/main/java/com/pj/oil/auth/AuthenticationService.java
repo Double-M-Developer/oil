@@ -3,7 +3,7 @@ package com.pj.oil.auth;
 import com.pj.oil.memberPost.member.Member;
 import com.pj.oil.memberPost.member.MemberRepository;
 import com.pj.oil.memberPost.member.Role;
-import com.pj.oil.memberPost.token.TokenService;
+import com.pj.oil.memberPost.token.*;
 import com.pj.oil.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +29,8 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+    private final AccessTokenRepository accessTokenRepository;
+    private final RefreshTokenRedisService refreshTokenRedisService;
     private final TokenService tokenService;
 
     /**
@@ -86,8 +88,6 @@ public class AuthenticationService {
                 .refreshToken(refreshToken)
                 .build(); // 생성된 토큰으로 AuthenticationResponse 반환
     }
-
-
 
     private static void sendErrorResponse(HttpServletResponse response, int statusCode, String message) throws IOException {
         response.setStatus(statusCode);
