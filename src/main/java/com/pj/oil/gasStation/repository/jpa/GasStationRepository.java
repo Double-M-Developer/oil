@@ -1,6 +1,7 @@
-package com.pj.oil.gasStation.repository;
+package com.pj.oil.gasStation.repository.jpa;
 
 import com.pj.oil.gasStation.entity.maria.GasStation;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

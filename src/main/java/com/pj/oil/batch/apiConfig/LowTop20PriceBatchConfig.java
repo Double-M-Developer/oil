@@ -29,10 +29,8 @@ import java.util.List;
         transactionManagerRef = "gasStationTransactionManager")
 public class LowTop20PriceBatchConfig {
 
-    private static String[] areas = {"01"};
-//    private static String[] areas = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "14", "15", "16", "17", "18", "19"};
-    private static String[] prods = {"B027"};
-//    private static String[] prods = {"B027", "D047", "B034", "C004", "K015"};
+    private static String[] areas = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "14", "15", "16", "17", "18", "19"};
+    private static String[] prods = {"B027", "D047", "B034", "C004", "K015"};
 
     private final PlatformTransactionManager platformTransactionManager;
     private final LowTop20PriceRepository repository;

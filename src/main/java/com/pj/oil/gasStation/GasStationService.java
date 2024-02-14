@@ -3,7 +3,7 @@ package com.pj.oil.gasStation;
 import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
 import com.pj.oil.gasStation.entity.maria.AverageAllPrice;
 import com.pj.oil.gasStation.entity.maria.LowTop20Price;
-import com.pj.oil.gasStation.repository.*;
+import com.pj.oil.gasStation.repository.jpa.*;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.PageRequest;
