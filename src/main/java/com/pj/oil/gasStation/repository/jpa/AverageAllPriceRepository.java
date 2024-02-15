@@ -13,4 +13,6 @@ import java.util.List;
 public interface AverageAllPriceRepository extends JpaRepository<AverageAllPrice, Long> {
 
     List<AverageAllPrice> findByTradeDate(String tradeDate);
+
+    void deleteByTradeDate(String tradeDate);
 }
