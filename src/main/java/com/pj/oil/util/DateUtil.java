@@ -34,4 +34,31 @@ public class DateUtil {
         // 날짜를 지정된 형식의 문자열로 변환
         return yesterday.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
     }
+
+    /**
+     * 어제 날짜부터 과거로 8일전의 날짜를 yyyyMMdd 형식의 문자열 배열로 반환합니다.
+     * @return 8일전의 날짜를 담은 문자열 배열
+     */
+    public String getEightDaysBeforeDateString() {
+        LocalDate sevenDaysBefore = LocalDate.now().minusDays(8);
+        return sevenDaysBefore.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
+    }
+
+    /**
+     * 어제 날짜부터 과거로 7일간의 날짜를 yyyyMMdd 형식의 문자열 배열로 반환합니다.
+     * @return 어제 날짜부터 과거로 7일간의 날짜를 담은 문자열 배열
+     */
+    public String[] getLastSevenDays() {
+        String[] lastSevenDays = new String[7];
+        LocalDate startDay = LocalDate.now().minusDays(1);
+
+        for (int i = 0; i < 7; i++) {
+            // startDay에서 i일을 뺀 날짜를 계산
+            LocalDate date = startDay.minusDays(i);
+            // 계산된 날짜를 지정된 형식으로 변환하여 배열에 저장
+            lastSevenDays[i] = date.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
+        }
+
+        return lastSevenDays;
+    }
 }

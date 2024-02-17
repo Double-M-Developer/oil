@@ -28,6 +28,7 @@ public class TestController {
     private final Job priceLpgJob;
     //
     private final Job areaAverageRecentPriceJob;
+    private final Job averageRecentPriceJob;
     private final Job averageAllPriceJob;
     private final Job lowTop20PriceJob;
 
@@ -43,6 +44,7 @@ public class TestController {
             @Qualifier("lpgJob") Job lpgJob,
             @Qualifier("priceLpgJob") Job priceLpgJob,
             //
+            @Qualifier("averageRecentPriceJob") Job averageRecentPriceJob,
             @Qualifier("areaAverageRecentPriceJob") Job areaAverageRecentPriceJob,
             @Qualifier("averageAllPriceJob") Job averageAllPriceJob,
             @Qualifier("lowTop20PriceJob") Job lowTop20PriceJob
@@ -55,6 +57,7 @@ public class TestController {
         this.priceOilJob = priceOilJob;
         this.lpgJob = lpgJob;
         this.priceLpgJob = priceLpgJob;
+        this.averageRecentPriceJob = averageRecentPriceJob;
         this.areaAverageRecentPriceJob = areaAverageRecentPriceJob;
         this.averageAllPriceJob = averageAllPriceJob;
         this.lowTop20PriceJob = lowTop20PriceJob;
@@ -175,6 +178,27 @@ public class TestController {
             return "배치 작업 실행 중 오류가 발생했습니다: " + e.getMessage();
         }
     }
+
+    @GetMapping("/test/averageRecentPriceJob")
+    public String testAverageRecentPriceJob() {
+        LOGGER.info("testAverageRecentPriceJob 실행 중...");
+        try {
+            // JobParameters를 생성하여 배치 작업 실행에 필요한 파라미터를 설정할 수 있습니다.
+            // 예제에서는 현재 시간을 기준으로 고유한 JobParameters를 생성합니다.
+            JobParameters jobParameters = new JobParametersBuilder()
+                    .addLong("time", System.currentTimeMillis())
+                    .toJobParameters();
+
+            // JobLauncher를 사용하여 배치 작업을 실행합니다.
+            JobExecution jobExecution = jobLauncher.run(averageRecentPriceJob, jobParameters);
+
+            // 실행 결과를 반환합니다.
+            return String.format("Job ID: %d, 실행 상태: %s", jobExecution.getId(), jobExecution.getStatus());
+        } catch (Exception e) {
+            return "배치 작업 실행 중 오류가 발생했습니다: " + e.getMessage();
+        }
+    }
+
     @GetMapping("/test/areaAverageRecentPriceJob")
     public String testAreaAverageRecentPriceJob() {
         LOGGER.info("testAreaAverageRecentPriceJob 실행 중...");

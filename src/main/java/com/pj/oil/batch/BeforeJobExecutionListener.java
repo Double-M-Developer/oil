@@ -15,6 +15,7 @@ public class BeforeJobExecutionListener implements JobExecutionListener {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final LowTop20PriceRepository lowTop20PriceRepository;
     private final AreaAverageRecentPriceRepository areaAverageRecentPriceRepository;
+    private final AverageRecentPriceRepository averageRecentPriceRepository;
     private final AverageAllPriceRepository averageAllPriceRepository;
     private final PriceOilRepository priceOilRepository;
     private final PriceLpgRepository priceLpgRepository;
@@ -39,6 +40,10 @@ public class BeforeJobExecutionListener implements JobExecutionListener {
             case "importAverageAllPrice":
                 averageAllPriceRepository.deleteByTradeDate(dateUtil.getYesterdayDateString());
                 LOGGER.info("Deleted all data from AverageAllPriceRepository before starting the job: {}", jobName);
+                break;
+            case "importAverageRecentPrice":
+                averageRecentPriceRepository.deleteByDate(dateUtil.getYesterdayDateString());
+                LOGGER.info("Deleted all data from AverageRecentPriceRepository before starting the job: {}", jobName);
                 break;
             case "importAreaAverageRecentPrice":
                 areaAverageRecentPriceRepository.deleteByBaseDate(dateUtil.getTodayDateString());

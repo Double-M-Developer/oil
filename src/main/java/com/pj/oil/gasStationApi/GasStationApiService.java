@@ -34,7 +34,7 @@ public class GasStationApiService {
             LOGGER.info(notExistedLogMessage);
             return dto;
         }
-        LOGGER.info("data dose existed, dto: {}", dto);
+        LOGGER.info("data dose exist, dto: {}", dto);
         return dto;
     }
 
@@ -43,7 +43,7 @@ public class GasStationApiService {
             LOGGER.info(notExistedLogMessage);
             return dto;
         }
-        LOGGER.info("data dose existed, dto size: {}", dto.size());
+        LOGGER.info("data dose exist, dto size: {}", dto.size());
         LOGGER.info("data: {}", dto.toString());
         return dto;
     }
@@ -62,12 +62,12 @@ public class GasStationApiService {
             LOGGER.info(notExistedLogMessage);
             return dto;
         }
-        LOGGER.info("data dose existed, dto size: {}", dto.size());
+        LOGGER.info("data dose exist, dto size: {}", dto.size());
         return dto;
     }
 
     /**
-     * 전국 주유소 평균가격
+     * 현재 전국 주유소 평균가격
      *
      * @return AverageAllPriceDto
      */
@@ -79,6 +79,23 @@ public class GasStationApiService {
                 ), AverageAllPrice.class);
         return processDto(dto, "data does not exist");
     }
+
+    /**
+     * 전날부터 최대 7일 전국 일일 평균가격
+     *
+     * @param date
+     * @return AverageRecentPriceDto
+     */
+    public List<AverageRecentPrice> getAvgRecentNDateAllProdPrice(String date) {
+        LOGGER.info("[getAvgRecentNDateAllProdPrice]");
+        List<AverageRecentPrice> dto = JsonUtil.convertOilJsonToList(
+                httpInterface.getAvgRecentNDateAllProdPrice(
+                        properties.getApiKey(),
+                        date
+                ), AverageRecentPrice.class);
+        return processDtoList(dto, "data does not exist");
+    }
+    //getAvgRecentNDateAllProdPrice
 
     /**
      * 최근 date일간 전국 일일 지역별 모든 제품 평균가격

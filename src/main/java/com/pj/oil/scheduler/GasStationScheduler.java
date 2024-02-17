@@ -28,6 +28,7 @@ public class GasStationScheduler {
     private final Job lpgJob;
     private final Job priceLpgJob;
     //
+    private final Job averageRecentPriceJob;
     private final Job areaAverageRecentPriceJob;
     private final Job averageAllPriceJob;
     private final Job lowTop20PriceJob;
@@ -43,6 +44,7 @@ public class GasStationScheduler {
             @Qualifier("lpgJob") Job lpgJob,
             @Qualifier("priceLpgJob") Job priceLpgJob,
             //
+            @Qualifier("averageRecentPriceJob") Job averageRecentPriceJob,
             @Qualifier("areaAverageRecentPriceJob") Job areaAverageRecentPriceJob,
             @Qualifier("averageAllPriceJob") Job averageAllPriceJob,
             @Qualifier("lowTop20PriceJob") Job lowTop20PriceJob
@@ -55,6 +57,7 @@ public class GasStationScheduler {
         this.priceOilJob = priceOilJob;
         this.lpgJob = lpgJob;
         this.priceLpgJob = priceLpgJob;
+        this.averageRecentPriceJob = averageRecentPriceJob;
         this.areaAverageRecentPriceJob = areaAverageRecentPriceJob;
         this.averageAllPriceJob = averageAllPriceJob;
         this.lowTop20PriceJob = lowTop20PriceJob;
@@ -163,6 +166,19 @@ public class GasStationScheduler {
     }
 
     @Scheduled(cron = "0 27 1 * * ?")
+    public void saveAverageRecentPrice() {
+        LOGGER.info("saveAverageRecentPrice 실행 중...");
+        try {
+            JobParameters jobParameters = new JobParametersBuilder()
+                    .addLong("time", System.currentTimeMillis())
+                    .toJobParameters();
+            JobExecution jobExecution = jobLauncher.run(averageRecentPriceJob, jobParameters);
+            LOGGER.info("Job ID: {} 상태: {}", jobExecution.getId(), jobExecution.getStatus());
+        } catch (Exception e) {
+            LOGGER.error("작업 실행 중 오류가 발생했습니다", e);
+        }
+    }
+    @Scheduled(cron = "0 28 1 * * ?")
     public void saveAreaAverageRecentPrice() {
         LOGGER.info("saveAreaAverageRecentPrice 실행 중...");
         try {

@@ -1,13 +1,11 @@
 package com.pj.oil.gasStation;
 
-import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
-import com.pj.oil.gasStation.entity.maria.AverageAllPrice;
-import com.pj.oil.gasStation.entity.maria.GasStation;
-import com.pj.oil.gasStation.entity.maria.LowTop20Price;
+import com.pj.oil.gasStation.entity.maria.*;
 import com.pj.oil.gasStation.repository.jpa.GasStationRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,16 +18,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/gas-station")
 public class GasStationController {
-//
-//    private final JobLauncher jobLauncher;
-//    private final Job job;
 
-    private final GasStationRepository gasStationRepository;
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-
     private final GasStationService gasStationService;
-
-//    private final JobLocator jobLocator;
 
     /**
      * 일 평균가격 확정 수치이며, 전일부터 7일간의 전국 일일 지역별 평균가격
@@ -41,9 +32,24 @@ public class GasStationController {
         LOGGER.info("[findAreaAverageRecentPriceByBaseDate]GET \"/api/v1/gas-station//area-average-recent-price\", parameters={}", baseDate);
         List<AreaAverageRecentPrice> entity = gasStationService.findAreaAverageRecentPriceByBaseDate(baseDate);
         if (entity.isEmpty()) {
-            LOGGER.info("[findAreaAverageRecentPriceByBaseDate] AreaAverageRecentPrice data dose not existed");
+            LOGGER.info("[findAreaAverageRecentPriceByBaseDate] AreaAverageRecentPrice data dose not exist");
         }
-        LOGGER.info("[findAreaAverageRecentPriceByBaseDate] AreaAverageRecentPrice data dose existed, AreaAverageRecentPrice size: {}", entity.size());
+        LOGGER.info("[findAreaAverageRecentPriceByBaseDate] AreaAverageRecentPrice data dose exist, AreaAverageRecentPrice size: {}", entity.size());
+        return entity;
+    }
+
+    /**
+     * 전날부터 최대 7일 전국 일일 평균가격
+     * @return
+     */
+    @GetMapping("/average-recent-price")
+    public Map<String, Object> findAverageRecentPrice7Day() {
+        LOGGER.info("[findAverageRecentPrice7Day]GET \"/api/v1/gas-station//average-recent-price\"");
+        Map<String, Object> entity = gasStationService.findAverageRecentPrice7Day();
+        if (entity.isEmpty()) {
+            LOGGER.info("[findAverageRecentPrice7Day] AverageRecentPrice data dose not exist");
+        }
+        LOGGER.info("[findAverageRecentPrice7Day] AverageRecentPrice data dose exist, AverageRecentPrice size: {}", entity.size());
         return entity;
     }
 
@@ -56,38 +62,41 @@ public class GasStationController {
     public List<AverageAllPrice> findAverageAllPriceByTradeDate(String tradeDate) {
         List<AverageAllPrice> entity = gasStationService.findAverageAllPriceByTradeDate(tradeDate);
         if (entity.isEmpty()) {
-            LOGGER.info("[findAverageAllPriceByTradeDate] AverageAllPrice data dose not existed");
+            LOGGER.info("[findAverageAllPriceByTradeDate] AverageAllPrice data dose not exist");
         }
-        LOGGER.info("[findAverageAllPriceByTradeDate] AverageAllPrice data dose existed, AverageAllPrice entity size: {}", entity.size());
+        LOGGER.info("[findAverageAllPriceByTradeDate] AverageAllPrice data dose exist, AverageAllPrice entity size: {}", entity.size());
         return entity;
     }
-
-
 
     /**
      * 전국 또는 지역별 최저가 주유소 TOP20
      * @param
      * @return
      */
-    public List<LowTop20Price> findLowTop20PriceByAreaCodeAndProductCode(String areaCode, String productCode) {
+    @GetMapping("/low-top20")
+    public List<LowTop20Price> findLowTop20PriceByAreaCodeAndProductCode(
+            @RequestParam("areaCode") String areaCode,
+            @RequestParam("productCode") String productCode
+    ) {
         List<LowTop20Price> entity = gasStationService.findLowTop20PriceByAreaCodeAndProductCode(areaCode, productCode);
         if (entity.isEmpty()) {
-            LOGGER.info("[findLowTop20PriceByAreaCodeAndProductCode] LowTop20Price data dose not existed");
+            LOGGER.info("[findLowTop20PriceByAreaCodeAndProductCode] LowTop20Price data dose not exist");
         }
-        LOGGER.info("[findLowTop20PriceByAreaCodeAndProductCode] LowTop20Price data dose existed, LowTop20Price size: {}", entity.size());
+        LOGGER.info("[findLowTop20PriceByAreaCodeAndProductCode] LowTop20Price data dose exist, LowTop20Price size: {}", entity.size());
         return entity;
     }
 
     @GetMapping("/avg")
     public Map<String, Object> avgDay(){
+        LOGGER.info("[avgDay]");
         Map<String, Object> avgDay = gasStationService.avgDay();
         return avgDay;
     }
 
     @GetMapping("/ranks")
     public Map<String, List<String>> getFuelTypeRanks() {
+        LOGGER.info("[getFuelTypeRanks]");
         return gasStationService.getTopBrandsByFuelType();
     }
-
 
 }
