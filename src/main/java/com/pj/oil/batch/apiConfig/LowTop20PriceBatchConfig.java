@@ -55,7 +55,7 @@ public class LowTop20PriceBatchConfig {
     @JobScope
     public ItemReader<LowTop20Price> reader() {
         return new ItemReader<LowTop20Price>() {
-            private Iterator<LowTop20Price> dataIterator;
+            private final Iterator<LowTop20Price> dataIterator;
             {
                 List<LowTop20Price> data = new ArrayList<>();
                 for (String area : areas) {

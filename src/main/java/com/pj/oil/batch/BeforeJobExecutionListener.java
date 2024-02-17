@@ -1,6 +1,7 @@
 package com.pj.oil.batch;
 
 import com.pj.oil.gasStation.repository.jpa.*;
+import com.pj.oil.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +15,11 @@ public class BeforeJobExecutionListener implements JobExecutionListener {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final LowTop20PriceRepository lowTop20PriceRepository;
     private final AreaAverageRecentPriceRepository areaAverageRecentPriceRepository;
+    private final AverageRecentPriceRepository averageRecentPriceRepository;
     private final AverageAllPriceRepository averageAllPriceRepository;
     private final PriceOilRepository priceOilRepository;
     private final PriceLpgRepository priceLpgRepository;
+    private final DateUtil dateUtil;
 
     @Override
     public void beforeJob(JobExecution jobExecution) {
@@ -35,11 +38,15 @@ public class BeforeJobExecutionListener implements JobExecutionListener {
                 LOGGER.info("Deleted all data from LowTop20PriceRepository before starting the job: {}", jobName);
                 break;
             case "importAverageAllPrice":
-                averageAllPriceRepository.deleteAll();
+                averageAllPriceRepository.deleteByTradeDate(dateUtil.getYesterdayDateString());
                 LOGGER.info("Deleted all data from AverageAllPriceRepository before starting the job: {}", jobName);
                 break;
+            case "importAverageRecentPrice":
+                averageRecentPriceRepository.deleteByDate(dateUtil.getYesterdayDateString());
+                LOGGER.info("Deleted all data from AverageRecentPriceRepository before starting the job: {}", jobName);
+                break;
             case "importAreaAverageRecentPrice":
-                areaAverageRecentPriceRepository.deleteAll();
+                areaAverageRecentPriceRepository.deleteByBaseDate(dateUtil.getTodayDateString());
                 LOGGER.info("Deleted all data from AreaAverageRecentPriceRepository before starting the job: {}", jobName);
                 break;
             default:

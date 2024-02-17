@@ -38,6 +38,18 @@ public interface GasStationHttpInterface { //HttpServiceProxyFactory
     String getAvgSidoProdPrice(@PathVariable String apiKey, @PathVariable String areaCd, @PathVariable String prodcd);
 
     /**
+     * 전날부터 최대 7일 전국 일일 평균가격
+     * http://www.opinet.co.kr/api/areaAvgRecentPrice.do?out=json&code={apiKey}&date={date}
+     *
+     * @param apiKey
+     * @param date yyyyMMdd
+     * @return AreaAverageRecentPriceDto
+     */
+    @GetExchange("avgRecentPrice.do?out=json&code={apiKey}&date={date}")
+    String getAvgRecentNDateAllProdPrice(@PathVariable String apiKey, @PathVariable String date);
+
+
+    /**
      * 최근 date일간 전국 일일 지역별 모든 제품 평균가격
      * http://www.opinet.co.kr/api/areaAvgRecentPrice.do?out=json&code={apiKey}&area={areaCd}&date={date}
      *

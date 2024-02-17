@@ -51,7 +51,7 @@ public class AverageAllPriceBatchConfig {
     @JobScope
     public ItemReader<AverageAllPrice> reader() {
         return new ItemReader<AverageAllPrice>() {
-            private Iterator<AverageAllPrice> dataIterator = gasStationApiService.getAvgAllPrice().iterator();
+            private final Iterator<AverageAllPrice> dataIterator = gasStationApiService.getAvgAllPrice().iterator();
             @Override
             public AverageAllPrice read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
                 if (dataIterator.hasNext()) {

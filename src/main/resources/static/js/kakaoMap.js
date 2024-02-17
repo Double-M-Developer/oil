@@ -1,61 +1,88 @@
-var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
-var options = { //지도를 생성할 때 필요한 기본 옵션
-    center: new kakao.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
-    level: 6 //지도의 레벨(확대, 축소 정도)
-};
+var mapContainer = document.getElementById('map'),
+    mapOption = {
+        center: new kakao.maps.LatLng(33.450701, 126.570667),
+        level: 9
+    };
 
-var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
-// 마커를 표시할 위치와 내용을 가지고 있는 객체 배열입니다
-// 서버에서 전송된 positions 배열을 사용하여 마커 추가
-positions.forEach(function(price) {
-    var markerPosition = new kakao.maps.LatLng(price.gisYCoor, price.gisXCoor);
+var map = new kakao.maps.Map(mapContainer, mapOption);
+
+function updateData() {
+    var areaCode = document.getElementById('areaCode').value;
+    var productCode = document.getElementById('productCode').value;
+    fetchLowTop20PriceData(areaCode, productCode);
+}
+
+function fetchLowTop20PriceData(areaCode, productCode) {
+    areaCode = areaCode || '서울';
+    productCode = productCode || '휘발유';
+
+    fetch(`gas-station/low-top20?areaCode=${areaCode}&productCode=${productCode}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length > 0) {
+                var firstStation = data[0];
+                var center = new kakao.maps.LatLng(firstStation.GIS_Y_COOR, firstStation.GIS_X_COOR);
+                map.setCenter(center);
+                clearOverlays(); // 기존 오버레이를 지우고 새로운 오버레이를 추가합니다.
+                data.forEach((station, index) => {
+                    addMarkerAndCustomOverlay(station, index);
+                });
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+var infowindows = []; // 인포윈도우 저장 배열 초기화
+
+function addMarkerAndCustomOverlay(station, index) {
+    var position = new kakao.maps.LatLng(station.GIS_Y_COOR, station.GIS_X_COOR);
     var marker = new kakao.maps.Marker({
-        position: markerPosition,
-        map: map
+        map: map,
+        position: position
     });
 
-    var infowindow = new kakao.maps.InfoWindow({
-        content: '<div style="padding:5px;">' + price.osNm + '</div>'
+    var content = `
+        <div class="custom-overlay">
+    <div style="position: relative; background-color: #FFF; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); overflow: hidden; font-family: 'Roboto', sans-serif;">
+        <strong style="display: block; padding: 10px 15px; background-color: #007bff; color: #FFF; font-size: 14px; border-bottom: 1px solid #eee;">${index + 1}. ${station.OS_NM}</strong>
+        <span style="display: block; padding: 5px 15px; color: #333; font-size: 12px;">가격: ${station.PRICE}원</span>
+        <button style="display: inline-block; margin: 5px 15px; padding: 3px 8px; background-color: #007bff; border: none; border-radius: 4px; color: #fff; cursor: pointer; font-size: 12px;" onclick="closeOverlay(${index})">닫기</button>
+    </div>
+        </div>
+    `;
+
+    var overlay = new kakao.maps.CustomOverlay({
+        content: content,
+        position: marker.getPosition(),
+        yAnchor: 1
     });
 
-    kakao.maps.event.addListener(marker, 'mouseover', function() {
-        infowindow.open(map, marker);
+    overlay.setMap(null); // 처음에는 오버레이를 숨깁니다.
+    kakao.maps.event.addListener(marker, 'click', function() {
+        closeAllInfoWindows(); // 다른 모든 오버레이를 닫고
+        overlay.setMap(map); // 클릭한 마커의 오버레이만 표시합니다.
     });
 
-    kakao.maps.event.addListener(marker, 'mouseout', function() {
-        infowindow.close();
+    infowindows[index] = overlay; // 오버레이를 배열에 저장합니다.
+}
+
+function closeOverlay(index) {
+    if (infowindows[index]) {
+        infowindows[index].setMap(null);
+    }
+}
+
+function closeAllInfoWindows() {
+    infowindows.forEach(function(overlay) {
+        overlay.setMap(null);
     });
+}
+
+function clearOverlays() {
+    closeAllInfoWindows();
+    infowindows = []; // 오버레이 배열을 리셋합니다.
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    fetchLowTop20PriceData('01', 'B027');
 });
-
-for (var i = 0; i < positions.length; i ++) {
-    // 마커를 생성합니다
-    var marker = new kakao.maps.Marker({
-        map: map, // 마커를 표시할 지도
-        position: positions[i].latlng // 마커의 위치
-    });
-
-    // 마커에 표시할 인포윈도우를 생성합니다
-    var infowindow = new kakao.maps.InfoWindow({
-        content: positions[i].content // 인포윈도우에 표시할 내용
-    });
-
-    // 마커에 mouseover 이벤트와 mouseout 이벤트를 등록합니다
-    // 이벤트 리스너로는 클로저를 만들어 등록합니다
-    // for문에서 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
-    kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
-    kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
-}
-
-// 인포윈도우를 표시하는 클로저를 만드는 함수입니다
-function makeOverListener(map, marker, infowindow) {
-    return function() {
-        infowindow.open(map, marker);
-    };
-}
-
-// 인포윈도우를 닫는 클로저를 만드는 함수입니다
-function makeOutListener(infowindow) {
-    return function() {
-        infowindow.close();
-    };
-}

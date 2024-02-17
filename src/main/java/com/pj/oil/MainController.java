@@ -1,11 +1,14 @@
 package com.pj.oil;
 
+import com.pj.oil.gasStation.GasStationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
 
 @Controller
+@RequiredArgsConstructor
 public class MainController {
 
     @RequestMapping("/")
@@ -13,10 +16,11 @@ public class MainController {
         return "index";
     }
 
-    @RequestMapping("/map")
+    @GetMapping("/map")
     public String map() {
         return "sidoMap";
     }
+
     @GetMapping("/home")
     public String home(){
         return "dashboard";

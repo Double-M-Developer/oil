@@ -13,4 +13,5 @@ import java.util.List;
 @Repository
 public interface AreaAverageRecentPriceRepository extends JpaRepository<AreaAverageRecentPrice, Long> {
         List<AreaAverageRecentPrice> findByBaseDate(String baseDate);
+        void deleteByBaseDate(String baseDate);
 }

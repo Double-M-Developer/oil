@@ -1,159 +1,110 @@
 /* globals Chart:false */
-// AJAX 요청을 처리하는 함수
-const colorSet = ['#007bff', '#ff007b', '#ff7b00', '#00ff7b']
 
-const fetchChartData = () => {
-    fetch('/gas-station/avg') // 서버 엔드포인트 경로
-        .then(response => response.json())
-        .then(data => {
-            // 서버로부터 받은 labels을 차트의 labels로 설정
+const colorSet = ['#007bff', '#ff007b', 'rgba(119,255,0,0.66)', 'rgba(183,0,255,0.66)'];
+const labels = ['고급 휘발유', '휘발유', '경유', 'lpg'];
 
-            console.log(data);
-            myChart.data.labels = data.labels;
+async function fetchDataAndRender() {
+    try {
+        await fetchAndRenderChartData();
+        await fetchAndRenderRankData();
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        // 여기서 사용자에게 오류 메시지를 보여주는 UI 처리를 할 수 있습니다.
+    }
+}
 
-            // 각 데이터셋에 서버로부터 받은 평균 가격 데이터 할당
-            data.prices.forEach((priceObj, index) => {
-                if (myChart.data.datasets[index]) {
-                    myChart.data.datasets[index].data = priceObj.averagePrice;
-                }
-            });
+async function fetchAndRenderChartData() {
+    const response = await fetch('/gas-station/avg');
+    const data = await response.json();
 
-            // 차트 업데이트
-            myChart.update();
-        })
-        .catch(error => console.error('Error fetching data:', error));
-};
-
-
-// Graphs
-const ctx = document.getElementById('myChart')
-// eslint-disable-next-line no-unused-vars
-const myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: [
-
-        ],
-        datasets: [
-            {
-                label: '고급 휘발유',
-                data: [
-
-                ],
-                lineTension: 0, // 0 고정
+    const ctx = document.getElementById('myChart');
+    const myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.labels,
+            datasets: data.prices.map((priceObj, index) => ({
+                label: labels[index],
+                lineTension: 0,
                 backgroundColor: 'transparent',
-                borderColor: '#007bff',
-                borderWidth: 4, // 그래프 곡선 두께
-                pointBackgroundColor: '#007bff'
-            }, {
-                label: '휘발유',
-                data: [
+                borderColor: colorSet[index],
+                pointBackgroundColor: colorSet[index],
+                borderWidth: 4,
+                data: priceObj.averagePrice,
+            })),
+        },
+        options: getChartOptions(),
+    });
 
-                ],
-                lineTension: 0, // 0 고정
-                backgroundColor: 'transparent',
-                borderColor: '#ff007b',
-                borderWidth: 4, // 그래프 곡선 두께
-                pointBackgroundColor: '#ff007b'
-            },{
-                label: '경유',
-                data: [
+    myChart.update();
+}
 
-                ],
-                lineTension: 0, // 0 고정
-                backgroundColor: 'transparent',
-                borderColor: 'rgba(119,255,0,0.66)',
-                borderWidth: 4, // 그래프 곡선 두께
-                pointBackgroundColor: 'rgba(119,255,0,0.66)'
-            },{
-                label: 'lpg',
-                data: [
+async function fetchAndRenderRankData() {
+    const response = await fetch('/gas-station/ranks');
+    const rankData = await response.json();
 
-                ],
-                lineTension: 0, // 0 고정
-                backgroundColor: 'transparent',
-                borderColor: 'rgba(183,0,255,0.66)',
-                borderWidth: 4, // 그래프 곡선 두께
-                pointBackgroundColor: 'rgba(183,0,255,0.66)'
-            }
-        ]
-    },
-    options: {
+    generateRankTable(rankData);
+}
+
+function getChartOptions() {
+    return {
         plugins: {
             legend: {
                 display: true,
-                position : 'bottom'
+                position: 'bottom',
             },
             tooltip: {
-                boxPadding: 3
-            }
-        }
-    }
-});
-// })()
-
-// 페이지 로드 시 차트 데이터 업데이트
-fetchChartData();
-
-// 예시 데이터, 실제로는 백엔드에서 가져온 데이터를 사용합니다.
-
-
-// 페이지 로드 시 차트 데이터 업데이트 및 순위 테이블 생성
-fetch('/gas-station/ranks') // 백엔드 엔드포인트 경로 수정
-    .then(response => response.json())
-    .then(rankData => {
-        console.log(rankData);
-        generateRankTable(rankData); // 순위 데이터를 사용하여 테이블 생성
-    })
-    .catch(error => console.error('Error fetching data:', error));
-
+                boxPadding: 3,
+            },
+        },
+    };
+}
 
 function generateRankTable(rankData) {
-    // 테이블을 추가할 부모 요소를 찾거나 지정합니다.
     const tableContainer = document.getElementById('rankTableContainer');
     if (!tableContainer) {
         console.error('Table container element not found!');
         return;
     }
 
-    // 기존에 테이블이 있으면 삭제합니다.
-    while (tableContainer.firstChild) {
-        tableContainer.removeChild(tableContainer.firstChild);
-    }
+    tableContainer.innerHTML = ''; // 기존 테이블 내용을 클리어
 
-    // 새 테이블 요소를 생성합니다.
     const table = document.createElement('table');
-    table.classList.add('rank-table'); // 스타일을 위한 클래스 추가 (옵션)
+    table.classList.add('rank-table');
 
-    // 테이블 헤더를 생성합니다.
+    table.appendChild(createTableHeader(['종류', '1위', '2위', '3위']));
+    table.appendChild(createTableBody(rankData));
+
+    tableContainer.appendChild(table);
+}
+
+function createTableHeader(headers) {
     const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    ['종류', '1위', '2위', '3위'].forEach(text => {
+    headers.forEach(header => {
         const th = document.createElement('th');
-        th.textContent = text;
+        th.textContent = header;
         headerRow.appendChild(th);
     });
     thead.appendChild(headerRow);
-    table.appendChild(thead);
+    return thead;
+}
 
-    // 테이블 본문을 생성합니다.
+function createTableBody(data) {
     const tbody = document.createElement('tbody');
-    Object.keys(rankData).forEach(fuelType => {
+    Object.entries(data).forEach(([fuelType, brands]) => {
         const row = document.createElement('tr');
-        const fuelTypeCell = document.createElement('td');
-        fuelTypeCell.textContent = fuelType;
-        row.appendChild(fuelTypeCell);
-
-        rankData[fuelType].forEach(brand => {
-            const cell = document.createElement('td');
-            cell.textContent = brand;
-            row.appendChild(cell);
-        });
-
+        row.appendChild(createCell(fuelType));
+        brands.forEach(brand => row.appendChild(createCell(brand)));
         tbody.appendChild(row);
     });
-    table.appendChild(tbody);
-
-    // 생성한 테이블을 페이지에 추가합니다.
-    tableContainer.appendChild(table);
+    return tbody;
 }
+
+function createCell(text) {
+    const cell = document.createElement('td');
+    cell.textContent = text;
+    return cell;
+}
+
+// 페이지 로드 시 차트 데이터 및 순위 테이블 업데이트
+fetchDataAndRender();
