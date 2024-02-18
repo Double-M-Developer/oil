@@ -1,6 +1,6 @@
 package com.pj.oil.batch;
 
-import com.pj.oil.gasStation.repository.jpa.*;
+import com.pj.oil.gasStation.repository.maria.*;
 import com.pj.oil.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

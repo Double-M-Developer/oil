@@ -5,7 +5,7 @@ import com.pj.oil.gasStation.entity.redis.AreaAverageRecentPriceRedis;
 import com.pj.oil.gasStation.entity.redis.AverageAllPriceRedis;
 import com.pj.oil.gasStation.entity.redis.AverageRecentPriceRedis;
 import com.pj.oil.gasStation.entity.redis.LowTop20PriceRedis;
-import com.pj.oil.gasStation.repository.jpa.*;
+import com.pj.oil.gasStation.repository.maria.*;
 import com.pj.oil.gasStation.repository.redis.AreaAverageRecentPriceRedisRepository;
 import com.pj.oil.gasStation.repository.redis.AverageAllPriceRedisRepository;
 import com.pj.oil.gasStation.repository.redis.AverageRecentPriceRedisRepository;

@@ -2,17 +2,15 @@ package com.pj.oil.batch.apiConfig;
 
 import com.pj.oil.batch.process.GasStationProcess;
 import com.pj.oil.gasStation.entity.maria.GasStation;
-import com.pj.oil.gasStation.repository.jpa.GasStationRepository;
+import com.pj.oil.gasStation.repository.maria.GasStationRepository;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;

@@ -1,6 +1,7 @@
-package com.pj.oil.memberPost.token;
+package com.pj.oil.memberPost.token.entity.maria;
 
 import com.pj.oil.memberPost.member.Member;
+import com.pj.oil.memberPost.token.TokenType;
 import jakarta.persistence.*;
 import lombok.*;
 

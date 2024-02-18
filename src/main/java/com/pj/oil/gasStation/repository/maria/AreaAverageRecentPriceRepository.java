@@ -1,8 +1,7 @@
-package com.pj.oil.gasStation.repository.jpa;
+package com.pj.oil.gasStation.repository.maria;
 
 import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
 
-import com.pj.oil.gasStation.entity.maria.AverageRecentPrice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

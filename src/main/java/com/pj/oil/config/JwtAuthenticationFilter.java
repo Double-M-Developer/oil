@@ -2,12 +2,11 @@ package com.pj.oil.config;
 
 import com.pj.oil.memberPost.member.Member;
 import com.pj.oil.memberPost.member.MemberRepository;
-import com.pj.oil.memberPost.token.AccessTokenRepository;
-import com.pj.oil.memberPost.token.RefreshTokenRepository;
+import com.pj.oil.memberPost.token.repository.maria.AccessTokenRepository;
+import com.pj.oil.memberPost.token.repository.redis.RefreshTokenRepository;
 import com.pj.oil.memberPost.token.TokenService;
 import com.pj.oil.util.CookieUtil;
 import com.pj.oil.util.JwtUtil;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,4 +1,4 @@
-package com.pj.oil.memberPost.token;
+package com.pj.oil.memberPost.token.entity.redis;
 
 
 import lombok.AccessLevel;

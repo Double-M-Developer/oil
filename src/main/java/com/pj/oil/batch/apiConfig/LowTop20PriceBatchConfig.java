@@ -3,7 +3,7 @@ package com.pj.oil.batch.apiConfig;
 import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.process.LowTop20PriceProcess;
 import com.pj.oil.gasStation.entity.maria.LowTop20Price;
-import com.pj.oil.gasStation.repository.jpa.LowTop20PriceRepository;
+import com.pj.oil.gasStation.repository.maria.LowTop20PriceRepository;
 import com.pj.oil.gasStationApi.GasStationApiService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

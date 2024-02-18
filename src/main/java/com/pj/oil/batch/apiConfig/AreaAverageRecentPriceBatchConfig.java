@@ -3,7 +3,7 @@ package com.pj.oil.batch.apiConfig;
 import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.process.AreaAverageRecentPriceProcess;
 import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
-import com.pj.oil.gasStation.repository.jpa.AreaAverageRecentPriceRepository;
+import com.pj.oil.gasStation.repository.maria.AreaAverageRecentPriceRepository;
 import com.pj.oil.gasStationApi.GasStationApiService;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.core.Job;
