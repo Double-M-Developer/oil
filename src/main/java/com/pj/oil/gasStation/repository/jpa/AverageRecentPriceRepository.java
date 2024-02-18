@@ -15,6 +15,6 @@ public interface AverageRecentPriceRepository extends JpaRepository<AverageRecen
         List<AverageRecentPrice> findByDate(String date);
         void deleteByDate(String date);
 
-        @Query("SELECT a FROM AverageRecentPrice a WHERE a.date BETWEEN :eightDaysBefore AND :yesterday")
-        List<AverageRecentPrice> findByLastSevenDays(String eightDaysBefore, String yesterday);
+        @Query("SELECT a FROM AverageRecentPrice a WHERE a.productCode = :productCode AND a.date BETWEEN :sevenDaysBefore AND :yesterday")
+        List<AverageRecentPrice> findByLastSevenDays(String sevenDaysBefore, String yesterday, String productCode);
 }

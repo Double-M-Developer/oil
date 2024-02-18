@@ -2,7 +2,9 @@ package com.pj.oil.gasStation.repository.jpa;
 
 import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
 
+import com.pj.oil.gasStation.entity.maria.AverageRecentPrice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
  */
 @Repository
 public interface AreaAverageRecentPriceRepository extends JpaRepository<AreaAverageRecentPrice, Long> {
-        List<AreaAverageRecentPrice> findByBaseDate(String baseDate);
+
+        @Query("SELECT a FROM AreaAverageRecentPrice a WHERE a.areaCode = :areaCode AND a.productCode = :productCode AND a.baseDate BETWEEN :sevenDaysBefore AND :yesterday")
+        List<AreaAverageRecentPrice> findByLastSevenDays(String sevenDaysBefore, String yesterday, String areaCode, String productCode);
         void deleteByBaseDate(String baseDate);
 }

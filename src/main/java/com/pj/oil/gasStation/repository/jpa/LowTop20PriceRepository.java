@@ -2,6 +2,8 @@ package com.pj.oil.gasStation.repository.jpa;
 
 import com.pj.oil.gasStation.entity.maria.LowTop20Price;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
 @Repository
 public interface LowTop20PriceRepository extends JpaRepository<LowTop20Price, Long> {
 
-    List<LowTop20Price> findLowTop20PriceByAreaCodeAndProductCode(String areaCode, String productCode);
+    @Query("SELECT l FROM LowTop20Price l WHERE l.areaCode = :areaCode AND l.productCode = :productCode ORDER BY l.priceCurrent ASC")
+    List<LowTop20Price> findLowTop20PriceByAreaCodeAndProductCode(@Param("areaCode") String areaCode, @Param("productCode") String productCode);
 
 }

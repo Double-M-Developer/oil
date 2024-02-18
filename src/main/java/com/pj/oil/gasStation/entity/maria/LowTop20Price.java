@@ -2,6 +2,7 @@ package com.pj.oil.gasStation.entity.maria;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pj.oil.gasStation.entity.redis.LowTop20PriceRedis;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -82,4 +83,20 @@ public class LowTop20Price extends GasStationBase {
         this.productCode = productCode;
         this.areaCode = areaCode;
     }
+
+    public static LowTop20Price transferRedisToEntity(LowTop20PriceRedis redis) {
+        return LowTop20Price.builder()
+                .uniId(redis.getUniId())
+                .priceCurrent(redis.getPriceCurrent())
+                .pollDivCode(redis.getPollDivCode())
+                .osName(redis.getOsName())
+                .vanAddress(redis.getVanAddress())
+                .newAddress(redis.getNewAddress())
+                .gisXCoor(redis.getGisXCoor())
+                .gisYCoor(redis.getGisYCoor())
+                .productCode(redis.getProductCode())
+                .areaCode(redis.getAreaCode())
+                .build();
+    }
+
 }

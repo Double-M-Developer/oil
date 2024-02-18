@@ -2,6 +2,7 @@ package com.pj.oil.gasStation.entity.maria;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pj.oil.gasStation.entity.redis.AverageAllPriceRedis;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -47,5 +48,15 @@ public class AverageAllPrice extends GasStationBase {
         this.productCode = productCode;
         this.priceAverage = priceAverage;
         this.priceChange = priceChange;
+    }
+
+    public static AverageAllPrice transferRedisToEntity(AverageAllPriceRedis redis) {
+        return AverageAllPrice.builder()
+                .id(redis.getAverageAllPriceId())
+                .tradeDate(redis.getTradeDate())
+                .productCode(redis.getProductCode())
+                .priceAverage(redis.getPriceAverage())
+                .priceChange(redis.getPriceChange())
+                .build();
     }
 }
