@@ -18,7 +18,7 @@ services:
     ports:
       - "80:80" # 호스트의 80 포트를 컨테이너의 80 포트에 매핑
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf # Nginx 설정 파일 매핑
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro # Nginx 설정 파일 매핑
     depends_on:
       - springboot-app
 
@@ -26,6 +26,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - ./src/main/resources/downloads:/app/src/main/resources/downloads
+      - ./src/main/resources/csv:/app/src/main/resources/csv
+      - ./src/main/resources/application.properties:/app/src/main/resources/application.properties
+    environment:
+      SELENIUM_CHROME_PATH: /usr/local/bin/chrome/chrome
+      SELENIUM_WEB_DRIVER_PATH: /usr/local/bin/chromedriver/chromedriver
+      SELENIUM_DOWNLOAD_FILEPATH: /app/src/main/resources/downloads/
+      CSV_ENCODING_OUTPUT_FILEPATH: /app/src/main/resources/csv/
+
     ports:
       - "8080:8080"
     depends_on:

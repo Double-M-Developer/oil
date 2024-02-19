@@ -30,8 +30,8 @@ public class EncodingUtil {
     public EncodingUtil(PropertyConfiguration config, DateUtil dateUtil) {
         this.config = config;
         this.dateUtil = dateUtil;
-        this.inputPathWithDate = config.getDownloadFilepath() + dateUtil.getTodayDateString() + "\\";
-        this.outputPathWithDate = config.getOutFilepath() + dateUtil.getTodayDateString() + "\\" + dateUtil.getTodayDateString() + "-";
+        this.inputPathWithDate = config.getDownloadFilepath() + dateUtil.getTodayDateString() + "/";
+        this.outputPathWithDate = config.getOutFilepath() + dateUtil.getTodayDateString() + "/" + dateUtil.getTodayDateString() + "-";
     }
 
     public boolean convertFileEncoding(String inputFileName, String outputFileName) {

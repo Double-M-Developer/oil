@@ -25,7 +25,7 @@ public class CrawlerUtil {
     private final PropertyConfiguration config;
     private final DateUtil dateUtil;
 
-    private static String downloadPathWithDate; //C:\\Users\\user\\git\\oil\\src\\main\\resources\\downloads\\date
+    private static String downloadPathWithDate;
 
     public CrawlerUtil(
             PropertyConfiguration config,
@@ -57,12 +57,16 @@ public class CrawlerUtil {
 
     private WebDriver initializeWebDriver() {
         LOGGER.info("[initializeWebDriver]");
+        LOGGER.info("driver path:{} chrome path: {}", config.getWebDriverPath(), config.getChromePath());
+        LOGGER.info("user-agent : {}", config.getUserAgent());
+
         System.setProperty("webdriver.chrome.driver", config.getWebDriverPath());
         ChromeOptions options = new ChromeOptions();
         options.setBinary(config.getChromePath());
         options.addArguments(config.getUserAgent());
-        options.addArguments("--disable-popup-blocking"); //팝업안띄움
         options.addArguments("--headless"); //브라우저 안띄움
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-popup-blocking"); //팝업안띄움
         options.addArguments("--disable-gpu"); //gpu 비활성화
         options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
         options.addArguments("--disable-dev-shm-usage"); //Linux /dev/shm 메모리 공유 비활성화
