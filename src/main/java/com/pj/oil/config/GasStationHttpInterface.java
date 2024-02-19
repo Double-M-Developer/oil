@@ -70,7 +70,7 @@ public interface GasStationHttpInterface { //HttpServiceProxyFactory
      * @param areaCd
      * @return LowTop20PriceDto
      */
-    @GetExchange("lowTop10.do?out=json&code={apiKey}&cnd=20&prodcd={prodcd}&area={areaCd}")
+    @GetExchange("lowTop10.do?out=json&code={apiKey}&cnd=20&prodcd={prodcd}&area={areaCd}&cnt=20")
     String getAreaLowTop20ProdPrice(@PathVariable String apiKey, @PathVariable String prodcd, @PathVariable String areaCd);
 
     /**

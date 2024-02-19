@@ -3,7 +3,7 @@ package com.pj.oil.batch.apiConfig;
 import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.process.AverageRecentPriceProcess;
 import com.pj.oil.gasStation.entity.maria.AverageRecentPrice;
-import com.pj.oil.gasStation.repository.jpa.AverageRecentPriceRepository;
+import com.pj.oil.gasStation.repository.maria.AverageRecentPriceRepository;
 import com.pj.oil.gasStationApi.GasStationApiService;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.core.Job;
@@ -20,9 +20,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 @Configuration
 @EnableBatchProcessing(

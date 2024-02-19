@@ -14,36 +14,81 @@
 <!--    <div th:insert="~{svg/dashboamemberPostvg::svg}"></div>-->
 <!--</th:block>-->
 <th:block layout:fragment="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
-                <div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu"
-                     aria-labelledby="sidebarMenuLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="sidebarMenuLabel">Company name</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                                data-bs-target="#sidebarMenu"
-                                aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
-                        <ul class="nav flex-column">
+    <div class="container-fluid py-4">
+        <div class="row mb-4">
+            <div class="col-12 col-md-8 offset-md-2"> <!-- 콘텐츠 사이즈 조절 및 중앙 정렬 -->
+                <h1 class="display-4 text-primary mb-5">전국 유가 평균</h1> <!-- 제목 아래 마진 추가 -->
 
-                        </ul>
+                <div class="mb-5"> <!-- 필터 옵션과 차트 사이 간격 증가 -->
+                    <div class="mb-4"> <!-- 카드 아래 마진 추가로 간격 조정 -->
+                        <div class="card-body">
+                            <h5 class="card-title">필터 옵션</h5>
+                            <div class="row g-3 align-items-center">
+                                <label for="areaCode" class="col-form-label">지역 선택:</label>
+                            </div>
+                            <div class="col-auto">
+                                <select id="areaCode" class="form-select">
+                                    <option value="01" selected>서울</option>
+                                    <option value="02">경기</option>
+                                    <option value="03">강원</option>
+                                    <option value="04">충북</option>
+                                    <option value="05">충남</option>
+                                    <option value="06">전북</option>
+                                    <option value="07">전남</option>
+                                    <option value="08">경북</option>
+                                    <option value="09">경남</option>
+                                    <option value="10">부산</option>
+                                    <option value="11">제주</option>
+                                    <option value="14">대구</option>
+                                    <option value="15">인천</option>
+                                    <option value="16">광주</option>
+                                    <option value="17">대전</option>
+                                    <option value="18">울산</option>
+                                    <option value="19">세종</option>
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="productCode" id="productB034"
+                                           value="B034"
+                                           checked>
+                                    <label class="form-check-label" for="productB034">고급 휘발유</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="productCode" id="productB027"
+                                           value="B027">
+                                    <label class="form-check-label" for="productB027">휘발유</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="productCode" id="productD047"
+                                           value="D047">
+                                    <label class="form-check-label" for="productD047">경유</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="productCode" id="productK015"
+                                           value="K015">
+                                    <label class="form-check-label" for="productK015">LPG</label>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <button onclick="updateData()" class="btn btn-primary">데이터 업데이트</button>
+                            </div>
+                        </div>
+
+                        <!-- 차트 캔버스 -->
+                        <div class="row">
+                            <div class="col-12 col-lg-10 offset-lg-1"> <!-- 차트의 너비를 조절하고 중앙에 위치하도록 조정 -->
+                                <div class="card shadow">
+                                    <div class="card-body">
+                                        <canvas id="myChart"></canvas>
+                                        <!-- width와 height 속성을 제거하고 CSS 또는 부트스트랩 클래스로 조절 -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">전국 유가 평균</h1>
-
-                </div>
-
-                <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
-
-                <div id="rankTableContainer"></div>
-
-            </main>
         </div>
     </div>
 </th:block>

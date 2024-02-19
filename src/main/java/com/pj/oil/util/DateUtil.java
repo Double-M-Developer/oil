@@ -11,6 +11,13 @@ public class DateUtil {
     // 날짜 형식을 정의하는 상수
     private static final String DATE_FORMAT = "yyyyMMdd";
 
+    public String formatDateString(String dateString) {
+        DateTimeFormatter originalFormat = DateTimeFormatter.ofPattern(DATE_FORMAT);
+        DateTimeFormatter targetFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate date = LocalDate.parse(dateString, originalFormat);
+        return date.format(targetFormat);
+    }
+
     /**
      * 오늘 날짜를 yyyyMMdd 형식의 문자열로 반환합니다.
      * @return 오늘 날짜를 나타내는 문자열
@@ -39,8 +46,8 @@ public class DateUtil {
      * 어제 날짜부터 과거로 8일전의 날짜를 yyyyMMdd 형식의 문자열 배열로 반환합니다.
      * @return 8일전의 날짜를 담은 문자열 배열
      */
-    public String getEightDaysBeforeDateString() {
-        LocalDate sevenDaysBefore = LocalDate.now().minusDays(8);
+    public String getSevenDaysBeforeDateString() {
+        LocalDate sevenDaysBefore = LocalDate.now().minusDays(7);
         return sevenDaysBefore.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
     }
 

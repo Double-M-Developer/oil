@@ -2,6 +2,7 @@ package com.pj.oil.gasStation.entity.maria;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pj.oil.gasStation.entity.redis.AverageRecentPriceRedis;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,8 +22,7 @@ public class AverageRecentPrice extends GasStationBase {
 
     @Schema(description = "전국 주유소 평균가격 id")
     @Column(name = "average_recent_price_id")
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     private Long id;
     @Schema(description = "기준일자")
     @Column(name = "date")
@@ -43,5 +43,14 @@ public class AverageRecentPrice extends GasStationBase {
         this.date = date;
         this.productCode = productCode;
         this.priceAverage = priceAverage;
+    }
+
+    public static AverageRecentPrice transferRedisToEntity(AverageRecentPriceRedis redis) {
+        return AverageRecentPrice.builder()
+                .id(redis.getAverageRecentPriceId())
+                .date(redis.getDate())
+                .productCode(redis.getProductCode())
+                .priceAverage(redis.getPriceAverage())
+                .build();
     }
 }

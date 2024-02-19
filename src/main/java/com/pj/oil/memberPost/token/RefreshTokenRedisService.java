@@ -1,9 +1,8 @@
 package com.pj.oil.memberPost.token;
 
+import com.pj.oil.memberPost.token.entity.redis.RefreshToken;
+import com.pj.oil.memberPost.token.repository.redis.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 @Service

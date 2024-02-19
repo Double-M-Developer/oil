@@ -12,7 +12,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 
 @Configuration
 @EnableRedisRepositories(
-        basePackages = "com.pj.oil.memberPost.token",
+        basePackages = "com.pj.oil.memberPost.token.repository.redis",
         redisTemplateRef = "refreshTokenRedisTemplate",
         enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP
 )

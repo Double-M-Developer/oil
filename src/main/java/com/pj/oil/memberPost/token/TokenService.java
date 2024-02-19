@@ -1,6 +1,10 @@
 package com.pj.oil.memberPost.token;
 
 import com.pj.oil.memberPost.member.Member;
+import com.pj.oil.memberPost.token.entity.maria.Token;
+import com.pj.oil.memberPost.token.entity.redis.RefreshToken;
+import com.pj.oil.memberPost.token.repository.maria.AccessTokenRepository;
+import com.pj.oil.memberPost.token.repository.redis.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

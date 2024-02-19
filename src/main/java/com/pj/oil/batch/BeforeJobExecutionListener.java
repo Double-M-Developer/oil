@@ -1,6 +1,6 @@
 package com.pj.oil.batch;
 
-import com.pj.oil.gasStation.repository.jpa.*;
+import com.pj.oil.gasStation.repository.maria.*;
 import com.pj.oil.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -8,8 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@Transactional("gasStationTransactionManager")
 @RequiredArgsConstructor
 public class BeforeJobExecutionListener implements JobExecutionListener {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
@@ -46,7 +48,7 @@ public class BeforeJobExecutionListener implements JobExecutionListener {
                 LOGGER.info("Deleted all data from AverageRecentPriceRepository before starting the job: {}", jobName);
                 break;
             case "importAreaAverageRecentPrice":
-                areaAverageRecentPriceRepository.deleteByBaseDate(dateUtil.getTodayDateString());
+                areaAverageRecentPriceRepository.deleteByBaseDate(dateUtil.getYesterdayDateString());
                 LOGGER.info("Deleted all data from AreaAverageRecentPriceRepository before starting the job: {}", jobName);
                 break;
             default:

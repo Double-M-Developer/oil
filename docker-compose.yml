@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    ports:
+      - "8081:8080" # Jenkins 웹 인터페이스에 접근하기 위한 포트 (스프링과 겹치므로 변경)
+      - "50000:50000" # Jenkins 에이전트를 위한 포트
+    volumes:
+      - jenkins_data:/var/jenkins_home # Jenkins 데이터의 영속성을 위한 볼륨
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false # Jenkins 설치 마법사 실행 비활성화 (선택적)
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80" # 호스트의 80 포트를 컨테이너의 80 포트에 매핑
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro # Nginx 설정 파일 매핑
+    depends_on:
+      - springboot-app
+
+  springboot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src/main/resources/downloads:/app/src/main/resources/downloads
+      - ./src/main/resources/csv:/app/src/main/resources/csv
+      - ./src/main/resources/application.properties:/app/src/main/resources/application.properties
+    environment:
+      SELENIUM_CHROME_PATH: /usr/local/bin/chrome/chrome
+      SELENIUM_WEB_DRIVER_PATH: /usr/local/bin/chromedriver/chromedriver
+      SELENIUM_DOWNLOAD_FILEPATH: /app/src/main/resources/downloads/
+      CSV_ENCODING_OUTPUT_FILEPATH: /app/src/main/resources/csv/
+
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb1
+      - mariadb2
+      - redis
+      - redis2
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--port", "6379"]
+
+  redis2:
+    image: redis:latest
+    container_name: redis2
+    ports:
+      - "6380:6379"
+    command: ["redis-server", "--port", "6380"]
+
+  mariadb1:
+    image: mariadb:latest
+    container_name: mariadb1
+    volumes:
+      - mariadb1_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: mypassword
+      MARIADB_USER: ride
+      MARIADB_PASSWORD: mypassword
+      MARIADB_DATABASE: gas_station
+
+  mariadb2:
+    image: mariadb:latest
+    container_name: mariadb2
+    volumes:
+      - mariadb2_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: mypassword
+      MARIADB_USER: ride
+      MARIADB_PASSWORD: mypassword
+      MARIADB_DATABASE: member_post
+
+volumes:
+  mariadb1_data:
+  mariadb2_data:
+  jenkins_data:

@@ -18,7 +18,6 @@ public class CoordinateUtil {
 
         ProjCoordinate result = new ProjCoordinate();
         katecToWgs.transform(new ProjCoordinate(x, y), result);
-        System.out.println(result);
         return result;
     }
 }

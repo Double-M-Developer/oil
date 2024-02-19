@@ -10,6 +10,6 @@ import java.util.List;
  */
 public interface LowTop20PriceRedisRepository extends CrudRepository<LowTop20PriceRedis, String> {
 
-    List<LowTop20PriceRedis> findLowTop20PriceByAreaCodeAndProductCode(String areaCode, String productCode);
+    List<LowTop20PriceRedis> findByAreaCodeAndProductCode(String areaCode, String productCode);
 
 }

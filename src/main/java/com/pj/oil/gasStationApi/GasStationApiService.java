@@ -1,6 +1,5 @@
 package com.pj.oil.gasStationApi;
 
-//import com.pj.oil.cache.GasStationCacheService;
 import com.pj.oil.config.PropertyConfiguration;
 import com.pj.oil.config.GasStationHttpInterface;
 import com.pj.oil.gasStation.entity.maria.*;
@@ -19,51 +18,31 @@ public class GasStationApiService {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
     private final PropertyConfiguration properties;
     private final GasStationHttpInterface httpInterface;
-//    private final GasStationCacheService gasStationCacheService;
 
     /**
      * 공통 로직
      *
-     * @param dto
-     * @param notExistedLogMessage
+     * @param entity
      * @param <T>
      * @return
      */
-    public <T extends GasStationBase> T processDto(T dto, String notExistedLogMessage) {
-        if (dto == null) {
-            LOGGER.info(notExistedLogMessage);
-            return dto;
+    public <T extends GasStationBase> T resultProcess(T entity) {
+        if (entity == null) {
+            LOGGER.info("data dose not exist");
+            return null;
         }
-        LOGGER.info("data dose exist, dto: {}", dto);
-        return dto;
+        LOGGER.info("data dose exist, entity: {}", entity);
+        return entity;
     }
 
-    public <T extends GasStationBase> List<T> processDto(List<T> dto, String notExistedLogMessage) {
-        if (dto == null) {
-            LOGGER.info(notExistedLogMessage);
-            return dto;
+    public <T extends GasStationBase> List<T> resultProcess(List<T> entity) {
+        if (entity == null) {
+            LOGGER.info("data dose not exist");
+            return null;
         }
-        LOGGER.info("data dose exist, dto size: {}", dto.size());
-        LOGGER.info("data: {}", dto.toString());
-        return dto;
-    }
-
-
-    /**
-     * 공통 로직
-     *
-     * @param dto
-     * @param notExistedLogMessage
-     * @param <T>
-     * @return
-     */
-    public <T extends GasStationBase> List<T> processDtoList(List<T> dto, String notExistedLogMessage) {
-        if (dto.isEmpty()) {
-            LOGGER.info(notExistedLogMessage);
-            return dto;
-        }
-        LOGGER.info("data dose exist, dto size: {}", dto.size());
-        return dto;
+        LOGGER.info("data dose exist, entity size: {}", entity.size());
+        LOGGER.info("data: {}", entity);
+        return entity;
     }
 
     /**
@@ -73,11 +52,11 @@ public class GasStationApiService {
      */
     public List<AverageAllPrice> getAvgAllPrice() {
         LOGGER.info("[getAvgAllPrice]");
-        List<AverageAllPrice> dto = JsonUtil.convertOilJsonToList(
+        List<AverageAllPrice> entity = JsonUtil.convertOilJsonToList(
                 httpInterface.getAvgAllPrice(
                         properties.getApiKey()
                 ), AverageAllPrice.class);
-        return processDto(dto, "data does not exist");
+        return resultProcess(entity);
     }
 
     /**
@@ -88,12 +67,12 @@ public class GasStationApiService {
      */
     public List<AverageRecentPrice> getAvgRecentNDateAllProdPrice(String date) {
         LOGGER.info("[getAvgRecentNDateAllProdPrice]");
-        List<AverageRecentPrice> dto = JsonUtil.convertOilJsonToList(
+        List<AverageRecentPrice> entity = JsonUtil.convertOilJsonToList(
                 httpInterface.getAvgRecentNDateAllProdPrice(
                         properties.getApiKey(),
                         date
                 ), AverageRecentPrice.class);
-        return processDtoList(dto, "data does not exist");
+        return resultProcess(entity);
     }
     //getAvgRecentNDateAllProdPrice
 
@@ -106,13 +85,13 @@ public class GasStationApiService {
      */
     public List<AreaAverageRecentPrice> getAreaAvgRecentNDateAllProdPrice(String areaCd, String date) {
         LOGGER.info("[getAreaAvgRecentNDateAllProdPrice]");
-        List<AreaAverageRecentPrice> dto = JsonUtil.convertOilJsonToList(
+        List<AreaAverageRecentPrice> entity = JsonUtil.convertOilJsonToList(
                 httpInterface.getAreaAvgRecentNDateAllProdPrice(
                         properties.getApiKey(),
                         areaCd,
                         date
                 ), AreaAverageRecentPrice.class);
-        return processDtoList(dto, "data does not exist");
+        return resultProcess(entity);
     }
 
     /**
@@ -131,18 +110,15 @@ public class GasStationApiService {
                         areaCd
                 ), LowTop20Price.class);
         List<LowTop20Price> dto = setProductAndAreaInfo(dtoList, prodcd, areaCd);
-        return processDto(dto, "data does not exist");
+        return resultProcess(dto);
     }
-    public List<LowTop20Price> setProductAndAreaInfo(List<LowTop20Price> dtoList, String prodcd, String areaCd) {
-        // Product와 Area 엔티티를 조회
-
-        // 조회된 Product와 Area를 각 LowTop20Price 객체에 설정
-        for (LowTop20Price dto : dtoList) {
-            dto.setProductCode(prodcd);
-            dto.setAreaCode(areaCd);
+    public List<LowTop20Price> setProductAndAreaInfo(List<LowTop20Price> entity, String productCode, String areaCode) {
+        // Product 와 Area 를 각 LowTop20Price 객체에 설정
+        for (LowTop20Price dto : entity) {
+            dto.setProductCode(productCode);
+            dto.setAreaCode(areaCode);
         }
 
-        return dtoList;
+        return entity;
     }
-
 }
