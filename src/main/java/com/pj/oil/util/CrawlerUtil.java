@@ -39,7 +39,7 @@ public class CrawlerUtil {
     public boolean downloadCSVFromWeb() {
         LOGGER.info("[downloadCSVFromWeb]");
         WebDriver driver = initializeWebDriver();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMinutes(2));
         boolean downloadOilData;
         boolean downloadLpgData;
         try {
