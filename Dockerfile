@@ -69,4 +69,4 @@ COPY --from=build /app/build/libs/*.jar app.jar
 COPY --from=build /usr/local/bin/chrome-linux64 /usr/local/bin/chrome
 COPY --from=build /usr/local/bin/chromedriver-linux64 /usr/local/bin/chromedriver
 
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java","-Dfile.encoding=UTF-8","-jar","app.jar"]

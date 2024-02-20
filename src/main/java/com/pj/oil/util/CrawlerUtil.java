@@ -33,6 +33,7 @@ public class CrawlerUtil {
     ) {
         this.config = config;
         this.dateUtil = dateUtil;
+        System.setProperty("file.encoding", "UTF-8");
     }
 
     public boolean downloadCSVFromWeb() {
