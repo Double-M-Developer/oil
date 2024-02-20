@@ -8,9 +8,11 @@ services:
       - "8081:8080" # Jenkins 웹 인터페이스에 접근하기 위한 포트 (스프링과 겹치므로 변경)
       - "50000:50000" # Jenkins 에이전트를 위한 포트
     volumes:
-      - jenkins_data:/var/jenkins_home # Jenkins 데이터의 영속성을 위한 볼륨
+      - jenkins_home:/var/jenkins_home # Jenkins 데이터의 영속성을 위한 볼륨
     environment:
-      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false # Jenkins 설치 마법사 실행 비활성화 (선택적)
+      - TZ=Asia/Seoul
+  #    environment:
+#      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false # Jenkins 설치 마법사 실행 비활성화 (선택적)
 
   nginx:
     image: nginx:latest
@@ -87,4 +89,4 @@ services:
 volumes:
   mariadb1_data:
   mariadb2_data:
-  jenkins_data:
+  jenkins_home:
