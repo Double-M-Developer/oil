@@ -5,7 +5,15 @@ FROM openjdk:17-jdk-slim as build
 RUN apt-get update && apt-get install -y \
     wget \
     unzip \
+    locales \
     && rm -rf /var/lib/apt/lists/*
+
+# 로케일 설정 추가
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen
+ENV LANG ko_KR.UTF-8
+ENV LANGUAGE ko_KR:kr
+ENV LC_ALL ko_KR.UTF-8
 
 # Chrome headless shell과 ChromeDriver 다운로드 및 설치
 RUN wget -q --continue -P /tmp "https://storage.googleapis.com/chrome-for-testing-public/121.0.6167.184/linux64/chrome-linux64.zip" \
@@ -62,8 +70,16 @@ RUN apt-get update && apt-get install -y \
     libxss1 \
     libxrandr2 \
     libgbm1 \
+    locales \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
+
+# 로케일 설정 추가
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen
+ENV LANG ko_KR.UTF-8
+ENV LANGUAGE ko_KR:kr
+ENV LC_ALL ko_KR.UTF-8
 
 COPY --from=build /app/build/libs/*.jar app.jar
 COPY --from=build /usr/local/bin/chrome-linux64 /usr/local/bin/chrome

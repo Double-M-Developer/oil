@@ -128,7 +128,6 @@ public class CrawlerUtil {
                 String expectedFileName = getExpectedFileName(downloadType, isChargeStation);
 
                 downloadCompleted = fluentWait.until((WebDriver webDriver) -> {
-                    LOGGER.info("[downloadCSV] check downloadCompleted, downloadPathWithDate: {}, expectedFileName: {}", downloadPathWithDate, expectedFileName);
                     Path downloadFilePath = Paths.get(downloadPathWithDate, expectedFileName);
 
                     return Files.exists(downloadFilePath) && !downloadFilePath.toString().endsWith(".crdownload");
