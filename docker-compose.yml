@@ -21,8 +21,11 @@ services:
       - "80:80" # 호스트의 80 포트를 컨테이너의 80 포트에 매핑
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro # Nginx 설정 파일 매핑
+    environment:
+      - TZ=Asia/Seoul
     depends_on:
       - springboot-app
+
 
   springboot-app:
     build:
@@ -37,7 +40,7 @@ services:
       SELENIUM_WEB_DRIVER_PATH: /usr/local/bin/chromedriver/chromedriver
       SELENIUM_DOWNLOAD_FILEPATH: /app/src/main/resources/downloads/
       CSV_ENCODING_OUTPUT_FILEPATH: /app/src/main/resources/csv/
-
+      TZ: Asia/Seoul
     ports:
       - "8080:8080"
     depends_on:
@@ -52,6 +55,8 @@ services:
     ports:
       - "6379:6379"
     command: ["redis-server", "--port", "6379"]
+    environment:
+      TZ: Asia/Seoul
 
   redis2:
     image: redis:latest
@@ -59,6 +64,8 @@ services:
     ports:
       - "6380:6379"
     command: ["redis-server", "--port", "6380"]
+    environment:
+      TZ: Asia/Seoul
 
   mariadb1:
     image: mariadb:latest
@@ -72,6 +79,7 @@ services:
       MARIADB_USER: ride
       MARIADB_PASSWORD: mypassword
       MARIADB_DATABASE: gas_station
+      TZ: Asia/Seoul
 
   mariadb2:
     image: mariadb:latest
@@ -85,6 +93,7 @@ services:
       MARIADB_USER: ride
       MARIADB_PASSWORD: mypassword
       MARIADB_DATABASE: member_post
+      TZ: Asia/Seoul
 
 volumes:
   mariadb1_data:
