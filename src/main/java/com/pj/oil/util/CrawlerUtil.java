@@ -122,7 +122,7 @@ public class CrawlerUtil {
                 JavascriptExecutor js = (JavascriptExecutor) driver;
                 js.executeScript("fn_Download(" + downloadType + ");");
                 Alert alert = wait.until(ExpectedConditions.alertIsPresent());
-                LOGGER.info("alert: {}", alert);
+                LOGGER.info("alert: {}", alert.getText());
                 alert.accept();
 
                 String expectedFileName = getExpectedFileName(downloadType, isChargeStation);

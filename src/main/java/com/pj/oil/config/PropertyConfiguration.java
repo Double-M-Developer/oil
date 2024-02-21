@@ -34,14 +34,10 @@ public class PropertyConfiguration {
     private int typeCurrentPrice;
     @Value("${selenium.user-agent}")
     private String userAgent;
-    @Value("${selenium.basic-info-lpg}")
-    private String basicInfoLpg;
-    @Value("${selenium.basic-info-oil}")
-    private String basicInfoOil;
-    @Value("${selenium.current-price-lpg}")
-    private String currentPriceLpg;
-    @Value("${selenium.current-price-oil}")
-    private String currentPriceOil;
+    private final String basicInfoLpg = "사업자_기본정보(충전소).csv";
+    private final String basicInfoOil = "사업자_기본정보(주유소).csv";
+    private final String currentPriceLpg = "현재_판매가격(충전소).csv";
+    private final String currentPriceOil = "현재_판매가격(주유소).csv";
     @Value("${selenium.csv-download-url}")
     private String csvDownloadUrl;
     @Value("${csv-encoding.output-filepath}")
