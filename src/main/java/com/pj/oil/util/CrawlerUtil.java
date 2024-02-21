@@ -122,11 +122,13 @@ public class CrawlerUtil {
                 JavascriptExecutor js = (JavascriptExecutor) driver;
                 js.executeScript("fn_Download(" + downloadType + ");");
                 Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+                LOGGER.info("alert: {}", alert);
                 alert.accept();
 
                 String expectedFileName = getExpectedFileName(downloadType, isChargeStation);
 
                 downloadCompleted = fluentWait.until((WebDriver webDriver) -> {
+                    LOGGER.info("[downloadCSV] check downloadCompleted, downloadPathWithDate: {}, expectedFileName: {}", downloadPathWithDate, expectedFileName);
                     Path downloadFilePath = Paths.get(downloadPathWithDate, expectedFileName);
 
                     return Files.exists(downloadFilePath) && !downloadFilePath.toString().endsWith(".crdownload");
@@ -151,6 +153,7 @@ public class CrawlerUtil {
     }
 
     private String getExpectedFileName(int downloadType, boolean isChargeStation) {
+        LOGGER.info("[getExpectedFileName]");
         String fileName;
         if (downloadType == config.getTypeBasicInfo()) {
             if (isChargeStation) {
