@@ -6,11 +6,11 @@ RUN apt-get update && apt-get install -y \
     wget \
     unzip \
     locales \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && sed -i '/ko_KR.UTF-8/s/^# //g' /etc/locale.gen \
+    && locale-gen \
 
 # 로케일 설정 추가
-RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
-    locale-gen
 ENV LANG ko_KR.UTF-8
 ENV LANGUAGE ko_KR:kr
 ENV LC_ALL ko_KR.UTF-8
@@ -72,11 +72,11 @@ RUN apt-get update && apt-get install -y \
     libgbm1 \
     locales \
     --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && sed -i '/ko_KR.UTF-8/s/^# //g' /etc/locale.gen \
+    && locale-gen
 
 # 로케일 설정 추가
-RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
-    locale-gen
 ENV LANG ko_KR.UTF-8
 ENV LANGUAGE ko_KR:kr
 ENV LC_ALL ko_KR.UTF-8

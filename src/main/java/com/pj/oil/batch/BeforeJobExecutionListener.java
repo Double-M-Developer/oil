@@ -1,6 +1,10 @@
 package com.pj.oil.batch;
 
 import com.pj.oil.gasStation.repository.maria.*;
+import com.pj.oil.gasStation.repository.redis.AreaAverageRecentPriceRedisRepository;
+import com.pj.oil.gasStation.repository.redis.AverageAllPriceRedisRepository;
+import com.pj.oil.gasStation.repository.redis.AverageRecentPriceRedisRepository;
+import com.pj.oil.gasStation.repository.redis.LowTop20PriceRedisRepository;
 import com.pj.oil.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -19,10 +23,17 @@ public class BeforeJobExecutionListener implements JobExecutionListener {
     private final AreaAverageRecentPriceRepository areaAverageRecentPriceRepository;
     private final AverageRecentPriceRepository averageRecentPriceRepository;
     private final AverageAllPriceRepository averageAllPriceRepository;
+
+    private final LowTop20PriceRedisRepository lowTop20PriceRedisRepository;
+    private final AreaAverageRecentPriceRedisRepository areaAverageRecentPriceRedisRepository;
+    private final AverageRecentPriceRedisRepository averageRecentPriceRedisRepository;
+    private final AverageAllPriceRedisRepository averageAllPriceRedisRepository;
+
     private final PriceOilRepository priceOilRepository;
     private final PriceLpgRepository priceLpgRepository;
     private final DateUtil dateUtil;
 
+    @Transactional("gasStationTransactionManager")
     @Override
     public void beforeJob(JobExecution jobExecution) {
         String jobName = jobExecution.getJobInstance().getJobName();
@@ -53,6 +64,32 @@ public class BeforeJobExecutionListener implements JobExecutionListener {
                 break;
             default:
                 LOGGER.warn("No specific pre-processing required for this job: {}", jobName);
+                break;
+        }
+    }
+
+    @Override
+    public void afterJob(JobExecution jobExecution) {
+        String jobName = jobExecution.getJobInstance().getJobName();
+        switch (jobName) {
+            case "importLowTop20Price":
+                lowTop20PriceRepository.deleteAll();
+                LOGGER.info("Deleted all data from LowTop20PriceRepository before starting the job: {}", jobName);
+                break;
+            case "importAverageAllPrice":
+                averageAllPriceRedisRepository.deleteAll();
+                LOGGER.info("Deleted all data from AverageAllPriceRepository before starting the job: {}", jobName);
+                break;
+            case "importAverageRecentPrice":
+                averageRecentPriceRedisRepository.deleteAll();
+                LOGGER.info("Deleted all data from AverageRecentPriceRepository before starting the job: {}", jobName);
+                break;
+            case "importAreaAverageRecentPrice":
+                areaAverageRecentPriceRedisRepository.deleteAll();
+                LOGGER.info("Deleted all data from AreaAverageRecentPriceRepository before starting the job: {}", jobName);
+                break;
+            default:
+                LOGGER.warn("No specific post-processing required for this job: {}", jobName);
                 break;
         }
     }
