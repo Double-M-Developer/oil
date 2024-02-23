@@ -36,7 +36,7 @@ services:
       - ./src/main/resources/csv:/app/src/main/resources/csv
       - ./src/main/resources/application.properties:/app/src/main/resources/application.properties
     environment:
-      SELENIUM_CHROME_PATH: /usr/local/bin/chrome/chrome
+      SELENIUM_CHROME_PATH: /usr/local/bin/chrome/chrome-headless-shell
       SELENIUM_WEB_DRIVER_PATH: /usr/local/bin/chromedriver/chromedriver
       SELENIUM_DOWNLOAD_FILEPATH: /app/src/main/resources/downloads/
       CSV_ENCODING_OUTPUT_FILEPATH: /app/src/main/resources/csv/

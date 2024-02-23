@@ -16,10 +16,10 @@ ENV LANGUAGE ko_KR:kr
 ENV LC_ALL ko_KR.UTF-8
 
 # Chrome headless shell과 ChromeDriver 다운로드 및 설치
-RUN wget -q --continue -P /tmp "https://storage.googleapis.com/chrome-for-testing-public/121.0.6167.184/linux64/chrome-linux64.zip" \
-    && unzip /tmp/chrome-linux64.zip -d /usr/local/bin \
-    && rm /tmp/chrome-linux64.zip \
-    && chmod +x /usr/local/bin/chrome-linux64 \
+RUN wget -q --continue -P /tmp "https://storage.googleapis.com/chrome-for-testing-public/121.0.6167.184/linux64/chrome-headless-shell-linux64.zip" \
+    && unzip /tmp/chrome-headless-shell-linux64.zip -d /usr/local/bin \
+    && rm /tmp/chrome-headless-shell-linux64.zip \
+    && chmod +x /usr/local/bin/chrome-headless-shell-linux64 \
     && wget -q --continue -P /tmp "https://storage.googleapis.com/chrome-for-testing-public/121.0.6167.184/linux64/chromedriver-linux64.zip" \
     && unzip /tmp/chromedriver-linux64.zip -d /usr/local/bin \
     && rm /tmp/chromedriver-linux64.zip \
@@ -82,7 +82,7 @@ ENV LANGUAGE ko_KR:kr
 ENV LC_ALL ko_KR.UTF-8
 
 COPY --from=build /app/build/libs/*.jar app.jar
-COPY --from=build /usr/local/bin/chrome-linux64 /usr/local/bin/chrome
+COPY --from=build /usr/local/bin/chrome-headless-shell-linux64 /usr/local/bin/chrome
 COPY --from=build /usr/local/bin/chromedriver-linux64 /usr/local/bin/chromedriver
 
 ENTRYPOINT ["java","-Dfile.encoding=UTF-8","-jar","app.jar"]
