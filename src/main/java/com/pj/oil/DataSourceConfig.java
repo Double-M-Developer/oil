@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -48,7 +49,12 @@ public class DataSourceConfig {
         Map<String, Object> jpaProperties = new HashMap<>();
         jpaProperties.put("hibernate.dialect", "org.hibernate.dialect.MariaDBDialect");
         jpaProperties.put("hibernate.hbm2ddl.auto", "update");
+        jpaProperties.put("hibernate.show_sql", true);
         jpaProperties.put("hibernate.format_sql", true);
+        jpaProperties.put("hibernate.jdbc.batch_size", 1000);
+        jpaProperties.put("hibernate.order_inserts", true);
+        jpaProperties.put("hibernate.order_deletes", true);
+        jpaProperties.put("hibernate.order_updates", true);
 
         return builder
                 .dataSource(dataSource)
@@ -66,7 +72,10 @@ public class DataSourceConfig {
         return transactionManager;
     }
 
-
+    @Bean(name = "gasStationJdbcTemplate")
+    public JdbcTemplate gasStationJdbcTemplate(@Qualifier("gasStationDataSource") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
 
 }
 

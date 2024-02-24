@@ -2,16 +2,17 @@ package com.pj.oil.gasStation.entity.maria;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter @Setter @ToString
 @Entity
-public class GasStation {
+public class GasStationOil {
 
     @Schema(description = "전국 주유소 id")
-    @Column(name = "uni_id")
-    @Id
-    private String id;
+    @Id @Column(name = "uni_id")
+    private String uniId;
 
     @Schema(description = "주유소 지역")
     @Column(name = "area")
@@ -29,6 +30,9 @@ public class GasStation {
     @Column(name = "new_address")
     private String newAddress;
 
+    @Schema(description = "업데이트 일자")
+    @Column(name = "update_date")
+    private String updateDate;
 }
 
 

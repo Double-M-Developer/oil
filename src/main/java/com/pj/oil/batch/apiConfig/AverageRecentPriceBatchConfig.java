@@ -1,9 +1,8 @@
 package com.pj.oil.batch.apiConfig;
 
 import com.pj.oil.batch.BeforeJobExecutionListener;
-import com.pj.oil.batch.process.AverageRecentPriceProcess;
+import com.pj.oil.batch.writer.AverageRecentPriceWriter;
 import com.pj.oil.gasStation.entity.maria.AverageRecentPrice;
-import com.pj.oil.gasStation.repository.maria.AverageRecentPriceRepository;
 import com.pj.oil.gasStationApi.GasStationApiService;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.core.Job;
@@ -14,10 +13,10 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.*;
-import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.Iterator;
@@ -30,33 +29,33 @@ public class AverageRecentPriceBatchConfig {
 
     private final String yesterday;
     private final PlatformTransactionManager platformTransactionManager;
-    private final AverageRecentPriceRepository repository;
     private final JobRepository jobRepository;
     private final GasStationApiService gasStationApiService;
     private final DateUtil dateUtil;
     private final BeforeJobExecutionListener beforeJobExecutionListener;
+    private final JdbcTemplate jdbcTemplate;
 
     public AverageRecentPriceBatchConfig(
             @Qualifier("gasStationJobRepository") JobRepository jobRepository,
             @Qualifier("gasStationTransactionManager") PlatformTransactionManager platformTransactionManager,
-            AverageRecentPriceRepository repository,
             GasStationApiService gasStationApiService,
             DateUtil dateUtil,
-            BeforeJobExecutionListener beforeJobExecutionListener
+            BeforeJobExecutionListener beforeJobExecutionListener,
+            @Qualifier("gasStationJdbcTemplate") JdbcTemplate jdbcTemplate
     ) {
         this.platformTransactionManager = platformTransactionManager;
         this.jobRepository = jobRepository;
-        this.repository = repository;
         this.gasStationApiService = gasStationApiService;
         this.dateUtil = dateUtil;
         this.yesterday = dateUtil.getYesterdayDateString();
         this.beforeJobExecutionListener = beforeJobExecutionListener;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Bean(name = "averageRecentPriceReader")
     @JobScope
     public ItemReader<AverageRecentPrice> reader() {
-        return new ItemReader<AverageRecentPrice>() {
+        return new ItemReader<>() {
             private final Iterator<AverageRecentPrice> dataIterator = gasStationApiService.getAvgRecentNDateAllProdPrice(yesterday).iterator();
             @Override
             public AverageRecentPrice read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
@@ -69,19 +68,9 @@ public class AverageRecentPriceBatchConfig {
         };
     }
 
-
-    @Bean(name = "averageRecentPriceProcess")
-    public ItemProcessor<AverageRecentPrice, AverageRecentPrice> processor() {
-        return new AverageRecentPriceProcess();
-    }
-
     @Bean(name = "averageRecentPriceWriter")
     public ItemWriter<AverageRecentPrice> writer() {
-
-        RepositoryItemWriter<AverageRecentPrice> writer = new RepositoryItemWriter<>();
-        writer.setRepository(repository);
-        writer.setMethodName("save");
-        return writer;
+        return new AverageRecentPriceWriter(jdbcTemplate);
     }
 
     @Bean(name = "averageRecentPriceImportStep")
@@ -89,7 +78,7 @@ public class AverageRecentPriceBatchConfig {
         return new StepBuilder("averageRecentPriceImport", jobRepository)
                 .<AverageRecentPrice, AverageRecentPrice>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
                 .reader(reader())
-                .processor(processor())
+//                .processor(processor())
                 .writer(writer())
 //                .taskExecutor(taskExecutor())
                 .build();

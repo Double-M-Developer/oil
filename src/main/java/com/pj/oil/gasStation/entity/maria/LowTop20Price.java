@@ -22,7 +22,7 @@ public class LowTop20Price extends GasStationBase {
 
     @Schema(description = "전국 또는 지역별 최저가 주유소 TOP20 id")
     @Column(name = "low_top_20_price_id")
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Schema(description = "주유소 코드")
     @Column(name = "uni_id")

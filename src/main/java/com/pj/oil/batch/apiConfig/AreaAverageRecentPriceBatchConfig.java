@@ -1,7 +1,7 @@
 package com.pj.oil.batch.apiConfig;
 
 import com.pj.oil.batch.BeforeJobExecutionListener;
-import com.pj.oil.batch.process.AreaAverageRecentPriceProcess;
+import com.pj.oil.batch.writer.AreaAverageRecentPriceWriter;
 import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
 import com.pj.oil.gasStation.repository.maria.AreaAverageRecentPriceRepository;
 import com.pj.oil.gasStationApi.GasStationApiService;
@@ -14,10 +14,10 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.*;
-import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.ArrayList;
@@ -27,17 +27,18 @@ import java.util.List;
 @Configuration
 @EnableBatchProcessing(
         dataSourceRef = "gasStationDataSource",
-        transactionManagerRef = "gasStationTransactionManager")
+        transactionManagerRef = "gasStationTransactionManager"
+)
 public class AreaAverageRecentPriceBatchConfig {
 
     private static String[] areas = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "14", "15", "16", "17", "18", "19"};
     private final String yesterday;
     private final PlatformTransactionManager platformTransactionManager;
-    private final AreaAverageRecentPriceRepository repository;
     private final JobRepository jobRepository;
     private final GasStationApiService gasStationApiService;
     private final DateUtil dateUtil;
     private final BeforeJobExecutionListener beforeJobExecutionListener;
+    private final JdbcTemplate jdbcTemplate;
 
     public AreaAverageRecentPriceBatchConfig(
             @Qualifier("gasStationJobRepository") JobRepository jobRepository,
@@ -45,21 +46,22 @@ public class AreaAverageRecentPriceBatchConfig {
             AreaAverageRecentPriceRepository repository,
             GasStationApiService gasStationApiService,
             DateUtil dateUtil,
-            BeforeJobExecutionListener beforeJobExecutionListener
+            BeforeJobExecutionListener beforeJobExecutionListener,
+            @Qualifier("gasStationJdbcTemplate") JdbcTemplate jdbcTemplate
     ) {
         this.platformTransactionManager = platformTransactionManager;
         this.jobRepository = jobRepository;
-        this.repository = repository;
         this.gasStationApiService = gasStationApiService;
         this.dateUtil = dateUtil;
         this.yesterday = dateUtil.getYesterdayDateString();
         this.beforeJobExecutionListener = beforeJobExecutionListener;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Bean(name = "areaAverageRecentPriceReader")
     @JobScope
     public ItemReader<AreaAverageRecentPrice> reader() {
-        return new ItemReader<AreaAverageRecentPrice>() {
+        return new ItemReader<>() {
             private final Iterator<AreaAverageRecentPrice> dataIterator;
 
             {
@@ -81,20 +83,9 @@ public class AreaAverageRecentPriceBatchConfig {
             }
         };
     }
-
-
-    @Bean(name = "areaAverageRecentPriceProcess")
-    public ItemProcessor<AreaAverageRecentPrice, AreaAverageRecentPrice> processor() {
-        return new AreaAverageRecentPriceProcess();
-    }
-
     @Bean(name = "areaAverageRecentPriceWriter")
     public ItemWriter<AreaAverageRecentPrice> writer() {
-
-        RepositoryItemWriter<AreaAverageRecentPrice> writer = new RepositoryItemWriter<>();
-        writer.setRepository(repository);
-        writer.setMethodName("save");
-        return writer;
+        return new AreaAverageRecentPriceWriter(jdbcTemplate);
     }
 
     @Bean(name = "areaAverageRecentPriceImportStep")
@@ -102,7 +93,7 @@ public class AreaAverageRecentPriceBatchConfig {
         return new StepBuilder("areaAverageRecentPriceImport", jobRepository)
                 .<AreaAverageRecentPrice, AreaAverageRecentPrice>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
                 .reader(reader())
-                .processor(processor())
+//                .processor(processor())
                 .writer(writer())
 //                .taskExecutor(taskExecutor())
                 .build();

@@ -1,9 +1,8 @@
 package com.pj.oil.batch.apiConfig;
 
 import com.pj.oil.batch.BeforeJobExecutionListener;
-import com.pj.oil.batch.process.AverageAllPriceProcess;
+import com.pj.oil.batch.writer.AverageAllPriceWriter;
 import com.pj.oil.gasStation.entity.maria.AverageAllPrice;
-import com.pj.oil.gasStation.repository.maria.AverageAllPriceRepository;
 import com.pj.oil.gasStationApi.GasStationApiService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -13,10 +12,10 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.*;
-import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.Iterator;
@@ -28,29 +27,29 @@ import java.util.Iterator;
 public class AverageAllPriceBatchConfig {
 
     private final PlatformTransactionManager platformTransactionManager;
-    private final AverageAllPriceRepository repository;
     private final JobRepository jobRepository;
     private final GasStationApiService gasStationApiService;
     private final BeforeJobExecutionListener beforeJobExecutionListener;
+    private final JdbcTemplate jdbcTemplate;
 
     public AverageAllPriceBatchConfig(
             @Qualifier("gasStationJobRepository") JobRepository jobRepository,
             @Qualifier("gasStationTransactionManager") PlatformTransactionManager platformTransactionManager,
-            AverageAllPriceRepository repository,
             GasStationApiService gasStationApiService,
-            BeforeJobExecutionListener beforeJobExecutionListener
+            BeforeJobExecutionListener beforeJobExecutionListener,
+            @Qualifier("gasStationJdbcTemplate") JdbcTemplate jdbcTemplate
     ) {
         this.platformTransactionManager = platformTransactionManager;
-        this.repository = repository;
         this.jobRepository = jobRepository;
         this.gasStationApiService = gasStationApiService;
         this.beforeJobExecutionListener = beforeJobExecutionListener;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Bean(name = "averageAllPriceReader")
     @JobScope
     public ItemReader<AverageAllPrice> reader() {
-        return new ItemReader<AverageAllPrice>() {
+        return new ItemReader<>() {
             private final Iterator<AverageAllPrice> dataIterator = gasStationApiService.getAvgAllPrice().iterator();
             @Override
             public AverageAllPrice read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
@@ -63,18 +62,9 @@ public class AverageAllPriceBatchConfig {
         };
     }
 
-    @Bean(name = "averageAllPriceProcess")
-    public ItemProcessor<AverageAllPrice, AverageAllPrice> processor() {
-        return new AverageAllPriceProcess();
-    }
-
     @Bean(name = "averageAllPriceWriter")
     public ItemWriter<AverageAllPrice> writer() {
-
-        RepositoryItemWriter<AverageAllPrice> writer = new RepositoryItemWriter<>();
-        writer.setRepository(repository);
-        writer.setMethodName("save");
-        return writer;
+        return new AverageAllPriceWriter(jdbcTemplate);
     }
 
     @Bean(name = "averageAllPriceImportStep")
@@ -82,7 +72,7 @@ public class AverageAllPriceBatchConfig {
         return new StepBuilder("averageAllPriceImport", jobRepository)
                 .<AverageAllPrice, AverageAllPrice>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
                 .reader(reader())
-                .processor(processor())
+//                .processor(processor())
                 .writer(writer())
 //                .taskExecutor(taskExecutor())
                 .build();

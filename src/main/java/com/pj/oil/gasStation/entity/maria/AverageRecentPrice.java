@@ -22,7 +22,7 @@ public class AverageRecentPrice extends GasStationBase {
 
     @Schema(description = "전국 주유소 평균가격 id")
     @Column(name = "average_recent_price_id")
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Schema(description = "기준일자")
     @Column(name = "date")

@@ -122,7 +122,6 @@ public class GasStationService {
                     .map(LowTop20PriceRedis::transferDataToRedis)
                     .toList();
             LOGGER.info("data size: {}", result.size());
-            LOGGER.info("data: {}", result);
 
             LOGGER.info("data -> redis");
             lowTop20PriceRedisRepository.saveAll(result);
@@ -154,7 +153,6 @@ public class GasStationService {
                     .map(AverageAllPriceRedis::transferDataToRedis)
                     .toList();
             LOGGER.info("data size: {}", result.size());
-            LOGGER.info("data: {}", result);
 
             LOGGER.info("data -> redis");
             averageAllPriceRedisRepository.saveAll(result);
@@ -188,7 +186,6 @@ public class GasStationService {
                     .map(AreaAverageRecentPriceRedis::transferDataToRedis)
                     .toList();
             LOGGER.info("data size: {}", result.size());
-            LOGGER.info("data: {}", result);
 
             LOGGER.info("data -> redis");
             areaAverageRecentPriceRedisRepository.saveAll(result);
@@ -221,7 +218,6 @@ public class GasStationService {
                     .map(AverageRecentPriceRedis::transferDataToRedis)
                     .toList();
             LOGGER.info("data size: {}", result.size());
-            LOGGER.info("data: {}", result);
 
             LOGGER.info("data -> redis");
             averageRecentPriceRedisRepository.saveAll(result);

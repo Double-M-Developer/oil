@@ -13,7 +13,7 @@ public class PriceLpg extends GasStationBase {
 
     @Schema(description = "lpg 가격 id")
     @Column(name = "price_lpg_id")
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Schema(description = "주유소 id")
