@@ -33,21 +33,20 @@ public class BeforeJobExecutionListener implements JobExecutionListener {
     private final PriceLpgRepository priceLpgRepository;
     private final DateUtil dateUtil;
 
-    @Transactional("gasStationTransactionManager")
     @Override
     public void beforeJob(JobExecution jobExecution) {
         String jobName = jobExecution.getJobInstance().getJobName();
         switch (jobName) {
             case "importPriceLpg":
-                priceLpgRepository.deleteAll();
+                priceLpgRepository.deleteAllData();
                 LOGGER.info("Deleted all data from PriceLpgRepository before starting the job: {}", jobName);
                 break;
             case "importPriceOil":
-                priceOilRepository.deleteAll();
+                priceOilRepository.deleteAllData();
                 LOGGER.info("Deleted all data from PriceOilRepository before starting the job: {}", jobName);
                 break;
             case "importLowTop20Price":
-                lowTop20PriceRepository.deleteAll();
+                lowTop20PriceRepository.deleteAllData();
                 LOGGER.info("Deleted all data from LowTop20PriceRepository before starting the job: {}", jobName);
                 break;
             case "importAverageAllPrice":
@@ -73,7 +72,7 @@ public class BeforeJobExecutionListener implements JobExecutionListener {
         String jobName = jobExecution.getJobInstance().getJobName();
         switch (jobName) {
             case "importLowTop20Price":
-                lowTop20PriceRepository.deleteAll();
+                lowTop20PriceRedisRepository.deleteAll();
                 LOGGER.info("Deleted all data from LowTop20PriceRepository before starting the job: {}", jobName);
                 break;
             case "importAverageAllPrice":

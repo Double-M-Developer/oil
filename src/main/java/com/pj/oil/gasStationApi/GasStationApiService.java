@@ -41,7 +41,6 @@ public class GasStationApiService {
             return null;
         }
         LOGGER.info("data dose exist, entity size: {}", entity.size());
-        LOGGER.info("data: {}", entity);
         return entity;
     }
 

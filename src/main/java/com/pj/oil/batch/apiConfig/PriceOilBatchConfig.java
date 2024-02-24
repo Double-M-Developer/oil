@@ -3,8 +3,8 @@ package com.pj.oil.batch.apiConfig;
 import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.CustomSkipPolicy;
 import com.pj.oil.batch.process.PriceOilProcess;
+import com.pj.oil.batch.writer.PriceOilWriter;
 import com.pj.oil.gasStation.entity.maria.PriceOil;
-import com.pj.oil.gasStation.repository.maria.PriceOilRepository;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -14,7 +14,6 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.*;
-import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
@@ -24,6 +23,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 
@@ -34,24 +34,24 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class PriceOilBatchConfig {
 
     private final PlatformTransactionManager platformTransactionManager;
-    private final PriceOilRepository repository;
     private final JobRepository jobRepository;
     private final DateUtil dateUtil;
     private final String READER_PATH;
     private final BeforeJobExecutionListener beforeJobExecutionListener;
+    private final JdbcTemplate jdbcTemplate;
 
     public PriceOilBatchConfig(@Qualifier("gasStationTransactionManager") PlatformTransactionManager platformTransactionManager,
                                @Qualifier("gasStationJobRepository") JobRepository jobRepository,
-                               PriceOilRepository repository,
                                DateUtil dateUtil,
-                               BeforeJobExecutionListener beforeJobExecutionListener
+                               BeforeJobExecutionListener beforeJobExecutionListener,
+                               @Qualifier("gasStationJdbcTemplate") JdbcTemplate jdbcTemplate
     ) {
         this.platformTransactionManager = platformTransactionManager;
         this.jobRepository = jobRepository;
-        this.repository = repository;
         this.dateUtil = dateUtil;
         this.READER_PATH = "src/main/resources/csv/" + dateUtil.getTodayDateString() + "/" + dateUtil.getTodayDateString() + "-";
         this.beforeJobExecutionListener = beforeJobExecutionListener;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Bean(name = "priceOilReader")
@@ -92,10 +92,8 @@ public class PriceOilBatchConfig {
 
     @Bean(name = "priceOilWriter")
     public ItemWriter<PriceOil> writer() {
-        RepositoryItemWriter<PriceOil> writer = new RepositoryItemWriter<>();
-        writer.setRepository(repository);
-        writer.setMethodName("save");
-        return writer;
+
+        return new PriceOilWriter(jdbcTemplate);
     }
 
     @Bean(name = "priceOilImportStep")

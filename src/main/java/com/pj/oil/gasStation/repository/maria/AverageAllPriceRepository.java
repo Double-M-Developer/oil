@@ -2,6 +2,9 @@ package com.pj.oil.gasStation.repository.maria;
 
 import com.pj.oil.gasStation.entity.maria.AverageAllPrice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,5 +17,7 @@ public interface AverageAllPriceRepository extends JpaRepository<AverageAllPrice
 
     List<AverageAllPrice> findByTradeDate(String tradeDate);
 
-    void deleteByTradeDate(String tradeDate);
+    @Modifying
+    @Query("DELETE FROM AverageAllPrice a WHERE a.tradeDate = :tradeDate")
+    void deleteByTradeDate(@Param("tradeDate") String tradeDate);
 }

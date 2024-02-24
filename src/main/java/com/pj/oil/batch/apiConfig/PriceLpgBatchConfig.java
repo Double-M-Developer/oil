@@ -3,8 +3,8 @@ package com.pj.oil.batch.apiConfig;
 import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.CustomSkipPolicy;
 import com.pj.oil.batch.process.PriceLpgProcess;
+import com.pj.oil.batch.writer.PriceLpgWriter;
 import com.pj.oil.gasStation.entity.maria.PriceLpg;
-import com.pj.oil.gasStation.repository.maria.PriceLpgRepository;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -14,7 +14,6 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
@@ -24,6 +23,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 
@@ -34,24 +34,24 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class PriceLpgBatchConfig {
 
     private final PlatformTransactionManager platformTransactionManager;
-    private final PriceLpgRepository repository;
     private final JobRepository jobRepository;
     private final DateUtil dateUtil;
     private final String READER_PATH;
     private final BeforeJobExecutionListener beforeJobExecutionListener;
+    private final JdbcTemplate jdbcTemplate;
 
     public PriceLpgBatchConfig(@Qualifier("gasStationTransactionManager") PlatformTransactionManager platformTransactionManager,
                                @Qualifier("gasStationJobRepository") JobRepository jobRepository,
-                               PriceLpgRepository repository,
                                DateUtil dateUtil,
-                               BeforeJobExecutionListener beforeJobExecutionListener
+                               BeforeJobExecutionListener beforeJobExecutionListener,
+                               @Qualifier("gasStationJdbcTemplate") JdbcTemplate jdbcTemplate
     ) {
         this.platformTransactionManager = platformTransactionManager;
         this.jobRepository = jobRepository;
-        this.repository = repository;
         this.dateUtil = dateUtil;
         this.READER_PATH = "src/main/resources/csv/" + dateUtil.getTodayDateString() + "/" + dateUtil.getTodayDateString() + "-";
         this.beforeJobExecutionListener = beforeJobExecutionListener;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Bean(name = "priceLpgReader")
@@ -91,10 +91,8 @@ public class PriceLpgBatchConfig {
 
     @Bean(name = "lpgPriceWriter")
     public ItemWriter<PriceLpg> writer() {
-        RepositoryItemWriter<PriceLpg> writer = new RepositoryItemWriter<>();
-        writer.setRepository(repository);
-        writer.setMethodName("save");
-        return writer;
+
+        return new PriceLpgWriter(jdbcTemplate);
     }
 
     @Bean(name = "priceLpgImportStep")

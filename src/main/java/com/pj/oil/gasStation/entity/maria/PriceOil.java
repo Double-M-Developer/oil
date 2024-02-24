@@ -14,7 +14,7 @@ public class PriceOil extends GasStationBase {
 
     @Schema(description = "고급 휘발유, 휘발유, 경유 id")
     @Column(name = "price_oil_id")
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Schema(description = "주유소 id")
