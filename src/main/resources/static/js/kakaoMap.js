@@ -10,6 +10,8 @@ var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
 // 사용자가 선택한 지역과 제품 코드에 따라 데이터를 업데이트하는 함수
 function updateData() {
     clearMarkers();
+    clearOverlays(); // 오버레이 초기화를 데이터 유무와 관계없이 실행
+    clearTable(); // 테이블 초기화를 데이터 유무와 관계없이 실행
     var areaCode = document.getElementById('areaCode').value;
     var subAreaCode = document.getElementById('subAreaCode').value;
     var finalAreaCode = areaCode;
@@ -17,7 +19,9 @@ function updateData() {
         finalAreaCode += subAreaCode; // 세부 지역 코드를 결합
     }
     var productCode = document.getElementById('productCode').value;
-    fetchLowTop20PriceData(finalAreaCode, productCode).then(() => showOverlayForFirstStation());
+    fetchLowTop20PriceData(finalAreaCode, productCode).then(() => {
+        showOverlayForFirstStation();
+    });
 }
 
 function updateSubAreas() {
@@ -74,7 +78,9 @@ function fetchLowTop20PriceData(areaCode, productCode) {
                 showOverlayForFirstStation();
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
 // 저렴한 주유소 정보를 기반으로 테이블을 생성하는 함수
@@ -129,6 +135,14 @@ function createCell(text) {
     const cell = document.createElement('td');
     cell.textContent = text;
     return cell;
+}
+
+// 기존 테이블 내용을 초기화하는 함수
+function clearTable() {
+    var tableContainer = document.getElementById('rankTableContainer');
+    if (tableContainer) {
+        tableContainer.innerHTML = ''; // 테이블 컨테이너 내용 비우기
+    }
 }
 
 var infowindows = []; // 오버레이를 저장할 배열 초기화
