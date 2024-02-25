@@ -38,45 +38,11 @@ public class GasStationService {
 
     private final CoordinateUtil coordinateUtil;
     private final DateUtil dateUtil;
+    private final AreaRegistry areaRegistry;
+    private final ProductRegistry productRegistry;
+    private final PollDivRegistry pollDivRegistry;
+
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
-    private static final Map<String, String> POLL_DIV_NAME = Map.of(
-            "SKE", "SK에너지",
-            "GSC", "GS칼텍스",
-            "HDO", "현대오일뱅크",
-            "SOL", "S-OIL",
-            "RTE", "자영알뜰",
-            "RTX", "고속도로알뜰",
-            "NHO", "농협알뜰",
-            "ETC", "자가상표",
-            "E1G", "E1",
-            "SKG", "SK가스");
-    private static final Map<String, String> PRODUCT_CODE = Map.of(
-            "B034", "고급휘발유",
-            "B027", "휘발유",
-            "D047", "경유",
-            "K015", "LPG");
-    private static final Map<String, String> AREA_CODE = new HashMap<>();
-
-    static {
-        AREA_CODE.put("01", "서울");
-        AREA_CODE.put("02", "경기");
-        AREA_CODE.put("03", "강원");
-        AREA_CODE.put("04", "충북");
-        AREA_CODE.put("05", "충남");
-        AREA_CODE.put("06", "전북");
-        AREA_CODE.put("07", "전남");
-        AREA_CODE.put("08", "경북");
-        AREA_CODE.put("09", "경남");
-        AREA_CODE.put("10", "부산");
-        AREA_CODE.put("11", "제주");
-        AREA_CODE.put("14", "대구");
-        AREA_CODE.put("15", "인천");
-        AREA_CODE.put("16", "광주");
-        AREA_CODE.put("17", "대전");
-        AREA_CODE.put("18", "울산");
-        AREA_CODE.put("19", "세종");
-    }
-
 
     private <T extends GasStationBase> List<T> processRedisData(List<T> redisData) {
         if (!redisData.isEmpty()) {
@@ -87,15 +53,15 @@ public class GasStationService {
         return null;
     }
     private String getPollDivNameByCode(String code) {
-        return POLL_DIV_NAME.getOrDefault(code, "기타");
+        return pollDivRegistry.getPollDivName(code);
     }
 
     private String getAreaNameByCode(String code) {
-        return AREA_CODE.getOrDefault(code, "기타");
+        return areaRegistry.getAreaName(code);
     }
 
     private String getProductNameByCode(String code) {
-        return PRODUCT_CODE.getOrDefault(code, "기타");
+        return productRegistry.getProductName(code);
     }
 
     private void transformStationCoordinates(LowTop20Price station) {

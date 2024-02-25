@@ -2,8 +2,8 @@ package com.pj.oil.batch.apiConfig;
 
 import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.writer.AreaAverageRecentPriceWriter;
+import com.pj.oil.gasStation.AreaRegistry;
 import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
-import com.pj.oil.gasStation.repository.maria.AreaAverageRecentPriceRepository;
 import com.pj.oil.gasStationApi.GasStationApiService;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.core.Job;
@@ -31,7 +31,6 @@ import java.util.List;
 )
 public class AreaAverageRecentPriceBatchConfig {
 
-    private static String[] areas = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "14", "15", "16", "17", "18", "19"};
     private final String yesterday;
     private final PlatformTransactionManager platformTransactionManager;
     private final JobRepository jobRepository;
@@ -39,15 +38,16 @@ public class AreaAverageRecentPriceBatchConfig {
     private final DateUtil dateUtil;
     private final BeforeJobExecutionListener beforeJobExecutionListener;
     private final JdbcTemplate jdbcTemplate;
+    private final AreaRegistry areaRegistry;
 
     public AreaAverageRecentPriceBatchConfig(
             @Qualifier("gasStationJobRepository") JobRepository jobRepository,
             @Qualifier("gasStationTransactionManager") PlatformTransactionManager platformTransactionManager,
-            AreaAverageRecentPriceRepository repository,
             GasStationApiService gasStationApiService,
             DateUtil dateUtil,
             BeforeJobExecutionListener beforeJobExecutionListener,
-            @Qualifier("gasStationJdbcTemplate") JdbcTemplate jdbcTemplate
+            @Qualifier("gasStationJdbcTemplate") JdbcTemplate jdbcTemplate,
+            AreaRegistry areaRegistry
     ) {
         this.platformTransactionManager = platformTransactionManager;
         this.jobRepository = jobRepository;
@@ -56,6 +56,7 @@ public class AreaAverageRecentPriceBatchConfig {
         this.yesterday = dateUtil.getYesterdayDateString();
         this.beforeJobExecutionListener = beforeJobExecutionListener;
         this.jdbcTemplate = jdbcTemplate;
+        this.areaRegistry = areaRegistry;
     }
 
     @Bean(name = "areaAverageRecentPriceReader")
@@ -66,7 +67,7 @@ public class AreaAverageRecentPriceBatchConfig {
 
             {
                 List<AreaAverageRecentPrice> data = new ArrayList<>();
-                for (String area : areas) {
+                for (String area : areaRegistry.getAreaCodes()) {
                     List<AreaAverageRecentPrice> areaAverageRecentPrice = gasStationApiService.getAreaAvgRecentNDateAllProdPrice(area, yesterday);
                     data.addAll(areaAverageRecentPrice);
                 }
