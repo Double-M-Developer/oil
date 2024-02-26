@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // fetchLowTop20PriceData 함수 수정 (Promise 반환 추가)
 function fetchLowTop20PriceData(areaCode, productCode) {
-    areaCode = areaCode || '서울';
+    areaCode = areaCode || '01';
     productCode = productCode || '휘발유';
 
     // fetch 함수 호출 시 Promise 반환
