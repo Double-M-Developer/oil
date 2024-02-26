@@ -16,7 +16,7 @@ function updateData() {
     var subAreaCode = document.getElementById('subAreaCode').value;
     var finalAreaCode = areaCode;
     if (subAreaCode !== "none") { // "none"은 세부 지역을 선택하지 않았을 때의 값이라고 가정
-        finalAreaCode += subAreaCode; // 세부 지역 코드를 결합
+        finalAreaCode = subAreaCode; // 세부 지역 코드를 결합
     }
     var productCode = document.getElementById('productCode').value;
     fetchLowTop20PriceData(finalAreaCode, productCode).then(() => {
