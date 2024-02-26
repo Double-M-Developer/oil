@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -102,16 +104,16 @@ public class OilBatchConfig {
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())
-//                .taskExecutor(taskExecutor())
+                .taskExecutor(taskExecutor())
                 .build();
     }
 
-//    @Bean
-//    public TaskExecutor taskExecutor() {
-//        SimpleAsyncTaskExecutor asyncTaskExecutor = new SimpleAsyncTaskExecutor();
-//        asyncTaskExecutor.setConcurrencyLimit(10); // 비동기 작업 수 설정, -1은 동시성 제한 없는 것
-//        return asyncTaskExecutor;
-//    }
+    @Bean(name = "oilTaskExecutor")
+    public TaskExecutor taskExecutor() {
+        SimpleAsyncTaskExecutor asyncTaskExecutor = new SimpleAsyncTaskExecutor();
+        asyncTaskExecutor.setConcurrencyLimit(10); // 비동기 작업 수 설정, -1은 동시성 제한 없는 것
+        return asyncTaskExecutor;
+    }
     @Bean(name = "oilJob")
     public Job runJob() {
         return new JobBuilder("importOil", jobRepository)
