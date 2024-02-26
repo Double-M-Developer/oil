@@ -2,6 +2,8 @@ package com.pj.oil.batch.apiConfig;
 
 import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.writer.LowTop20PriceWriter;
+import com.pj.oil.gasStation.AreaRegistry;
+import com.pj.oil.gasStation.ProductRegistry;
 import com.pj.oil.gasStation.entity.maria.LowTop20Price;
 import com.pj.oil.gasStationApi.GasStationApiService;
 import org.springframework.batch.core.Job;
@@ -28,27 +30,30 @@ import java.util.List;
         transactionManagerRef = "gasStationTransactionManager")
 public class LowTop20PriceBatchConfig {
 
-    private static String[] areas = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "14", "15", "16", "17", "18", "19"};
-    private static String[] prods = {"B027", "D047", "B034", "C004", "K015"};
-
     private final PlatformTransactionManager platformTransactionManager;
     private final JobRepository jobRepository;
     private final GasStationApiService gasStationApiService;
     private final BeforeJobExecutionListener beforeJobExecutionListener;
     private final JdbcTemplate jdbcTemplate;
+    private final AreaRegistry areaRegistry;
+    private final ProductRegistry productRegistry;
 
     public LowTop20PriceBatchConfig(
             @Qualifier("gasStationJobRepository") JobRepository jobRepository,
             @Qualifier("gasStationTransactionManager") PlatformTransactionManager platformTransactionManager,
             GasStationApiService gasStationApiService,
             BeforeJobExecutionListener beforeJobExecutionListener,
-            @Qualifier("gasStationJdbcTemplate") JdbcTemplate jdbcTemplate
+            AreaRegistry areaRegistry,
+            @Qualifier("gasStationJdbcTemplate") JdbcTemplate jdbcTemplate,
+            ProductRegistry productRegistry
     ) {
         this.platformTransactionManager = platformTransactionManager;
         this.jobRepository = jobRepository;
         this.gasStationApiService = gasStationApiService;
         this.beforeJobExecutionListener = beforeJobExecutionListener;
         this.jdbcTemplate = jdbcTemplate;
+        this.areaRegistry = areaRegistry;
+        this.productRegistry = productRegistry;
     }
 
     @Bean(name = "lowTop20PriceReader")
@@ -58,8 +63,8 @@ public class LowTop20PriceBatchConfig {
             private final Iterator<LowTop20Price> dataIterator;
             {
                 List<LowTop20Price> data = new ArrayList<>();
-                for (String area : areas) {
-                    for (String prod : prods) {
+                for (String area : areaRegistry.getAreaCodes()) {
+                    for (String prod : productRegistry.getProductCodes()) {
                         List<LowTop20Price> areaLowTop20ProdPrice = gasStationApiService.getAreaLowTop20ProdPrice(prod, area);
                         data.addAll(areaLowTop20ProdPrice);
                     }

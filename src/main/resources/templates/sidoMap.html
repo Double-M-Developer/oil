@@ -42,7 +42,7 @@
                         <label for="areaCode" class="col-form-label">지역 선택:</label>
                     </div>
                     <div class="col-auto">
-                        <select id="areaCode" class="form-select">
+                        <select id="areaCode" class="form-select" onchange="updateSubAreas();">
                             <option value="01" selected>서울</option>
                             <option value="02">경기</option>
                             <option value="03">강원</option>
@@ -60,6 +60,14 @@
                             <option value="17">대전</option>
                             <option value="18">울산</option>
                             <option value="19">세종</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <label for="subAreaCode" class="col-form-label">세부 지역 선택:</label>
+                    </div>
+                    <div class="col-auto">
+                        <select id="subAreaCode" class="form-select">
+                            <!-- 세부 지역 옵션은 JavaScript를 통해 동적으로 생성됩니다 -->
                         </select>
                     </div>
                     <div class="col-auto">
@@ -87,6 +95,7 @@
 <th:block layout:fragment="script">
     <script type="text/javascript"
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=26aaaddcab04c14345279f233d6c24d1"></script>
+    <script th:src="@{/assets/js/subAreas.js}"></script>
     <script th:src="@{/js/kakaoMap.js}"></script>
 </th:block>
 </body>

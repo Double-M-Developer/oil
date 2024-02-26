@@ -10,15 +10,50 @@ var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
 // 사용자가 선택한 지역과 제품 코드에 따라 데이터를 업데이트하는 함수
 function updateData() {
     clearMarkers();
+    clearOverlays(); // 오버레이 초기화를 데이터 유무와 관계없이 실행
+    clearTable(); // 테이블 초기화를 데이터 유무와 관계없이 실행
     var areaCode = document.getElementById('areaCode').value;
+    var subAreaCode = document.getElementById('subAreaCode').value;
+    var finalAreaCode = areaCode;
+    if (subAreaCode !== "none") { // "none"은 세부 지역을 선택하지 않았을 때의 값이라고 가정
+        finalAreaCode += subAreaCode; // 세부 지역 코드를 결합
+    }
     var productCode = document.getElementById('productCode').value;
-    fetchLowTop20PriceData(areaCode, productCode).then(() => showOverlayForFirstStation());
+    fetchLowTop20PriceData(finalAreaCode, productCode).then(() => {
+        showOverlayForFirstStation();
+    });
+}
+
+function updateSubAreas() {
+    var areaCode = document.getElementById('areaCode').value;
+    var subAreaSelect = document.getElementById('subAreaCode');
+    subAreaSelect.innerHTML = ''; // 세부 지역 선택지 초기화
+
+    // "선택 안함" 옵션 추가
+    var defaultOption = document.createElement('option');
+    defaultOption.value = "none";
+    defaultOption.text = "선택 안함";
+    subAreaSelect.appendChild(defaultOption);
+
+
+
+    if (subAreas[areaCode]) {
+        subAreas[areaCode].forEach(function (subArea) {
+            var option = document.createElement('option');
+            var value = areaCode + subArea.split(' ')[0]; // 메인 지역 코드와 세부 지역 코드 조합
+            var text = subArea.split(' ')[1]; // 세부 지역 이름
+            option.value = value;
+            option.text = text;
+            subAreaSelect.appendChild(option);
+        });
+    }
 }
 
 // 페이지 로드 시 초기 데이터를 가져오고, 첫 번째 주유소에 마커를 표시하는 함수
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     // 페이지 로드 시 데이터를 가져오고 첫 번째 주유소에 마커를 표시합니다.
     updateData();
+    updateSubAreas();
 });
 
 // fetchLowTop20PriceData 함수 수정 (Promise 반환 추가)
@@ -43,7 +78,9 @@ function fetchLowTop20PriceData(areaCode, productCode) {
                 showOverlayForFirstStation();
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
 
 // 저렴한 주유소 정보를 기반으로 테이블을 생성하는 함수
@@ -99,6 +136,15 @@ function createCell(text) {
     cell.textContent = text;
     return cell;
 }
+
+// 기존 테이블 내용을 초기화하는 함수
+function clearTable() {
+    var tableContainer = document.getElementById('rankTableContainer');
+    if (tableContainer) {
+        tableContainer.innerHTML = ''; // 테이블 컨테이너 내용 비우기
+    }
+}
+
 var infowindows = []; // 오버레이를 저장할 배열 초기화
 var markers = []; // 마커를 저장할 배열 추가
 
@@ -141,7 +187,7 @@ function addMarkerAndCustomOverlay(station, index) {
     });
 
     overlay.setMap(null); // 오버레이 초기에는 숨김
-    kakao.maps.event.addListener(marker, 'click', function() {
+    kakao.maps.event.addListener(marker, 'click', function () {
         closeAllInfoWindows(); // 다른 오버레이 닫기
         overlay.setMap(map); // 클릭한 마커의 오버레이 표시
     });
@@ -159,7 +205,7 @@ function closeOverlay(index) {
 
 // 모든 오버레이를 닫는 함수
 function closeAllInfoWindows() {
-    infowindows.forEach(function(overlay) {
+    infowindows.forEach(function (overlay) {
         overlay.setMap(null);
     });
 }
