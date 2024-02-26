@@ -75,9 +75,9 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MARIADB_ROOT_PASSWORD: mypassword
+      MARIADB_ROOT_PASSWORD: oilmaria1password
       MARIADB_USER: ride
-      MARIADB_PASSWORD: mypassword
+      MARIADB_PASSWORD: oilmaria1password
       MARIADB_DATABASE: gas_station
       TZ: Asia/Seoul
 
@@ -89,9 +89,9 @@ services:
     ports:
       - "3307:3306"
     environment:
-      MARIADB_ROOT_PASSWORD: mypassword
+      MARIADB_ROOT_PASSWORD: oilmaria2password
       MARIADB_USER: ride
-      MARIADB_PASSWORD: mypassword
+      MARIADB_PASSWORD: oilmaria2password
       MARIADB_DATABASE: member_post
       TZ: Asia/Seoul
 
