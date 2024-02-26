@@ -26,10 +26,20 @@
 </table>
 <h2>개발기능</h2>
 <h3>Front-end</h3>
+<p>kakao api를 활용한 map</p>
 <h3>Back-end</h3>
 <p>데이터 입출력 속도 향상을 위한 캐싱(Redis)</p>
 <p>대용량 데이터 처리를 고려한 Spring Batch</p>
 <p>외부 api 연결에 대한 유연성&확장성을 고려한 RestClient 및 HttpInterface</p>
 <p>api 문서화, 협업 강화, 테스트 용이성을 위한 Swagger</p>
-<p>확장성 및 유연성을 고려한 AWS EC2</p>
+<p>서비스 확장성을 고려한 AWS EC2</p>
+<p>수평적 확장 및 환경 독립성을 고려한 Docker</p>
+<p>수평적 확장 및 유연성을 고려한 다중 데이터 소스</p>
+<p>배포 편의성을 고려한 Jenkins CI/CD pipeline</p>
 <h2>아키텍처</h2>
+<img
+  width="100%"
+  height="100%"
+  alt="architecture"
+  src="https://github.com/Double-M-Developer/oil/assets/91239439/772688a5-c7ae-4a20-92bf-7569214f84bd"
+  >
