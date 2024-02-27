@@ -16,9 +16,9 @@ import org.springframework.batch.item.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.Iterator;
@@ -88,9 +88,12 @@ public class AverageRecentPriceBatchConfig {
 
     @Bean(name = "averageRecentPriceTaskExecutor")
     public TaskExecutor taskExecutor() {
-        SimpleAsyncTaskExecutor asyncTaskExecutor = new SimpleAsyncTaskExecutor();
-        asyncTaskExecutor.setConcurrencyLimit(10); // 비동기 작업 수 설정, -1은 동시성 제한 없는 것
-        return asyncTaskExecutor;
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(5); // 기본 스레드 풀 크기
+        executor.setMaxPoolSize(10); // 최대 스레드 풀 크기
+        executor.setQueueCapacity(25); // 큐 용량
+        executor.initialize();
+        return executor;
     }
     @Bean(name = "averageRecentPriceJob")
     public Job runJob() {

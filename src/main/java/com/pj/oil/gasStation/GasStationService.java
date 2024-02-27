@@ -136,7 +136,7 @@ public class GasStationService {
         LOGGER.info("[findAreaAverageRecentPriceSevenDays]");
         String sevenDaysBeforeDateString = dateUtil.getSevenDaysBeforeDateString();
         String yesterdayDateString = dateUtil.getYesterdayDateString();
-        List<AreaAverageRecentPriceRedis> redisPrice = areaAverageRecentPriceRedisRepository.findByAreaCodeAndProductCode(areaCode, productCode);
+        List<AreaAverageRecentPriceRedis> redisPrice = areaAverageRecentPriceRedisRepository.findByAreaCodeAndProductCode(getAreaNameByCode(areaCode), getProductNameByCode(productCode));
         List<AreaAverageRecentPriceRedis> result = processRedisData(redisPrice);
         if (result != null) return result;
 
@@ -169,7 +169,7 @@ public class GasStationService {
         String sevenDaysBeforeDateString = dateUtil.getSevenDaysBeforeDateString();
         String yesterdayDateString = dateUtil.getYesterdayDateString();
         // 데이터베이스에서 지난 7일간의 AverageRecentPrice 객체를 불러옴
-        List<AverageRecentPriceRedis> redisPrice = averageRecentPriceRedisRepository.findByProductCode(productCode);
+        List<AverageRecentPriceRedis> redisPrice = averageRecentPriceRedisRepository.findByProductCode(getProductNameByCode(productCode));
         List<AverageRecentPriceRedis> result = processRedisData(redisPrice);
         if (result != null) return result;
 
