@@ -96,19 +96,19 @@ public class LowTop20PriceBatchConfig {
                 .<LowTop20Price, LowTop20Price>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
                 .reader(reader())
                 .writer(writer())
-                .taskExecutor(taskExecutor())
+//                .taskExecutor(taskExecutor())
                 .build();
     }
 
-    @Bean(name = "lowTop20PriceTaskExecutor")
-    public TaskExecutor taskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(5); // 기본 스레드 풀 크기
-        executor.setMaxPoolSize(10); // 최대 스레드 풀 크기
-        executor.setQueueCapacity(25); // 큐 용량
-        executor.initialize();
-        return executor;
-    }
+//    @Bean(name = "lowTop20PriceTaskExecutor")
+//    public TaskExecutor taskExecutor() {
+//        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+//        executor.setCorePoolSize(5); // 기본 스레드 풀 크기
+//        executor.setMaxPoolSize(10); // 최대 스레드 풀 크기
+//        executor.setQueueCapacity(25); // 큐 용량
+//        executor.initialize();
+//        return executor;
+//    }
     @Bean(name = "lowTop20PriceJob")
     public Job runJob() {
         return new JobBuilder("importLowTop20Price", jobRepository)
