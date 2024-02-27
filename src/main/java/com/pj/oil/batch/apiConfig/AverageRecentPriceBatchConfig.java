@@ -82,19 +82,19 @@ public class AverageRecentPriceBatchConfig {
                 .reader(reader())
 //                .processor(processor())
                 .writer(writer())
-                .taskExecutor(taskExecutor())
+//                .taskExecutor(taskExecutor())
                 .build();
     }
 
-    @Bean(name = "averageRecentPriceTaskExecutor")
-    public TaskExecutor taskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(5); // 기본 스레드 풀 크기
-        executor.setMaxPoolSize(10); // 최대 스레드 풀 크기
-        executor.setQueueCapacity(25); // 큐 용량
-        executor.initialize();
-        return executor;
-    }
+//    @Bean(name = "averageRecentPriceTaskExecutor")
+//    public TaskExecutor taskExecutor() {
+//        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+//        executor.setCorePoolSize(5); // 기본 스레드 풀 크기
+//        executor.setMaxPoolSize(10); // 최대 스레드 풀 크기
+//        executor.setQueueCapacity(25); // 큐 용량
+//        executor.initialize();
+//        return executor;
+//    }
     @Bean(name = "averageRecentPriceJob")
     public Job runJob() {
         return new JobBuilder("importAverageRecentPrice", jobRepository)
