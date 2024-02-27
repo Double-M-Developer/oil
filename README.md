@@ -35,6 +35,7 @@
 <p>서비스 확장성을 고려한 AWS EC2</p>
 <p>수평적 확장 및 환경 독립성을 고려한 Docker</p>
 <p>수평적 확장 및 유연성을 고려한 다중 데이터 소스</p>
+<p>selenium을 활용한 동적 웹 크롤링</p>
 <p>배포 편의성을 고려한 Jenkins CI/CD pipeline</p>
 <h2>아키텍처</h2>
 <img
