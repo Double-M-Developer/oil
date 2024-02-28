@@ -20,7 +20,7 @@
     </tr>
     <tr>
       <td>DevOps</td>
-      <td>AWS EC2, Jenkins, docker-compose, Docker</td>
+      <td>AWS EC2, Jenkins, Docker, docker-compose, Docker</td>
     </tr>
   </tbody>
 </table>
