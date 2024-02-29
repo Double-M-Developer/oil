@@ -25,13 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
 let areaAveragePriceData = []; // 전역 변수로 지역별 평균 가격 데이터 저장
 
 function updateData() {
-    const areaCode = document.getElementById('areaCode').value;
+    var areaCode = document.getElementById('areaCode').value;
     var subAreaCode = document.getElementById('subAreaCode').value;
     var finalAreaCode = areaCode;
     if (subAreaCode !== "none") { // "none"은 세부 지역을 선택하지 않았을 때의 값이라고 가정
         finalAreaCode = subAreaCode; // 세부 지역 코드를 결합
     }
-    const productCode = document.getElementById('productCode').value;
+    var productCode = document.getElementById('productCode').value;
     fetchDataAndRender(finalAreaCode, productCode);
 }
 
@@ -61,6 +61,8 @@ function updateSubAreas() {
 }
 
 async function fetchDataAndRender(areaCode, productCode) {
+    areaCode = areaCode || '01';
+    productCode = productCode || '휘발유';
     try {
         // 비동기 함수 호출을 await로 처리
         const allPriceData = await fetchAndRenderChartData(productCode);
