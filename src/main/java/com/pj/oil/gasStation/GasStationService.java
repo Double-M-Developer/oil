@@ -37,7 +37,6 @@ public class GasStationService {
     private final LowTop20PriceRedisRepository lowTop20PriceRedisRepository;
 
     private final CoordinateUtil coordinateUtil;
-    private final DateUtil dateUtil;
     private final AreaRegistry areaRegistry;
     private final ProductRegistry productRegistry;
     private final PollDivRegistry pollDivRegistry;
@@ -103,8 +102,8 @@ public class GasStationService {
     // 현재 오피넷에 게시되고 있는 전국 주유소 평균 가격
     public List<AverageAllPriceRedis> findAverageAllPriceByTradeDate() {
         LOGGER.info("[findAverageAllPriceByTradeDate]");
-        String todayDateString = dateUtil.getTodayDateString();
-        List<AverageAllPriceRedis> redisPrice = averageAllPriceRedisRepository.findByTradeDate(dateUtil.formatDateString(todayDateString));
+        String todayDateString = DateUtil.getTodayDateString();
+        List<AverageAllPriceRedis> redisPrice = averageAllPriceRedisRepository.findByTradeDate(DateUtil.formatDateString(todayDateString));
         List<AverageAllPriceRedis> result = processRedisData(redisPrice);
         if (result != null) return result;
 
@@ -114,7 +113,7 @@ public class GasStationService {
             result = dbPrice.stream()
                     .peek(station -> {
                         station.setProductCode(getProductNameByCode(station.getProductCode()));
-                        station.setTradeDate(dateUtil.formatDateString(station.getTradeDate()));
+                        station.setTradeDate(DateUtil.formatDateString(station.getTradeDate()));
                     })
                     .map(AverageAllPriceRedis::transferDataToRedis)
                     .toList();
@@ -134,8 +133,8 @@ public class GasStationService {
     // 일 평균가격 확정 수치이며, 전일부터 7일간의 전국 일일 지역별 평균가격
     public List<AreaAverageRecentPriceRedis> findAreaAverageRecentPriceSevenDays(String areaCode, String productCode) {
         LOGGER.info("[findAreaAverageRecentPriceSevenDays]");
-        String sevenDaysBeforeDateString = dateUtil.getSevenDaysBeforeDateString();
-        String yesterdayDateString = dateUtil.getYesterdayDateString();
+        String sevenDaysBeforeDateString = DateUtil.getSevenDaysBeforeDateString();
+        String yesterdayDateString = DateUtil.getYesterdayDateString();
         List<AreaAverageRecentPriceRedis> redisPrice = areaAverageRecentPriceRedisRepository.findByAreaCodeAndProductCode(getAreaNameByCode(areaCode), getProductNameByCode(productCode));
         List<AreaAverageRecentPriceRedis> result = processRedisData(redisPrice);
         if (result != null) return result;
@@ -147,7 +146,7 @@ public class GasStationService {
                     .peek(station -> {
                         station.setAreaCode(getAreaNameByCode(station.getAreaCode()));
                         station.setProductCode(getProductNameByCode(station.getProductCode()));
-                        station.setBaseDate(dateUtil.formatDateString(station.getBaseDate()));
+                        station.setBaseDate(DateUtil.formatDateString(station.getBaseDate()));
                     })
                     .map(AreaAverageRecentPriceRedis::transferDataToRedis)
                     .toList();
@@ -166,8 +165,8 @@ public class GasStationService {
 
     public List<AverageRecentPriceRedis> findAverageRecentPriceSevenDays(String productCode) {
         LOGGER.info("[findAverageRecentPriceSevenDays]");
-        String sevenDaysBeforeDateString = dateUtil.getSevenDaysBeforeDateString();
-        String yesterdayDateString = dateUtil.getYesterdayDateString();
+        String sevenDaysBeforeDateString = DateUtil.getSevenDaysBeforeDateString();
+        String yesterdayDateString = DateUtil.getYesterdayDateString();
         // 데이터베이스에서 지난 7일간의 AverageRecentPrice 객체를 불러옴
         List<AverageRecentPriceRedis> redisPrice = averageRecentPriceRedisRepository.findByProductCode(getProductNameByCode(productCode));
         List<AverageRecentPriceRedis> result = processRedisData(redisPrice);
@@ -179,7 +178,7 @@ public class GasStationService {
             result = dbPrice.stream()
                     .peek(station -> {
                         station.setProductCode(getProductNameByCode(station.getProductCode()));
-                        station.setDate(dateUtil.formatDateString(station.getDate()));
+                        station.setDate(DateUtil.formatDateString(station.getDate()));
                     })
                     .map(AverageRecentPriceRedis::transferDataToRedis)
                     .toList();

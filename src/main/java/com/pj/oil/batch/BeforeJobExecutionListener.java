@@ -31,7 +31,6 @@ public class BeforeJobExecutionListener implements JobExecutionListener {
 
     private final PriceOilRepository priceOilRepository;
     private final PriceLpgRepository priceLpgRepository;
-    private final DateUtil dateUtil;
 
     @Override
     public void beforeJob(JobExecution jobExecution) {
@@ -50,16 +49,16 @@ public class BeforeJobExecutionListener implements JobExecutionListener {
                 LOGGER.info("Deleted all data from LowTop20PriceRepository before starting the job: {}", jobName);
                 break;
             case "importAverageAllPrice":
-                averageAllPriceRepository.deleteByTradeDate(dateUtil.getYesterdayDateString());
-                LOGGER.info("Deleted all data from AverageAllPriceRepository before starting the job: {}", jobName);
+                averageAllPriceRepository.deleteByTradeDate(DateUtil.getYesterdayDateString());
+                LOGGER.info("Deleted all data from AverageAllPriceRepository before starting the job: {}, date: {}", jobName, DateUtil.getYesterdayDateString());
                 break;
             case "importAverageRecentPrice":
-                averageRecentPriceRepository.deleteByDate(dateUtil.getYesterdayDateString());
-                LOGGER.info("Deleted all data from AverageRecentPriceRepository before starting the job: {}", jobName);
+                averageRecentPriceRepository.deleteByDate(DateUtil.getYesterdayDateString());
+                LOGGER.info("Deleted all data from AverageRecentPriceRepository before starting the job: {}, date: {}", jobName, DateUtil.getYesterdayDateString());
                 break;
             case "importAreaAverageRecentPrice":
-                areaAverageRecentPriceRepository.deleteByBaseDate(dateUtil.getYesterdayDateString());
-                LOGGER.info("Deleted all data from AreaAverageRecentPriceRepository before starting the job: {}", jobName);
+                areaAverageRecentPriceRepository.deleteByBaseDate(DateUtil.getYesterdayDateString());
+                LOGGER.info("Deleted all data from AreaAverageRecentPriceRepository before starting the job: {}, date: {}", jobName, DateUtil.getYesterdayDateString());
                 break;
             default:
                 LOGGER.warn("No specific pre-processing required for this job: {}", jobName);

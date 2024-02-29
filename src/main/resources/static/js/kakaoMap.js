@@ -7,6 +7,13 @@ var mapContainer = document.getElementById('map'),
 
 var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
 
+// 페이지 로드 시 초기 데이터를 가져오고, 첫 번째 주유소에 마커를 표시하는 함수
+document.addEventListener("DOMContentLoaded", function () {
+    // 페이지 로드 시 데이터를 가져오고 첫 번째 주유소에 마커를 표시합니다.
+    updateData();
+    updateSubAreas();
+});
+
 // 사용자가 선택한 지역과 제품 코드에 따라 데이터를 업데이트하는 함수
 function updateData() {
     clearMarkers();
@@ -48,13 +55,6 @@ function updateSubAreas() {
         });
     }
 }
-
-// 페이지 로드 시 초기 데이터를 가져오고, 첫 번째 주유소에 마커를 표시하는 함수
-document.addEventListener("DOMContentLoaded", function () {
-    // 페이지 로드 시 데이터를 가져오고 첫 번째 주유소에 마커를 표시합니다.
-    updateData();
-    updateSubAreas();
-});
 
 // fetchLowTop20PriceData 함수 수정 (Promise 반환 추가)
 function fetchLowTop20PriceData(areaCode, productCode) {

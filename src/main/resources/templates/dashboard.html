@@ -27,7 +27,7 @@
                                 <label for="areaCode" class="col-form-label">지역 선택:</label>
                             </div>
                             <div class="col-auto">
-                                <select id="areaCode" class="form-select">
+                                <select id="areaCode" class="form-select" onchange="updateSubAreas();">
                                     <option value="01" selected>서울</option>
                                     <option value="02">경기</option>
                                     <option value="03">강원</option>
@@ -45,6 +45,14 @@
                                     <option value="17">대전</option>
                                     <option value="18">울산</option>
                                     <option value="19">세종</option>
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <label for="subAreaCode" class="col-form-label">세부 지역 선택:</label>
+                            </div>
+                            <div class="col-auto">
+                                <select id="subAreaCode" class="form-select">
+                                    <!-- 세부 지역 옵션은 JavaScript를 통해 동적으로 생성됩니다 -->
                                 </select>
                             </div>
                             <div class="col-auto">
