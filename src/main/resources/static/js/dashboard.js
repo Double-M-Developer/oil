@@ -14,7 +14,6 @@ const areaColorSet = [
     '#34495e', // LPG - 진한 남색 (지역 평균)
 ];
 const labels = ['고급휘발유', '휘발유', '경유', 'LPG'];
-const areaLabels = ['지역 고급 휘발유', '지역 휘발유', '지역 경유'];
 
 // 페이지 로드 시 호출
 document.addEventListener('DOMContentLoaded', function() {
@@ -22,11 +21,10 @@ document.addEventListener('DOMContentLoaded', function() {
     updateSubAreas();
 });
 
-let areaAveragePriceData = []; // 전역 변수로 지역별 평균 가격 데이터 저장
-
 function updateData() {
     var areaCode = document.getElementById('areaCode').value;
     var subAreaCode = document.getElementById('subAreaCode').value;
+    console.log(subAreaCode)
     var finalAreaCode = areaCode;
     if (subAreaCode !== "none") { // "none"은 세부 지역을 선택하지 않았을 때의 값이라고 가정
         finalAreaCode = subAreaCode; // 세부 지역 코드를 결합
@@ -45,8 +43,6 @@ function updateSubAreas() {
     defaultOption.value = "none";
     defaultOption.text = "선택 안함";
     subAreaSelect.appendChild(defaultOption);
-
-
 
     if (subAreas[areaCode]) {
         subAreas[areaCode].forEach(function (subArea) {

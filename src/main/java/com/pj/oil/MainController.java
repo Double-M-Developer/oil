@@ -21,10 +21,4 @@ public class MainController {
         return "sidoMap";
     }
 
-    @GetMapping("/home")
-    public String home(){
-        return "dashboard";
-    }
-
-
 }
