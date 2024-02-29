@@ -33,7 +33,6 @@ public class AverageRecentPriceBatchConfig {
     private final PlatformTransactionManager platformTransactionManager;
     private final JobRepository jobRepository;
     private final GasStationApiService gasStationApiService;
-    private final DateUtil dateUtil;
     private final BeforeJobExecutionListener beforeJobExecutionListener;
     private final JdbcTemplate jdbcTemplate;
 
@@ -41,15 +40,13 @@ public class AverageRecentPriceBatchConfig {
             @Qualifier("gasStationJobRepository") JobRepository jobRepository,
             @Qualifier("gasStationTransactionManager") PlatformTransactionManager platformTransactionManager,
             GasStationApiService gasStationApiService,
-            DateUtil dateUtil,
             BeforeJobExecutionListener beforeJobExecutionListener,
             @Qualifier("gasStationJdbcTemplate") JdbcTemplate jdbcTemplate
     ) {
         this.platformTransactionManager = platformTransactionManager;
         this.jobRepository = jobRepository;
         this.gasStationApiService = gasStationApiService;
-        this.dateUtil = dateUtil;
-        this.yesterday = dateUtil.getYesterdayDateString();
+        this.yesterday = DateUtil.getYesterdayDateString();
         this.beforeJobExecutionListener = beforeJobExecutionListener;
         this.jdbcTemplate = jdbcTemplate;
     }

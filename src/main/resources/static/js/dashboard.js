@@ -19,14 +19,45 @@ const areaLabels = ['지역 고급 휘발유', '지역 휘발유', '지역 경�
 // 페이지 로드 시 호출
 document.addEventListener('DOMContentLoaded', function() {
     updateData()
+    updateSubAreas();
 });
 
 let areaAveragePriceData = []; // 전역 변수로 지역별 평균 가격 데이터 저장
 
 function updateData() {
     const areaCode = document.getElementById('areaCode').value;
+    var subAreaCode = document.getElementById('subAreaCode').value;
+    var finalAreaCode = areaCode;
+    if (subAreaCode !== "none") { // "none"은 세부 지역을 선택하지 않았을 때의 값이라고 가정
+        finalAreaCode = subAreaCode; // 세부 지역 코드를 결합
+    }
     const productCode = document.getElementById('productCode').value;
-    fetchDataAndRender(areaCode, productCode);
+    fetchDataAndRender(finalAreaCode, productCode);
+}
+
+function updateSubAreas() {
+    var areaCode = document.getElementById('areaCode').value;
+    var subAreaSelect = document.getElementById('subAreaCode');
+    subAreaSelect.innerHTML = ''; // 세부 지역 선택지 초기화
+
+    // "선택 안함" 옵션 추가
+    var defaultOption = document.createElement('option');
+    defaultOption.value = "none";
+    defaultOption.text = "선택 안함";
+    subAreaSelect.appendChild(defaultOption);
+
+
+
+    if (subAreas[areaCode]) {
+        subAreas[areaCode].forEach(function (subArea) {
+            var option = document.createElement('option');
+            var value = areaCode + subArea.split(' ')[0]; // 메인 지역 코드와 세부 지역 코드 조합
+            var text = subArea.split(' ')[1]; // 세부 지역 이름
+            option.value = value;
+            option.text = text;
+            subAreaSelect.appendChild(option);
+        });
+    }
 }
 
 async function fetchDataAndRender(areaCode, productCode) {

@@ -15,13 +15,10 @@ import java.util.List;
 
 public class GasStationOilWriter implements ItemWriter<GasStationOil> {
     private final JdbcTemplate jdbcTemplate;
-    private final DateUtil dateUtil;
     public GasStationOilWriter(
-            @Qualifier("gasStationJdbcTemplate") JdbcTemplate jdbcTemplate,
-            DateUtil dateUtil
+            @Qualifier("gasStationJdbcTemplate") JdbcTemplate jdbcTemplate
     ) {
         this.jdbcTemplate = jdbcTemplate;
-        this.dateUtil = dateUtil;
     }
 
     @Override
@@ -39,7 +36,7 @@ public class GasStationOilWriter implements ItemWriter<GasStationOil> {
                 ps.setString(3, item.getOsName());
                 ps.setString(4, item.getPollDivName());
                 ps.setString(5, item.getNewAddress());
-                ps.setString(6, dateUtil.getTodayDateString());
+                ps.setString(6, DateUtil.getTodayDateString());
             }
 
             @Override

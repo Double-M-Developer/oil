@@ -23,16 +23,13 @@ public class CrawlerUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(CrawlerUtil.class);
 
     private final PropertyConfiguration config;
-    private final DateUtil dateUtil;
 
     private static String downloadPathWithDate;
 
     public CrawlerUtil(
-            PropertyConfiguration config,
-            DateUtil dateUtil
+            PropertyConfiguration config
     ) {
         this.config = config;
-        this.dateUtil = dateUtil;
         System.setProperty("file.encoding", "UTF-8");
     }
 
@@ -72,7 +69,7 @@ public class CrawlerUtil {
         options.addArguments("--blink-settings=imagesEnabled=false"); //이미지 다운 안받음
         options.addArguments("--disable-dev-shm-usage"); //Linux /dev/shm 메모리 공유 비활성화
 
-        downloadPathWithDate = config.getDownloadFilepath() + dateUtil.getTodayDateString();
+        downloadPathWithDate = config.getDownloadFilepath() + DateUtil.getTodayDateString();
         LOGGER.info("downloadPathWithDate: {}", downloadPathWithDate);
         Path downloadDir = Paths.get(downloadPathWithDate);
         if (!Files.exists(downloadDir)) {

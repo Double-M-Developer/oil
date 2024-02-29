@@ -36,20 +36,17 @@ public class LpgBatchConfig {
 
     private final PlatformTransactionManager platformTransactionManager;
     private final JobRepository jobRepository;
-    private final DateUtil dateUtil;
     private final String READER_PATH;
     private final BeforeJobExecutionListener beforeJobExecutionListener;
     private final JdbcTemplate jdbcTemplate;
     public LpgBatchConfig(@Qualifier("gasStationTransactionManager") PlatformTransactionManager platformTransactionManager,
                           @Qualifier("gasStationJobRepository") JobRepository jobRepository,
-                          DateUtil dateUtil,
                           BeforeJobExecutionListener beforeJobExecutionListener,
                           @Qualifier("gasStationJdbcTemplate") JdbcTemplate jdbcTemplate
     ) {
         this.platformTransactionManager = platformTransactionManager;
         this.jobRepository = jobRepository;
-        this.dateUtil = dateUtil;
-        this.READER_PATH = "src/main/resources/csv/" + dateUtil.getTodayDateString() + "/" + dateUtil.getTodayDateString() + "-";
+        this.READER_PATH = "src/main/resources/csv/" + DateUtil.getTodayDateString() + "/" + DateUtil.getTodayDateString() + "-";
         this.beforeJobExecutionListener = beforeJobExecutionListener;
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -93,7 +90,7 @@ public class LpgBatchConfig {
     @Bean(name = "lpgWriter")
     public ItemWriter<GasStationLpg> writer() {
 
-        return new GasStationLpgWriter(jdbcTemplate, dateUtil);
+        return new GasStationLpgWriter(jdbcTemplate);
     }
 
     @Bean(name = "lpgImportStep")

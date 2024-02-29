@@ -22,16 +22,14 @@ public class EncodingUtil {
     private static final int CHUNK_SIZE = 1000; // 청크 크기 설정
 
     private final PropertyConfiguration config;
-    private final DateUtil dateUtil;
 
     private final String inputPathWithDate;
     private final String outputPathWithDate;
 
-    public EncodingUtil(PropertyConfiguration config, DateUtil dateUtil) {
+    public EncodingUtil(PropertyConfiguration config) {
         this.config = config;
-        this.dateUtil = dateUtil;
-        this.inputPathWithDate = config.getDownloadFilepath() + dateUtil.getTodayDateString() + "/";
-        this.outputPathWithDate = config.getOutFilepath() + dateUtil.getTodayDateString() + "/" + dateUtil.getTodayDateString() + "-";
+        this.inputPathWithDate = config.getDownloadFilepath() + DateUtil.getTodayDateString() + "/";
+        this.outputPathWithDate = config.getOutFilepath() + DateUtil.getTodayDateString() + "/" + DateUtil.getTodayDateString() + "-";
     }
 
     public boolean convertFileEncoding(String inputFileName, String outputFileName) {
