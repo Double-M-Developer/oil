@@ -63,6 +63,14 @@
                         </select>
                     </div>
                     <div class="col-auto">
+                        <label for="subAreaCode" class="col-form-label">세부 지역 선택:</label>
+                    </div>
+                    <div class="col-auto">
+                        <select id="subAreaCode" class="form-select">
+                            <!-- 세부 지역 옵션은 JavaScript를 통해 동적으로 생성됩니다 -->
+                        </select>
+                    </div>
+                    <div class="col-auto">
                         <label for="productCode" class="col-form-label">기름 종류:</label>
                     </div>
                     <div class="col-auto">
@@ -89,17 +97,15 @@
                         </div>
                     </div>
                 </div>
+            </main>
         </div>
-    </div>
-    </div>
-    </main>
-    </div>
     </div>
 </th:block>
 <th:block layout:fragment="script">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js"
             integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp"
             crossorigin="anonymous"></script>
+    <script th:src="@{/assets/js/subAreas.js}"></script>
     <script th:src="@{/js/dashboard.js}"></script>
 </th:block>
 </body>
