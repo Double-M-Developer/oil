@@ -76,6 +76,7 @@ async function fetchDataAndRender(areaCode, productCode) {
 }
 
 async function fetchAndRenderChartData(productCode) {
+    productCode = productCode || '휘발유';
     const response = await fetch(`/gas-station/average-recent-price?productCode=${productCode}`);
     const data = await response.json();
     console.log(data);
@@ -83,6 +84,8 @@ async function fetchAndRenderChartData(productCode) {
 }
 
 async function fetchAndRenderAreaAverageRecentPrice(areaCode, productCode) {
+    areaCode = areaCode || '01';
+    productCode = productCode || '휘발유';
     try {
         const response = await fetch(`/gas-station/area-average-recent-price?areaCode=${areaCode}&productCode=${productCode}`);
         if (!response.ok) {
