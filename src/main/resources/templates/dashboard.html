@@ -56,27 +56,15 @@
                                 </select>
                             </div>
                             <div class="col-auto">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="productCode" id="productB034"
-                                           value="B034"
-                                           checked>
-                                    <label class="form-check-label" for="productB034">고급 휘발유</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="productCode" id="productB027"
-                                           value="B027">
-                                    <label class="form-check-label" for="productB027">휘발유</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="productCode" id="productD047"
-                                           value="D047">
-                                    <label class="form-check-label" for="productD047">경유</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="productCode" id="productK015"
-                                           value="K015">
-                                    <label class="form-check-label" for="productK015">LPG</label>
-                                </div>
+                                <label for="productCode" class="col-form-label">기름 종류:</label>
+                            </div>
+                            <div class="col-auto">
+                                <select id="productCode" class="form-select">
+                                    <option value="B027" selected>휘발유</option>
+                                    <option value="D047">경유</option>
+                                    <option value="B034">고급휘발유</option>
+                                    <option value="K015">LPG</option>
+                                </select>
                             </div>
                             <div class="col-auto">
                                 <button onclick="updateData()" class="btn btn-primary">데이터 업데이트</button>
