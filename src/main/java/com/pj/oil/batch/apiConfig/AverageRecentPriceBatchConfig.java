@@ -29,7 +29,6 @@ import java.util.Iterator;
         transactionManagerRef = "gasStationTransactionManager")
 public class AverageRecentPriceBatchConfig {
 
-    private final String yesterday;
     private final PlatformTransactionManager platformTransactionManager;
     private final JobRepository jobRepository;
     private final GasStationApiService gasStationApiService;
@@ -46,7 +45,6 @@ public class AverageRecentPriceBatchConfig {
         this.platformTransactionManager = platformTransactionManager;
         this.jobRepository = jobRepository;
         this.gasStationApiService = gasStationApiService;
-        this.yesterday = DateUtil.getYesterdayDateString();
         this.beforeJobExecutionListener = beforeJobExecutionListener;
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -55,6 +53,7 @@ public class AverageRecentPriceBatchConfig {
     @JobScope
     public ItemReader<AverageRecentPrice> reader() {
         return new ItemReader<>() {
+            String yesterday = DateUtil.getYesterdayDateString();
             private final Iterator<AverageRecentPrice> dataIterator = gasStationApiService.getAvgRecentNDateAllProdPrice(yesterday).iterator();
             @Override
             public AverageRecentPrice read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {

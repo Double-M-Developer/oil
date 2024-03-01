@@ -33,7 +33,6 @@ import java.util.List;
 )
 public class AreaAverageRecentPriceBatchConfig {
 
-    private final String yesterday;
     private final PlatformTransactionManager platformTransactionManager;
     private final JobRepository jobRepository;
     private final GasStationApiService gasStationApiService;
@@ -52,7 +51,6 @@ public class AreaAverageRecentPriceBatchConfig {
         this.platformTransactionManager = platformTransactionManager;
         this.jobRepository = jobRepository;
         this.gasStationApiService = gasStationApiService;
-        this.yesterday = DateUtil.getYesterdayDateString();
         this.beforeJobExecutionListener = beforeJobExecutionListener;
         this.jdbcTemplate = jdbcTemplate;
         this.areaRegistry = areaRegistry;
@@ -65,6 +63,7 @@ public class AreaAverageRecentPriceBatchConfig {
             private final Iterator<AreaAverageRecentPrice> dataIterator;
 
             {
+                String yesterday = DateUtil.getYesterdayDateString();
                 List<AreaAverageRecentPrice> data = new ArrayList<>();
                 for (String area : areaRegistry.getAreaCodes()) {
                     List<AreaAverageRecentPrice> areaAverageRecentPrice = gasStationApiService.getAreaAvgRecentNDateAllProdPrice(area, yesterday);
