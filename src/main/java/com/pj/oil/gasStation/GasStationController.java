@@ -39,7 +39,7 @@ public class GasStationController {
         LOGGER.info("[findAreaAverageRecentPriceSevenDays]GET \"/gas-station/area-average-recent-price\", areaCode: {}, productCode: {}", areaCode, productCode);
         long start = System.currentTimeMillis();
         List<AreaAverageRecentPriceRedis> response = gasStationService.findAreaAverageRecentPriceSevenDays(areaCode, productCode);
-        meterRegistry.timer("http_server_requests_seconds",
+        meterRegistry.timer("custom_http_server_requests_seconds",
                         Tags.of("uri", "/gas-station/area-average-recent-price",
                                 "method", "GET",
                                 "areaCode", areaCode,
@@ -60,7 +60,7 @@ public class GasStationController {
         LOGGER.info("[findAverageRecentPriceSevenDays]GET \"/gas-station/average-recent-price\", productCode: {}", productCode);
         long start = System.currentTimeMillis();
         List<AverageRecentPriceRedis> response = gasStationService.findAverageRecentPriceSevenDays(productCode);
-        meterRegistry.timer("http_server_requests_seconds",
+        meterRegistry.timer("custom_http_server_requests_seconds",
                         Tags.of("uri", "/gas-station/average-recent-price",
                                 "method", "GET",
                                 "productCode", productCode))
@@ -77,7 +77,7 @@ public class GasStationController {
     public List<AverageAllPriceRedis> findAverageAllPriceByTradeDate() {
         LOGGER.info("[findAverageAllPriceByTradeDate]GET \"/gas-station/area-average-all-price\"");
         long start = System.currentTimeMillis();
-        meterRegistry.timer("http_server_requests_seconds",
+        meterRegistry.timer("custom_http_server_requests_seconds",
                         Tags.of("uri", "/gas-station/area-average-all-price",
                                 "method", "GET"))
                 .record(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
@@ -98,7 +98,7 @@ public class GasStationController {
         LOGGER.info("[findLowTop20PriceByAreaCodeAndProductCode]GET \"/gas-station/low-top20\"");
         long start = System.currentTimeMillis();
         List<LowTop20PriceRedis> response = gasStationService.findLowTop20PriceByAreaCodeAndProductCode(areaCode, productCode);
-        meterRegistry.timer("http_server_requests_seconds",
+        meterRegistry.timer("custom_http_server_requests_seconds",
                         Tags.of("uri", "/gas-station/low-top20",
                                 "method", "GET",
                                 "areaCode", areaCode,

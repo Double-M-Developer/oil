@@ -46,7 +46,7 @@ public class WebConfig {
     }
 
     private void recordMetrics(String uri, int statusCode, long requestDuration) {
-        Timer.builder("oil.api.requests")
+        Timer.builder("opi-net.api.requests")
                 .tags("uri", uri, "status", String.valueOf(statusCode))
                 .register(meterRegistry)
                 .record(requestDuration, TimeUnit.MILLISECONDS);
