@@ -41,7 +41,7 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     volumes:
-      - grafana-data:/var/lib/grafana
+      - ./grafana-data:./grafana-data
     ports:
       - "3000:3000"
     depends_on:
@@ -124,4 +124,3 @@ volumes:
   mariadb2_data:
   jenkins_home:
   prometheus_data:
-  grafana_data:
