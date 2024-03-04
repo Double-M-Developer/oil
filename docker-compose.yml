@@ -41,7 +41,7 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     volumes:
-      - ./grafana-data:./grafana-data
+      - ./grafana-data:/app/grafana-data
     ports:
       - "3000:3000"
     depends_on:
