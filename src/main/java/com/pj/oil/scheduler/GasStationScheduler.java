@@ -3,6 +3,9 @@ package com.pj.oil.scheduler;
 import com.pj.oil.config.PropertyConfiguration;
 import com.pj.oil.util.CrawlerUtil;
 import com.pj.oil.util.EncodingUtil;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -13,6 +16,8 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class GasStationScheduler {
@@ -32,6 +37,8 @@ public class GasStationScheduler {
     private final Job areaAverageRecentPriceJob;
     private final Job averageAllPriceJob;
     private final Job lowTop20PriceJob;
+    //
+    private final MeterRegistry meterRegistry;
 
     public GasStationScheduler(
             CrawlerUtil crawlerUtil,
@@ -47,7 +54,9 @@ public class GasStationScheduler {
             @Qualifier("averageRecentPriceJob") Job averageRecentPriceJob,
             @Qualifier("areaAverageRecentPriceJob") Job areaAverageRecentPriceJob,
             @Qualifier("averageAllPriceJob") Job averageAllPriceJob,
-            @Qualifier("lowTop20PriceJob") Job lowTop20PriceJob
+            @Qualifier("lowTop20PriceJob") Job lowTop20PriceJob,
+            //
+            MeterRegistry meterRegistry
     ) {
         this.crawlerUtil = crawlerUtil;
         this.encodingUtil = encodingUtil;
@@ -61,11 +70,13 @@ public class GasStationScheduler {
         this.areaAverageRecentPriceJob = areaAverageRecentPriceJob;
         this.averageAllPriceJob = averageAllPriceJob;
         this.lowTop20PriceJob = lowTop20PriceJob;
+        this.meterRegistry = meterRegistry;
     }
 
     @Scheduled(cron = "0 0 1 * * ?") // 매일 새벽 1시에 실행
     public void saveCsv() {
         LOGGER.info("스케줄링 작업 실행 중...");
+        long start = System.currentTimeMillis();
         boolean downloadCSVCompleted = crawlerUtil.downloadCSVFromWeb();
         if (downloadCSVCompleted) {
             String[] files = {config.getBasicInfoLpg(), config.getBasicInfoOil(), config.getCurrentPriceLpg(), config.getCurrentPriceOil()};
@@ -77,118 +88,79 @@ public class GasStationScheduler {
             }
             if (downloadCSVCompleted && encodingCompleted) {
                 LOGGER.info("스케줄링 작업 완료");
+                long duration = System.currentTimeMillis() - start;
+                LOGGER.info("saveCsv 실행 시간: {}ms", duration);
+                Timer.builder("scheduler.jobs.duration")
+                        .tags("job", "saveCsv")
+                        .register(meterRegistry)
+                        .record(duration, TimeUnit.MILLISECONDS);
             } else {
                 LOGGER.warn("스케줄링 작업 실패");
+                Counter.builder("scheduler.jobs.failures")
+                        .tags("job", "saveCsv")
+                        .register(meterRegistry)
+                        .increment();
             }
         }
     }
-
-    @Scheduled(cron = "0 5 1 * * ?")
-    public void saveOil() {
-        LOGGER.info("saveOil 실행 중...");
+    private void jobWithMonitoring(Job job) {
+        String jobName = job.getName();
+        LOGGER.info("{} 실행 중...",jobName);
+        long start = System.currentTimeMillis();
         try {
             JobParameters jobParameters = new JobParametersBuilder()
                     .addLong("time", System.currentTimeMillis())
                     .toJobParameters();
-            JobExecution jobExecution = jobLauncher.run(oilJob, jobParameters);
+            JobExecution jobExecution = jobLauncher.run(job, jobParameters);
             LOGGER.info("Job ID: {} 상태: {}",jobExecution.getId(), jobExecution.getStatus());
+            long duration = System.currentTimeMillis() - start;
+            LOGGER.info("{} 실행 시간: {}ms", jobName, duration);
+            Timer.builder("scheduler.jobs.duration")
+                    .tags("job", jobName)
+                    .register(meterRegistry)
+                    .record(duration, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
+            Counter.builder("scheduler.jobs.failures")
+                    .tags("job", jobName)
+                    .register(meterRegistry)
+                    .increment();
             LOGGER.error("작업 실행 중 오류가 발생했습니다", e);
         }
+    }
+    @Scheduled(cron = "0 5 1 * * ?")
+    public void saveOil() {
+        jobWithMonitoring(oilJob);
     }
     @Scheduled(cron = "0 10 1 * * ?")
     public void savePriceOil() {
-        LOGGER.info("savePriceOil 실행 중...");
-        try {
-            JobParameters jobParameters = new JobParametersBuilder()
-                    .addLong("time", System.currentTimeMillis())
-                    .toJobParameters();
-            JobExecution jobExecution = jobLauncher.run(priceOilJob, jobParameters);
-            LOGGER.info("Job ID: {} 상태: {}", jobExecution.getId(), jobExecution.getStatus());
-        } catch (Exception e) {
-            LOGGER.error("작업 실행 중 오류가 발생했습니다", e);
-        }
+        jobWithMonitoring(priceOilJob);
     }
     @Scheduled(cron = "0 15 1 * * ?")
     public void saveLpg() {
-        LOGGER.info("saveLpg 실행 중...");
-        try {
-            JobParameters jobParameters = new JobParametersBuilder()
-                    .addLong("time", System.currentTimeMillis())
-                    .toJobParameters();
-            JobExecution jobExecution = jobLauncher.run(lpgJob, jobParameters);
-            LOGGER.info("Job ID: {} 상태: {}", jobExecution.getId(), jobExecution.getStatus());
-        } catch (Exception e) {
-            LOGGER.error("작업 실행 중 오류가 발생했습니다", e);
-        }
+        jobWithMonitoring(lpgJob);
     }
 
     @Scheduled(cron = "0 20 1 * * ?")
     public void savePriceLpg() {
-        LOGGER.info("savePriceLpg 실행 중...");
-        try {
-            JobParameters jobParameters = new JobParametersBuilder()
-                    .addLong("time", System.currentTimeMillis())
-                    .toJobParameters();
-            JobExecution jobExecution = jobLauncher.run(priceLpgJob, jobParameters);
-            LOGGER.info("Job ID: {} 상태: {}", jobExecution.getId(), jobExecution.getStatus());
-        } catch (Exception e) {
-            LOGGER.error("작업 실행 중 오류가 발생했습니다", e);
-        }
+        jobWithMonitoring(priceLpgJob);
     }
 
     @Scheduled(cron = "0 25 1 * * ?")
     public void saveLowTop20Price() {
-        LOGGER.info("saveLowTop20Price 실행 중...");
-        try {
-            JobParameters jobParameters = new JobParametersBuilder()
-                    .addLong("time", System.currentTimeMillis())
-                    .toJobParameters();
-            JobExecution jobExecution = jobLauncher.run(lowTop20PriceJob, jobParameters);
-            LOGGER.info("Job ID: {} 상태: {}", jobExecution.getId(), jobExecution.getStatus());
-        } catch (Exception e) {
-            LOGGER.error("작업 실행 중 오류가 발생했습니다", e);
-        }
+        jobWithMonitoring(lowTop20PriceJob);
     }
 
     @Scheduled(cron = "0 26 1 * * ?")
     public void saveAverageAllPrice() {
-        LOGGER.info("saveAverageAllPrice 실행 중...");
-        try {
-            JobParameters jobParameters = new JobParametersBuilder()
-                    .addLong("time", System.currentTimeMillis())
-                    .toJobParameters();
-            JobExecution jobExecution = jobLauncher.run(averageAllPriceJob, jobParameters);
-            LOGGER.info("Job ID: {} 상태: {}", jobExecution.getId(), jobExecution.getStatus());
-        } catch (Exception e) {
-            LOGGER.error("작업 실행 중 오류가 발생했습니다", e);
-        }
+        jobWithMonitoring(averageAllPriceJob);
     }
 
     @Scheduled(cron = "0 27 1 * * ?")
     public void saveAverageRecentPrice() {
-        LOGGER.info("saveAverageRecentPrice 실행 중...");
-        try {
-            JobParameters jobParameters = new JobParametersBuilder()
-                    .addLong("time", System.currentTimeMillis())
-                    .toJobParameters();
-            JobExecution jobExecution = jobLauncher.run(averageRecentPriceJob, jobParameters);
-            LOGGER.info("Job ID: {} 상태: {}", jobExecution.getId(), jobExecution.getStatus());
-        } catch (Exception e) {
-            LOGGER.error("작업 실행 중 오류가 발생했습니다", e);
-        }
+        jobWithMonitoring(averageRecentPriceJob);
     }
     @Scheduled(cron = "0 28 1 * * ?")
     public void saveAreaAverageRecentPrice() {
-        LOGGER.info("saveAreaAverageRecentPrice 실행 중...");
-        try {
-            JobParameters jobParameters = new JobParametersBuilder()
-                    .addLong("time", System.currentTimeMillis())
-                    .toJobParameters();
-            JobExecution jobExecution = jobLauncher.run(areaAverageRecentPriceJob, jobParameters);
-            LOGGER.info("Job ID: {} 상태: {}", jobExecution.getId(), jobExecution.getStatus());
-        } catch (Exception e) {
-            LOGGER.error("작업 실행 중 오류가 발생했습니다", e);
-        }
+        jobWithMonitoring(areaAverageRecentPriceJob);
     }
 }
