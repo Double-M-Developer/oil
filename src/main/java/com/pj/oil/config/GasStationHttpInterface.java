@@ -38,12 +38,24 @@ public interface GasStationHttpInterface { //HttpServiceProxyFactory
     String getAvgSidoProdPrice(@PathVariable String apiKey, @PathVariable String areaCd, @PathVariable String prodcd);
 
     /**
+     * 전날부터 최대 7일 전국 일일 평균가격
+     * http://www.opinet.co.kr/api/areaAvgRecentPrice.do?out=json&code={apiKey}&date={date}
+     *
+     * @param apiKey
+     * @param date yyyyMMdd
+     * @return AreaAverageRecentPriceDto
+     */
+    @GetExchange("avgRecentPrice.do?out=json&code={apiKey}&date={date}")
+    String getAvgRecentNDateAllProdPrice(@PathVariable String apiKey, @PathVariable String date);
+
+
+    /**
      * 최근 date일간 전국 일일 지역별 모든 제품 평균가격
      * http://www.opinet.co.kr/api/areaAvgRecentPrice.do?out=json&code={apiKey}&area={areaCd}&date={date}
      *
      * @param apiKey
-     * @param areaCd
-     * @param date
+     * @param areaCd nn
+     * @param date yyyyMMdd
      * @return AreaAverageRecentPriceDto
      */
     @GetExchange("areaAvgRecentPrice.do?out=json&code={apiKey}&area={areaCd}&date={date}")
@@ -58,7 +70,7 @@ public interface GasStationHttpInterface { //HttpServiceProxyFactory
      * @param areaCd
      * @return LowTop20PriceDto
      */
-    @GetExchange("lowTop10.do?out=json&code={apiKey}&cnd=20&prodcd={prodcd}&area={areaCd}")
+    @GetExchange("lowTop10.do?out=json&code={apiKey}&cnd=20&prodcd={prodcd}&area={areaCd}&cnt=20")
     String getAreaLowTop20ProdPrice(@PathVariable String apiKey, @PathVariable String prodcd, @PathVariable String areaCd);
 
     /**

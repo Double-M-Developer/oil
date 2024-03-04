@@ -2,6 +2,7 @@ package com.pj.oil.gasStation.entity.maria;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pj.oil.gasStation.entity.redis.AreaAverageRecentPriceRedis;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,12 +14,15 @@ import lombok.*;
 @Getter @Setter @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(indexes = {
+        @Index(name = "area_avg_rec_price_bd",columnList = "base_date"),
+})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AreaAverageRecentPrice extends GasStationBase {
 
         @Schema(description = "일 평균가격 id")
         @Column(name = "area_average_recent_price_id")
-        @Id @GeneratedValue
+        @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
         @Schema(description = "기준일자")
         @Column(name = "base_date")
@@ -35,14 +39,24 @@ public class AreaAverageRecentPrice extends GasStationBase {
         @Schema(description = "평균가격")
         @Column(name = "price_average")
         @JsonProperty("PRICE")
-        private String priceAverage;
+        private double priceAverage;
 
         @Builder
-        public AreaAverageRecentPrice(Long id, String baseDate, String areaCode, String productCode, String priceAverage) {
+        public AreaAverageRecentPrice(Long id, String baseDate, String areaCode, String productCode, double priceAverage) {
                 this.id = id;
                 this.baseDate = baseDate;
                 this.areaCode = areaCode;
                 this.productCode = productCode;
                 this.priceAverage = priceAverage;
+        }
+
+        public static AreaAverageRecentPrice transferRedisToEntity(AreaAverageRecentPriceRedis redis) {
+                return AreaAverageRecentPrice.builder()
+                        .id(redis.getAreaAverageRecentPriceId())
+                        .baseDate(redis.getBaseDate())
+                        .areaCode(redis.getAreaCode())
+                        .productCode(redis.getProductCode())
+                        .priceAverage(redis.getPriceAverage())
+                        .build();
         }
 }

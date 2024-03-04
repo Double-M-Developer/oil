@@ -1,6 +1,6 @@
 package com.pj.oil.memberPost.member;
 
-import com.pj.oil.memberPost.token.Token;
+import com.pj.oil.memberPost.token.entity.maria.Token;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

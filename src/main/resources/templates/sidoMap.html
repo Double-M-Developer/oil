@@ -5,7 +5,6 @@
       layout:decorate="~{layouts/layout}">
 <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 </th:block>
 <body>
 <th:block layout:fragment="header">
@@ -17,7 +16,6 @@
 <th:block layout:fragment="content">
     <div class="container-fluid">
         <div class="row">
-            <script th:src="@{/js/kakaoMap.js}"></script>
             <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
                 <div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu"
                      aria-labelledby="sidebarMenuLabel">
@@ -29,118 +27,6 @@
                     </div>
                     <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
                         <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2 active" aria-current="page" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#house-fill"/>
-                                    </svg>
-                                    Dashboard
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#file-earmark"/>
-                                    </svg>
-                                    Orders
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#cart"/>
-                                    </svg>
-                                    Products
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#people"/>
-                                    </svg>
-                                    Customers
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#graph-up"/>
-                                    </svg>
-                                    Reports
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#puzzle"/>
-                                    </svg>
-                                    Integrations
-                                </a>
-                            </li>
-                        </ul>
-
-                        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
-                            <span>Saved reports</span>
-                            <a class="link-secondary" href="#" aria-label="Add a new report">
-                                <svg class="bi">
-                                    <use xlink:href="#plus-circle"/>
-                                </svg>
-                            </a>
-                        </h6>
-                        <ul class="nav flex-column mb-auto">
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#file-earmark-text"/>
-                                    </svg>
-                                    Current month
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#file-earmark-text"/>
-                                    </svg>
-                                    Last quarter
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#file-earmark-text"/>
-                                    </svg>
-                                    Social engagement
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#file-earmark-text"/>
-                                    </svg>
-                                    Year-end sale
-                                </a>
-                            </li>
-                        </ul>
-
-                        <hr class="my-3">
-
-                        <ul class="nav flex-column mb-auto">
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#gear-wide-connected"/>
-                                    </svg>
-                                    Settings
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="#">
-                                    <svg class="bi">
-                                        <use xlink:href="#door-closed"/>
-                                    </svg>
-                                    Sign out
-                                </a>
-                            </li>
                         </ul>
                     </div>
                 </div>
@@ -148,59 +34,68 @@
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">시도 별 지도</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group me-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-                        </div>
-                        <button type="button"
-                                class="btn btn-sm btn-outline-secondary dropdown-toggle d-flex align-items-center gap-1">
-                            <svg class="bi">
-                                <use xlink:href="#calendar3"/>
-                            </svg>
-                            This week
-                        </button>
+                    <h1 class="h2">지역 별 저렴한 주유소</h1>
+                </div>
+
+                <div class="row g-3 align-items-center mb-4">
+                    <div class="col-auto">
+                        <label for="areaCode" class="col-form-label">지역 선택:</label>
+                    </div>
+                    <div class="col-auto">
+                        <select id="areaCode" class="form-select" onchange="updateSubAreas();">
+                            <option value="01" selected>서울</option>
+                            <option value="02">경기</option>
+                            <option value="03">강원</option>
+                            <option value="04">충북</option>
+                            <option value="05">충남</option>
+                            <option value="06">전북</option>
+                            <option value="07">전남</option>
+                            <option value="08">경북</option>
+                            <option value="09">경남</option>
+                            <option value="10">부산</option>
+                            <option value="11">제주</option>
+                            <option value="14">대구</option>
+                            <option value="15">인천</option>
+                            <option value="16">광주</option>
+                            <option value="17">대전</option>
+                            <option value="18">울산</option>
+                            <option value="19">세종</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <label for="subAreaCode" class="col-form-label">세부 지역 선택:</label>
+                    </div>
+                    <div class="col-auto">
+                        <select id="subAreaCode" class="form-select">
+                            <!-- 세부 지역 옵션은 JavaScript를 통해 동적으로 생성됩니다 -->
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <label for="productCode" class="col-form-label">기름 종류:</label>
+                    </div>
+                    <div class="col-auto">
+                        <select id="productCode" class="form-select">
+                            <option value="B027" selected>휘발유</option>
+                            <option value="D047">경유</option>
+                            <option value="B034">고급휘발유</option>
+                            <option value="K015">LPG</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button onclick="updateData()" class="btn btn-primary">데이터 업데이트</button>
                     </div>
                 </div>
 
-                <div id="map" style=" min-width:400px; max-width:1000px;height:500px;"></div>
-
-                <h2>Section title</h2>
-                <div class="table-responsive small">
-                    <table class="table table-striped table-sm">
-                        <thead>
-                        <tr>
-                            <th scope="col">순위</th>
-                            <th scope="col">상호</th>
-                            <th scope="col">상표</th>
-                            <th scope="col">제품구분</th>
-                            <th scope="col">가격</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="lowTop20Price, stat:${lowTop20PriceList}">
-                            <td th:text="${stat.count}"></td>
-                            <td th:text="${lowTop20Price.osNm}"></td>
-                            <td th:text="${lowTop20Price.pollDivCd.title}"></td>
-                            <td th:text="${lowTop20Price.product.title}"></td>
-                            <td th:text="${lowTop20Price.price}"></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <div id="map" style="width:100%;height:500px;" class="shadow-sm p-3 mb-5 bg-body rounded"></div>
+                <div id="rankTableContainer"></div>
             </main>
         </div>
     </div>
 </th:block>
 <th:block layout:fragment="script">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=26aaaddcab04c14345279f233d6c24d1"></script>
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        var positions = /*[[${lowTop20PriceList}]]*/ [];
-        /*]]>*/
-    </script>
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=26aaaddcab04c14345279f233d6c24d1"></script>
+    <script th:src="@{/assets/js/subAreas.js}"></script>
     <script th:src="@{/js/kakaoMap.js}"></script>
 </th:block>
 </body>

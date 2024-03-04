@@ -2,6 +2,7 @@ package com.pj.oil.gasStation.entity.maria;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pj.oil.gasStation.entity.redis.LowTop20PriceRedis;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,12 +14,15 @@ import lombok.*;
 @Getter @Setter @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(indexes = {
+        @Index(name = "low_top_price",columnList = "price_current"),
+})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LowTop20Price extends GasStationBase {
 
     @Schema(description = "전국 또는 지역별 최저가 주유소 TOP20 id")
     @Column(name = "low_top_20_price_id")
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Schema(description = "주유소 코드")
     @Column(name = "uni_id")
@@ -79,4 +83,20 @@ public class LowTop20Price extends GasStationBase {
         this.productCode = productCode;
         this.areaCode = areaCode;
     }
+
+    public static LowTop20Price transferRedisToEntity(LowTop20PriceRedis redis) {
+        return LowTop20Price.builder()
+                .uniId(redis.getUniId())
+                .priceCurrent(redis.getPriceCurrent())
+                .pollDivCode(redis.getPollDivCode())
+                .osName(redis.getOsName())
+                .vanAddress(redis.getVanAddress())
+                .newAddress(redis.getNewAddress())
+                .gisXCoor(redis.getGisXCoor())
+                .gisYCoor(redis.getGisYCoor())
+                .productCode(redis.getProductCode())
+                .areaCode(redis.getAreaCode())
+                .build();
+    }
+
 }

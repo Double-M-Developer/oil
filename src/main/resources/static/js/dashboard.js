@@ -1,159 +1,210 @@
 /* globals Chart:false */
-// AJAX 요청을 처리하는 함수
-const colorSet = ['#007bff', '#ff007b', '#ff7b00', '#00ff7b']
 
-const fetchChartData = () => {
-    fetch('/gas-station/avg') // 서버 엔드포인트 경로
-        .then(response => response.json())
-        .then(data => {
-            // 서버로부터 받은 labels을 차트의 labels로 설정
+const colorSet = [
+    '#3498db', // 고급휘발유 - 밝은 청색 (전국 평균)
+    '#2ecc71', // 휘발유 - 밝은 녹색 (전국 평균)
+    '#f1c40f', // 경유 - 밝은 황색 (전국 평균)
+    '#9b59b6', // LPG - 밝은 보라색 (전국 평균)
+];
 
-            console.log(data);
-            myChart.data.labels = data.labels;
+const areaColorSet = [
+    '#e74c3c', // 고급휘발유 - 밝은 붉은색 (지역 평균)
+    '#16a085', // 휘발유 - 청록색 (지역 평균)
+    '#d35400', // 경유 - 단풍색 (지역 평균)
+    '#34495e', // LPG - 진한 남색 (지역 평균)
+];
+const labels = ['고급휘발유', '휘발유', '경유', 'LPG'];
 
-            // 각 데이터셋에 서버로부터 받은 평균 가격 데이터 할당
-            data.prices.forEach((priceObj, index) => {
-                if (myChart.data.datasets[index]) {
-                    myChart.data.datasets[index].data = priceObj.averagePrice;
-                }
-            });
+// 페이지 로드 시 호출
+document.addEventListener('DOMContentLoaded', function() {
+    updateData()
+    updateSubAreas();
+});
 
-            // 차트 업데이트
-            myChart.update();
-        })
-        .catch(error => console.error('Error fetching data:', error));
-};
+function updateData() {
+    var areaCode = document.getElementById('areaCode').value;
+    var subAreaCode = document.getElementById('subAreaCode').value;
+    console.log(subAreaCode)
+    var finalAreaCode = areaCode;
+    if (subAreaCode !== "none") { // "none"은 세부 지역을 선택하지 않았을 때의 값이라고 가정
+        finalAreaCode = subAreaCode; // 세부 지역 코드를 결합
+    }
+    var productCode = document.getElementById('productCode').value;
+    fetchDataAndRender(finalAreaCode, productCode);
+}
 
+function updateSubAreas() {
+    var areaCode = document.getElementById('areaCode').value;
+    var subAreaSelect = document.getElementById('subAreaCode');
+    subAreaSelect.innerHTML = ''; // 세부 지역 선택지 초기화
 
-// Graphs
-const ctx = document.getElementById('myChart')
-// eslint-disable-next-line no-unused-vars
-const myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: [
+    // "선택 안함" 옵션 추가
+    var defaultOption = document.createElement('option');
+    defaultOption.value = "none";
+    defaultOption.text = "선택 안함";
+    subAreaSelect.appendChild(defaultOption);
 
-        ],
-        datasets: [
-            {
-                label: '고급 휘발유',
-                data: [
+    if (subAreas[areaCode]) {
+        subAreas[areaCode].forEach(function (subArea) {
+            var option = document.createElement('option');
+            var value = areaCode + subArea.split(' ')[0]; // 메인 지역 코드와 세부 지역 코드 조합
+            var text = subArea.split(' ')[1]; // 세부 지역 이름
+            option.value = value;
+            option.text = text;
+            subAreaSelect.appendChild(option);
+        });
+    }
+}
 
-                ],
-                lineTension: 0, // 0 고정
-                backgroundColor: 'transparent',
-                borderColor: '#007bff',
-                borderWidth: 4, // 그래프 곡선 두께
-                pointBackgroundColor: '#007bff'
-            }, {
-                label: '휘발유',
-                data: [
+async function fetchDataAndRender(areaCode, productCode) {
+    areaCode = areaCode || '01';
+    productCode = productCode || '휘발유';
+    try {
+        // 비동기 함수 호출을 await로 처리
+        const allPriceData = await fetchAndRenderChartData(productCode);
+        const areaPriceData = await fetchAndRenderAreaAverageRecentPrice(areaCode, productCode);
 
-                ],
-                lineTension: 0, // 0 고정
-                backgroundColor: 'transparent',
-                borderColor: '#ff007b',
-                borderWidth: 4, // 그래프 곡선 두께
-                pointBackgroundColor: '#ff007b'
-            },{
-                label: '경유',
-                data: [
+        // 배열로 래핑하지 않고 직접 전달
+        updateChartDataWithAreaAveragePrice(allPriceData, areaPriceData);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
 
-                ],
-                lineTension: 0, // 0 고정
-                backgroundColor: 'transparent',
-                borderColor: 'rgba(119,255,0,0.66)',
-                borderWidth: 4, // 그래프 곡선 두께
-                pointBackgroundColor: 'rgba(119,255,0,0.66)'
-            },{
-                label: 'lpg',
-                data: [
+async function fetchAndRenderChartData(productCode) {
+    productCode = productCode || '휘발유';
+    const response = await fetch(`/gas-station/average-recent-price?productCode=${productCode}`);
+    const data = await response.json();
+    console.log(data);
+    return data; // 데이터 반환
+}
 
-                ],
-                lineTension: 0, // 0 고정
-                backgroundColor: 'transparent',
-                borderColor: 'rgba(183,0,255,0.66)',
-                borderWidth: 4, // 그래프 곡선 두께
-                pointBackgroundColor: 'rgba(183,0,255,0.66)'
+async function fetchAndRenderAreaAverageRecentPrice(areaCode, productCode) {
+    areaCode = areaCode || '01';
+    productCode = productCode || '휘발유';
+    try {
+        const response = await fetch(`/gas-station/area-average-recent-price?areaCode=${areaCode}&productCode=${productCode}`);
+        if (!response.ok) {
+            throw new Error(`Server responded with status ${response.status}`);
+        }
+
+        const text = await response.text();
+        if (!text) {
+            throw new Error('Response body is empty');
+        }
+
+        // JSON.parse를 사용하여 응답 텍스트를 안전하게 파싱
+        // 빈 문자열이거나 유효하지 않은 JSON일 경우 catch 블록으로 이동
+        const data = JSON.parse(text);
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error('Error fetching area average recent price data:', error);
+        // 에러 발생 시 빈 배열 또는 기본 값을 반환하여 함수의 나머지 로직이 계속 실행될 수 있도록 함
+        return [];
+    }
+}
+
+let myChart; // 차트 인스턴스를 저장할 전역 변수
+// 제품 코드에 따른 색상 반환 함수
+function getColorForProductCode(productCode) {
+    const index = labels.indexOf(productCode); // labels 배열에서 제품 코드의 인덱스 찾기
+    return colorSet[index % colorSet.length]; // 색상 배열에서 해당 인덱스의 색상 반환
+}
+function getAreaColorForLabel(productCode) {
+    const index = labels.indexOf(productCode); // labels 배열에서 제품 코드의 인덱스 찾기
+    return areaColorSet[index % areaColorSet.length]; // 색상 배열에서 해당 인덱스의 색상 반환
+}
+function updateChartDataWithAreaAveragePrice(allPrice, areaPrice) {
+    const ctx = document.getElementById('myChart');
+    if (ctx) {
+        if (myChart) {
+            myChart.destroy();
+        }
+
+        // 모든 날짜 추출 및 정렬
+        const allDates = [...new Set([...allPrice.map(item => item.DATE), ...areaPrice.map(item => item.DATE)])].sort();
+
+        // allPrice 데이터셋 생성
+        const allPriceDatasets = allPrice.reduce((acc, item) => {
+            let dataset = acc.find(ds => ds.label === item.PRODCD + " (전국)");
+            if (!dataset) {
+                dataset = {
+                    label: item.PRODCD + " (전국)",
+                    lineTension: 0,
+                    backgroundColor: 'transparent',
+                    borderColor: getColorForProductCode(item.PRODCD),
+                    pointBackgroundColor: getColorForProductCode(item.PRODCD),
+                    borderWidth: 4,
+                    data: new Array(allDates.length).fill(null)
+                };
+                acc.push(dataset);
             }
-        ]
-    },
-    options: {
+            const dateIndex = allDates.indexOf(item.DATE);
+            dataset.data[dateIndex] = item.PRICE;
+            return acc;
+        }, []);
+
+        // areaPrice 데이터셋 생성
+        const areaPriceDatasets = areaPrice.reduce((acc, item) => {
+            let dataset = acc.find(ds => ds.label === item.PRODCD + " (지역)");
+            if (!dataset) {
+                dataset = {
+                    label: item.PRODCD + " (지역)",
+                    lineTension: 0,
+                    backgroundColor: 'transparent',
+                    borderColor: getAreaColorForLabel(item.PRODCD),
+                    pointBackgroundColor: getAreaColorForLabel(item.PRODCD),
+                    borderWidth: 4,
+                    data: new Array(allDates.length).fill(null)
+                };
+                acc.push(dataset);
+            }
+            const dateIndex = allDates.indexOf(item.DATE);
+            dataset.data[dateIndex] = item.PRICE;
+            return acc;
+        }, []);
+
+        // allPrice와 areaPrice 데이터셋을 합쳐서 차트 생성
+        const combinedDatasets = allPriceDatasets.concat(areaPriceDatasets);
+
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: allDates,
+                datasets: combinedDatasets
+            },
+            options: getChartOptions(),
+        });
+    }
+}
+
+function getChartOptions() {
+    return {
         plugins: {
             legend: {
                 display: true,
-                position : 'bottom'
+                position: 'bottom',
             },
             tooltip: {
-                boxPadding: 3
-            }
+                enabled: true,
+                mode: 'index', // 동일한 인덱스의 모든 데이터 세트 정보를 함께 표시
+                intersect: false, // 마우스 위치와 상관없이 모든 데이터 세트를 표시
+                bodySpacing: 8, // 툴팁 내부 텍스트 간 간격을 8px로 설정
+                callbacks: {
+                    label: function(context) {
+                        // 라벨 커스터마이즈: 데이터 세트의 이름과 값을 포함
+                        let label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed.y !== null) {
+                            label += context.parsed.y;
+                        }
+                        return label;
+                    }
+                }
+            },
         }
-    }
-});
-// })()
-
-// 페이지 로드 시 차트 데이터 업데이트
-fetchChartData();
-
-// 예시 데이터, 실제로는 백엔드에서 가져온 데이터를 사용합니다.
-
-
-// 페이지 로드 시 차트 데이터 업데이트 및 순위 테이블 생성
-fetch('/gas-station/ranks') // 백엔드 엔드포인트 경로 수정
-    .then(response => response.json())
-    .then(rankData => {
-        console.log(rankData);
-        generateRankTable(rankData); // 순위 데이터를 사용하여 테이블 생성
-    })
-    .catch(error => console.error('Error fetching data:', error));
-
-
-function generateRankTable(rankData) {
-    // 테이블을 추가할 부모 요소를 찾거나 지정합니다.
-    const tableContainer = document.getElementById('rankTableContainer');
-    if (!tableContainer) {
-        console.error('Table container element not found!');
-        return;
-    }
-
-    // 기존에 테이블이 있으면 삭제합니다.
-    while (tableContainer.firstChild) {
-        tableContainer.removeChild(tableContainer.firstChild);
-    }
-
-    // 새 테이블 요소를 생성합니다.
-    const table = document.createElement('table');
-    table.classList.add('rank-table'); // 스타일을 위한 클래스 추가 (옵션)
-
-    // 테이블 헤더를 생성합니다.
-    const thead = document.createElement('thead');
-    const headerRow = document.createElement('tr');
-    ['종류', '1위', '2위', '3위'].forEach(text => {
-        const th = document.createElement('th');
-        th.textContent = text;
-        headerRow.appendChild(th);
-    });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-
-    // 테이블 본문을 생성합니다.
-    const tbody = document.createElement('tbody');
-    Object.keys(rankData).forEach(fuelType => {
-        const row = document.createElement('tr');
-        const fuelTypeCell = document.createElement('td');
-        fuelTypeCell.textContent = fuelType;
-        row.appendChild(fuelTypeCell);
-
-        rankData[fuelType].forEach(brand => {
-            const cell = document.createElement('td');
-            cell.textContent = brand;
-            row.appendChild(cell);
-        });
-
-        tbody.appendChild(row);
-    });
-    table.appendChild(tbody);
-
-    // 생성한 테이블을 페이지에 추가합니다.
-    tableContainer.appendChild(table);
+    };
 }

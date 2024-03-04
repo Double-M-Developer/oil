@@ -3,24 +3,21 @@ package com.pj.oil.gasStation.entity.maria;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
+@Schema(description = "고급 휘발유, 휘발유, 경유 가격")
 @Getter @Setter @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PriceOil {
+public class PriceOil extends GasStationBase {
 
     @Schema(description = "고급 휘발유, 휘발유, 경유 id")
     @Column(name = "price_oil_id")
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Schema(description = "주유쇼 id")
+    @Schema(description = "주유소 id")
     @Column(name = "uni_id")
     private String uniId;
 
