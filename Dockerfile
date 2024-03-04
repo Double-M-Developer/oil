@@ -47,29 +47,6 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y \
     wget \
-    libglib2.0-0 \
-    libnss3 \
-    libgconf-2-4 \
-    libfontconfig1 \
-    libx11-6 \
-    libx11-xcb1 \
-    libxcomposite1 \
-    libxcursor1 \
-    libxdamage1 \
-    libxext6 \
-    libxi6 \
-    libxtst6 \
-    libgdk-pixbuf2.0-0 \
-    libgtk-3-0 \
-    libpango-1.0-0 \
-    libcairo2 \
-    libatspi2.0-0 \
-    libatk1.0-0 \
-    libasound2 \
-    libdbus-1-3 \
-    libxss1 \
-    libxrandr2 \
-    libgbm1 \
     locales \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
