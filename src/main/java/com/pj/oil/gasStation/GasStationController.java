@@ -6,12 +6,14 @@ import com.pj.oil.gasStation.entity.redis.AverageAllPriceRedis;
 import com.pj.oil.gasStation.entity.redis.AverageRecentPriceRedis;
 import com.pj.oil.gasStation.entity.redis.LowTop20PriceRedis;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Tags;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +28,18 @@ public class GasStationController {
 
     private final MeterRegistry meterRegistry;
 
+
+    private void recordMetric(String uri, String method, String areaCode, String productCode, long start) {
+        List<Tag> tags = new ArrayList<>();
+        tags.add(Tag.of("uri", uri));
+        tags.add(Tag.of("method", method));
+        if (areaCode != null) tags.add(Tag.of("areaCode", areaCode));
+        if (productCode != null) tags.add(Tag.of("productCode", productCode));
+
+        meterRegistry.timer("custom_http_server_requests_seconds", tags)
+                .record(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
+    }
+
     /**
      * 일 평균가격 확정 수치이며, 전일부터 7일간의 전국 일일 지역별 평균가격
      *
@@ -39,12 +53,7 @@ public class GasStationController {
         LOGGER.info("[findAreaAverageRecentPriceSevenDays]GET \"/gas-station/area-average-recent-price\", areaCode: {}, productCode: {}", areaCode, productCode);
         long start = System.currentTimeMillis();
         List<AreaAverageRecentPriceRedis> response = gasStationService.findAreaAverageRecentPriceSevenDays(areaCode, productCode);
-        meterRegistry.timer("custom_http_server_requests_seconds",
-                        Tags.of("uri", "/gas-station/area-average-recent-price",
-                                "method", "GET",
-                                "areaCode", areaCode,
-                                "productCode", productCode))
-                .record(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
+        recordMetric("/gas-station/area-average-recent-price", "GET", areaCode, productCode, start);
         return response;
     }
 
@@ -60,11 +69,7 @@ public class GasStationController {
         LOGGER.info("[findAverageRecentPriceSevenDays]GET \"/gas-station/average-recent-price\", productCode: {}", productCode);
         long start = System.currentTimeMillis();
         List<AverageRecentPriceRedis> response = gasStationService.findAverageRecentPriceSevenDays(productCode);
-        meterRegistry.timer("custom_http_server_requests_seconds",
-                        Tags.of("uri", "/gas-station/average-recent-price",
-                                "method", "GET",
-                                "productCode", productCode))
-                .record(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
+        recordMetric("/gas-station/average-recent-price", "GET", null, productCode, start);
         return response;
     }
 
@@ -77,11 +82,9 @@ public class GasStationController {
     public List<AverageAllPriceRedis> findAverageAllPriceByTradeDate() {
         LOGGER.info("[findAverageAllPriceByTradeDate]GET \"/gas-station/area-average-all-price\"");
         long start = System.currentTimeMillis();
-        meterRegistry.timer("custom_http_server_requests_seconds",
-                        Tags.of("uri", "/gas-station/area-average-all-price",
-                                "method", "GET"))
-                .record(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
-        return gasStationService.findAverageAllPriceByTradeDate();
+        List<AverageAllPriceRedis> response = gasStationService.findAverageAllPriceByTradeDate();
+        recordMetric("/gas-station/area-average-all-price", "GET", null, null, start);
+        return response;
     }
 
     /**
@@ -98,12 +101,7 @@ public class GasStationController {
         LOGGER.info("[findLowTop20PriceByAreaCodeAndProductCode]GET \"/gas-station/low-top20\"");
         long start = System.currentTimeMillis();
         List<LowTop20PriceRedis> response = gasStationService.findLowTop20PriceByAreaCodeAndProductCode(areaCode, productCode);
-        meterRegistry.timer("custom_http_server_requests_seconds",
-                        Tags.of("uri", "/gas-station/low-top20",
-                                "method", "GET",
-                                "areaCode", areaCode,
-                                "productCode", productCode))
-                .record(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
+        recordMetric("/gas-station/low-top20", "GET", areaCode, productCode, start);
         return response;
     }
 
