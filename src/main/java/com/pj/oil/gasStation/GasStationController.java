@@ -31,12 +31,11 @@ public class GasStationController {
 
     private void recordMetric(String uri, String method, String areaCode, String productCode, long start) {
         List<Tag> tags = new ArrayList<>();
-        tags.add(Tag.of("uri", uri));
         tags.add(Tag.of("method", method));
         if (areaCode != null) tags.add(Tag.of("areaCode", areaCode));
         if (productCode != null) tags.add(Tag.of("productCode", productCode));
 
-        meterRegistry.timer("custom_http_server_requests_seconds", tags)
+        meterRegistry.timer(uri, tags)
                 .record(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS);
     }
 
