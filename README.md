@@ -42,5 +42,5 @@
   width="100%"
   height="100%"
   alt="architecture"
-  src="https://github.com/Double-M-Developer/oil/assets/91239439/772688a5-c7ae-4a20-92bf-7569214f84bd"
+  src="https://github.com/Double-M-Developer/oil/assets/91239439/290d84b8-b7bd-4998-8bd5-a06c400e9834"
   >
