@@ -3,6 +3,15 @@
 <p>인원: 2인</p>
 <p>Back-end  : 민성조, 문재승</p>
 <p>기간: 2024-01 ~ 2024-02</p>
+<h2>웹 페이지</h2>
+<img
+  width="33%"
+  src ="https://github.com/Double-M-Developer/oil/assets/91239439/9b4a861e-4139-4689-aeb6-cbd0651dd572"
+  >
+<img
+  width="33%"
+  src ="https://github.com/Double-M-Developer/oil/assets/91239439/135c9c85-2e4a-48bf-b4bd-1bfda92fb0f6"
+  >
 <h2>기술스택</h2>
 <table>
   <tbody>
@@ -12,15 +21,15 @@
     </tr>
     <tr>
       <td>Back-end</td>
-      <td>Java, SpringBoot, Gradle, JPA, Spring Batch</td>
+      <td>Java, Spring Boot, Gradle, JPA, Spring Batch, Spring Boot Actuator</td>
     </tr>
     <tr>
       <td>DB</td>
-      <td>MariaDb, Redis</td>
+      <td>MariaDb, Redis, Prometheus</td>
     </tr>
     <tr>
       <td>DevOps</td>
-      <td>AWS EC2, Jenkins, Docker, docker-compose, Docker</td>
+      <td>AWS EC2, Jenkins, Docker, docker-compose, Docker, Grafana</td>
     </tr>
   </tbody>
 </table>
@@ -28,19 +37,19 @@
 <h3>Front-end</h3>
 <p>kakao api를 활용한 map</p>
 <h3>Back-end</h3>
-<p>데이터 입출력 속도 향상을 위한 캐싱(Redis)</p>
-<p>대용량 데이터 처리를 고려한 Spring Batch</p>
-<p>외부 api 연결에 대한 유연성&확장성을 고려한 RestClient 및 HttpInterface</p>
-<p>api 문서화, 협업 강화, 테스트 용이성을 위한 Swagger</p>
-<p>서비스 확장성을 고려한 AWS EC2</p>
-<p>수평적 확장 및 환경 독립성을 고려한 Docker</p>
-<p>수평적 확장 및 유연성을 고려한 다중 데이터 소스</p>
-<p>selenium을 활용한 동적 웹 크롤링</p>
-<p>배포 편의성을 고려한 Jenkins CI/CD pipeline</p>
+<p>Docker를 사용하여 환경에 독립적인 개발환경 구축</p>
+<p>Selenium을 사용하여 웹사이트 CSV 파일 동적으로 크롤링</p>
+<p>Spring Batch를 사용하여 대용량 데이터(CSV, JSON) 처리</p>
+<p>다중 데이터 소스를 구현하여 도메인 사용량 증가로 인한 성능 저하 예방</p>
+<p>Redis를 캐시 스토리지로 사용하여 데이터 입출력 성능 최적화</p>
+<p>RestClient & HttpInterface를 활용하여 외부API 응답 시간 최적화</p>
+<p>Grafana, Prometheus, actuator를 사용하여 메트릭 데이터 시각화</p>
+<p>Jenkins-CI/CD pipeline를 구축하여 개발 편의성을 확보</p>
+
 <h2>아키텍처</h2>
 <img
   width="100%"
   height="100%"
   alt="architecture"
-  src="https://github.com/Double-M-Developer/oil/assets/91239439/290d84b8-b7bd-4998-8bd5-a06c400e9834"
+  src="https://github.com/Double-M-Developer/oil/assets/91239439/6a1eb7d5-aff1-40bb-9bf9-12b9b3cde9cd"
   >
