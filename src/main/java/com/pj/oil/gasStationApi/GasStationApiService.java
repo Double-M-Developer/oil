@@ -2,7 +2,7 @@ package com.pj.oil.gasStationApi;
 
 import com.pj.oil.config.PropertyConfiguration;
 import com.pj.oil.config.GasStationHttpInterface;
-import com.pj.oil.gasStation.entity.maria.*;
+import com.pj.oil.gasStation.entity.*;
 import com.pj.oil.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

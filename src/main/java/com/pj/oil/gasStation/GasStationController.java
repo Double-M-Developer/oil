@@ -1,13 +1,11 @@
 package com.pj.oil.gasStation;
 
-import com.pj.oil.gasStation.entity.maria.*;
-import com.pj.oil.gasStation.entity.redis.AreaAverageRecentPriceRedis;
-import com.pj.oil.gasStation.entity.redis.AverageAllPriceRedis;
-import com.pj.oil.gasStation.entity.redis.AverageRecentPriceRedis;
-import com.pj.oil.gasStation.entity.redis.LowTop20PriceRedis;
+import com.pj.oil.cache.gasStation.entity.AreaAverageRecentPriceRedis;
+import com.pj.oil.cache.gasStation.entity.AverageAllPriceRedis;
+import com.pj.oil.cache.gasStation.entity.AverageRecentPriceRedis;
+import com.pj.oil.cache.gasStation.entity.LowTop20PriceRedis;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
-import io.micrometer.core.instrument.Tags;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @RestController

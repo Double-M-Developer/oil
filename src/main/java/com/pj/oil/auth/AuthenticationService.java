@@ -1,10 +1,11 @@
 package com.pj.oil.auth;
 
+import com.pj.oil.cache.refreshToken.RefreshTokenRedisService;
 import com.pj.oil.memberPost.member.Member;
 import com.pj.oil.memberPost.member.MemberRepository;
 import com.pj.oil.memberPost.member.Role;
 import com.pj.oil.memberPost.token.*;
-import com.pj.oil.memberPost.token.repository.maria.AccessTokenRepository;
+import com.pj.oil.memberPost.token.AccessTokenRepository;
 import com.pj.oil.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

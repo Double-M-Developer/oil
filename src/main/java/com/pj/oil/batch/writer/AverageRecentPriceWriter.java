@@ -1,6 +1,6 @@
 package com.pj.oil.batch.writer;
 
-import com.pj.oil.gasStation.entity.maria.AverageRecentPrice;
+import com.pj.oil.gasStation.entity.AverageRecentPrice;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;

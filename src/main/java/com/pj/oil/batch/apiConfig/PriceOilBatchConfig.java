@@ -4,7 +4,7 @@ import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.CustomSkipPolicy;
 import com.pj.oil.batch.process.PriceOilProcess;
 import com.pj.oil.batch.writer.PriceOilWriter;
-import com.pj.oil.gasStation.entity.maria.PriceOil;
+import com.pj.oil.gasStation.entity.PriceOil;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

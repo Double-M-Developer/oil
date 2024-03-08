@@ -1,6 +1,6 @@
 package com.pj.oil.batch.writer;
 
-import com.pj.oil.gasStation.entity.maria.GasStationLpg;
+import com.pj.oil.gasStation.entity.GasStationLpg;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;

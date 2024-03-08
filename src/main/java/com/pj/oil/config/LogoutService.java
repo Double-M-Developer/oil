@@ -1,6 +1,6 @@
 package com.pj.oil.config;
 
-import com.pj.oil.memberPost.token.repository.maria.AccessTokenRepository;
+import com.pj.oil.memberPost.token.AccessTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
