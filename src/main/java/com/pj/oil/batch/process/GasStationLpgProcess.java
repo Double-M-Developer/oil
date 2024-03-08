@@ -1,6 +1,6 @@
 package com.pj.oil.batch.process;
 
-import com.pj.oil.gasStation.entity.maria.GasStationLpg;
+import com.pj.oil.gasStation.entity.GasStationLpg;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.batch.item.ItemProcessor;
 

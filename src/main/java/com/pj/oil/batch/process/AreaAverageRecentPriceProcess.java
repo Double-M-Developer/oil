@@ -1,6 +1,6 @@
 package com.pj.oil.batch.process;
 
-import com.pj.oil.gasStation.entity.maria.AreaAverageRecentPrice;
+import com.pj.oil.gasStation.entity.AreaAverageRecentPrice;
 import org.springframework.batch.item.*;
 
 

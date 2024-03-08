@@ -1,10 +1,10 @@
 package com.pj.oil.batch;
 
-import com.pj.oil.gasStation.repository.maria.*;
-import com.pj.oil.gasStation.repository.redis.AreaAverageRecentPriceRedisRepository;
-import com.pj.oil.gasStation.repository.redis.AverageAllPriceRedisRepository;
-import com.pj.oil.gasStation.repository.redis.AverageRecentPriceRedisRepository;
-import com.pj.oil.gasStation.repository.redis.LowTop20PriceRedisRepository;
+import com.pj.oil.gasStation.repository.*;
+import com.pj.oil.cache.gasStation.repository.AreaAverageRecentPriceRedisRepository;
+import com.pj.oil.cache.gasStation.repository.AverageAllPriceRedisRepository;
+import com.pj.oil.cache.gasStation.repository.AverageRecentPriceRedisRepository;
+import com.pj.oil.cache.gasStation.repository.LowTop20PriceRedisRepository;
 import com.pj.oil.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

@@ -3,7 +3,7 @@ package com.pj.oil.batch.apiConfig;
 import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.process.GasStationOilProcess;
 import com.pj.oil.batch.writer.GasStationOilWriter;
-import com.pj.oil.gasStation.entity.maria.GasStationOil;
+import com.pj.oil.gasStation.entity.GasStationOil;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

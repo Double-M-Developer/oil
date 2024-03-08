@@ -2,7 +2,7 @@ package com.pj.oil.batch.apiConfig;
 
 import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.writer.AverageAllPriceWriter;
-import com.pj.oil.gasStation.entity.maria.AverageAllPrice;
+import com.pj.oil.gasStation.entity.AverageAllPrice;
 import com.pj.oil.gasStationApi.GasStationApiService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -15,9 +15,7 @@ import org.springframework.batch.item.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.Iterator;
