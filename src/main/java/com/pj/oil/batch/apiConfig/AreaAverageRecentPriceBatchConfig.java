@@ -3,7 +3,7 @@ package com.pj.oil.batch.apiConfig;
 import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.writer.AreaAverageRecentPriceWriter;
 import com.pj.oil.gasStation.AreaRegistry;
-import com.pj.oil.gasStation.entity.AreaAverageRecentPrice;
+import com.pj.oil.gasStation.dto.AreaAverageRecentPriceDto;
 import com.pj.oil.gasStationApi.GasStationApiService;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.core.Job;
@@ -56,22 +56,22 @@ public class AreaAverageRecentPriceBatchConfig {
 
     @Bean(name = "areaAverageRecentPriceReader")
     @JobScope
-    public ItemReader<AreaAverageRecentPrice> reader() {
+    public ItemReader<AreaAverageRecentPriceDto> reader() {
         return new ItemReader<>() {
-            private final Iterator<AreaAverageRecentPrice> dataIterator;
+            private final Iterator<AreaAverageRecentPriceDto> dataIterator;
 
             {
                 String yesterday = DateUtil.getYesterdayDateString();
-                List<AreaAverageRecentPrice> data = new ArrayList<>();
+                List<AreaAverageRecentPriceDto> data = new ArrayList<>();
                 for (String area : areaRegistry.getAreaCodes()) {
-                    List<AreaAverageRecentPrice> areaAverageRecentPrice = gasStationApiService.getAreaAvgRecentNDateAllProdPrice(area, yesterday);
+                    List<AreaAverageRecentPriceDto> areaAverageRecentPrice = gasStationApiService.getAreaAvgRecentNDateAllProdPrice(area, yesterday);
                     data.addAll(areaAverageRecentPrice);
                 }
                 this.dataIterator = data.iterator();
             }
 
             @Override
-            public AreaAverageRecentPrice read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+            public AreaAverageRecentPriceDto read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
                 if (dataIterator.hasNext()) {
                     return dataIterator.next();
                 } else {
@@ -81,14 +81,14 @@ public class AreaAverageRecentPriceBatchConfig {
         };
     }
     @Bean(name = "areaAverageRecentPriceWriter")
-    public ItemWriter<AreaAverageRecentPrice> writer() {
+    public ItemWriter<AreaAverageRecentPriceDto> writer() {
         return new AreaAverageRecentPriceWriter(jdbcTemplate);
     }
 
     @Bean(name = "areaAverageRecentPriceImportStep")
     public Step importStep() {
         return new StepBuilder("areaAverageRecentPriceImport", jobRepository)
-                .<AreaAverageRecentPrice, AreaAverageRecentPrice>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
+                .<AreaAverageRecentPriceDto, AreaAverageRecentPriceDto>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
                 .reader(reader())
 //                .processor(processor())
                 .writer(writer())

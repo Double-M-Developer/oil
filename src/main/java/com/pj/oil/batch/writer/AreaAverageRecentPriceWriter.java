@@ -1,6 +1,6 @@
 package com.pj.oil.batch.writer;
 
-import com.pj.oil.gasStation.entity.AreaAverageRecentPrice;
+import com.pj.oil.gasStation.dto.AreaAverageRecentPriceDto;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class AreaAverageRecentPriceWriter implements ItemWriter<AreaAverageRecentPrice> {
+public class AreaAverageRecentPriceWriter implements ItemWriter<AreaAverageRecentPriceDto> {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -22,14 +22,14 @@ public class AreaAverageRecentPriceWriter implements ItemWriter<AreaAverageRecen
     }
 
     @Override
-    public void write(Chunk<? extends AreaAverageRecentPrice> chunk) throws Exception {
-        List<? extends AreaAverageRecentPrice> items = chunk.getItems(); // Chunk에서 아이템 리스트를 가져옴
+    public void write(Chunk<? extends AreaAverageRecentPriceDto> chunk) throws Exception {
+        List<? extends AreaAverageRecentPriceDto> items = chunk.getItems(); // Chunk에서 아이템 리스트를 가져옴
         String sql = "INSERT INTO AreaAverageRecentPrice (base_date, area_code, product_code, price_average) VALUES (?, ?, ?, ?)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                AreaAverageRecentPrice item = items.get(i);
+                AreaAverageRecentPriceDto item = items.get(i);
                 ps.setString(1, item.getBaseDate());
                 ps.setString(2, item.getAreaCode());
                 ps.setString(3, item.getProductCode());

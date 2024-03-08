@@ -2,7 +2,7 @@ package com.pj.oil.gasStationApi;
 
 import com.pj.oil.config.PropertyConfiguration;
 import com.pj.oil.config.GasStationHttpInterface;
-import com.pj.oil.gasStation.entity.*;
+import com.pj.oil.gasStation.dto.*;
 import com.pj.oil.util.JsonUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class GasStationApiService {
      * @param <T>
      * @return
      */
-    public <T extends GasStationBase> T resultProcess(T entity) {
+    public <T extends GasStationDtoBase> T resultProcess(T entity) {
         if (entity == null) {
             LOGGER.info("data dose not exist");
             return null;
@@ -35,7 +35,7 @@ public class GasStationApiService {
         return entity;
     }
 
-    public <T extends GasStationBase> List<T> resultProcess(List<T> entity) {
+    public <T extends GasStationDtoBase> List<T> resultProcess(List<T> entity) {
         if (entity == null) {
             LOGGER.info("data dose not exist");
             return null;
@@ -49,12 +49,12 @@ public class GasStationApiService {
      *
      * @return AverageAllPriceDto
      */
-    public List<AverageAllPrice> getAvgAllPrice() {
+    public List<AverageAllPriceDto> getAvgAllPrice() {
         LOGGER.info("[getAvgAllPrice]");
-        List<AverageAllPrice> entity = JsonUtil.convertOilJsonToList(
+        List<AverageAllPriceDto> entity = JsonUtil.convertOilJsonToList(
                 httpInterface.getAvgAllPrice(
                         properties.getApiKey()
-                ), AverageAllPrice.class);
+                ), AverageAllPriceDto.class);
         return resultProcess(entity);
     }
 
@@ -64,13 +64,13 @@ public class GasStationApiService {
      * @param date
      * @return AverageRecentPriceDto
      */
-    public List<AverageRecentPrice> getAvgRecentNDateAllProdPrice(String date) {
+    public List<AverageRecentPriceDto> getAvgRecentNDateAllProdPrice(String date) {
         LOGGER.info("[getAvgRecentNDateAllProdPrice]");
-        List<AverageRecentPrice> entity = JsonUtil.convertOilJsonToList(
+        List<AverageRecentPriceDto> entity = JsonUtil.convertOilJsonToList(
                 httpInterface.getAvgRecentNDateAllProdPrice(
                         properties.getApiKey(),
                         date
-                ), AverageRecentPrice.class);
+                ), AverageRecentPriceDto.class);
         return resultProcess(entity);
     }
     //getAvgRecentNDateAllProdPrice
@@ -82,14 +82,14 @@ public class GasStationApiService {
      * @param date
      * @return AreaAverageRecentPriceDto
      */
-    public List<AreaAverageRecentPrice> getAreaAvgRecentNDateAllProdPrice(String areaCd, String date) {
+    public List<AreaAverageRecentPriceDto> getAreaAvgRecentNDateAllProdPrice(String areaCd, String date) {
         LOGGER.info("[getAreaAvgRecentNDateAllProdPrice]");
-        List<AreaAverageRecentPrice> entity = JsonUtil.convertOilJsonToList(
+        List<AreaAverageRecentPriceDto> entity = JsonUtil.convertOilJsonToList(
                 httpInterface.getAreaAvgRecentNDateAllProdPrice(
                         properties.getApiKey(),
                         areaCd,
                         date
-                ), AreaAverageRecentPrice.class);
+                ), AreaAverageRecentPriceDto.class);
         return resultProcess(entity);
     }
 
@@ -100,20 +100,20 @@ public class GasStationApiService {
      * @param areaCd
      * @return LowTop20PriceDto
      */
-    public List<LowTop20Price> getAreaLowTop20ProdPrice(String prodcd, String areaCd) {
+    public List<LowTop20PriceDto> getAreaLowTop20ProdPrice(String prodcd, String areaCd) {
         LOGGER.info("[getAreaLowTop20ProdPrice]");
-        List<LowTop20Price> dtoList = JsonUtil.convertOilJsonToList(
+        List<LowTop20PriceDto> dtoList = JsonUtil.convertOilJsonToList(
                 httpInterface.getAreaLowTop20ProdPrice(
                         properties.getApiKey(),
                         prodcd,
                         areaCd
-                ), LowTop20Price.class);
-        List<LowTop20Price> dto = setProductAndAreaInfo(dtoList, prodcd, areaCd);
+                ), LowTop20PriceDto.class);
+        List<LowTop20PriceDto> dto = setProductAndAreaInfo(dtoList, prodcd, areaCd);
         return resultProcess(dto);
     }
-    public List<LowTop20Price> setProductAndAreaInfo(List<LowTop20Price> entity, String productCode, String areaCode) {
+    public List<LowTop20PriceDto> setProductAndAreaInfo(List<LowTop20PriceDto> entity, String productCode, String areaCode) {
         // Product 와 Area 를 각 LowTop20Price 객체에 설정
-        for (LowTop20Price dto : entity) {
+        for (LowTop20PriceDto dto : entity) {
             dto.setProductCode(productCode);
             dto.setAreaCode(areaCode);
         }

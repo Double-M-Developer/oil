@@ -4,7 +4,7 @@ import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.writer.LowTop20PriceWriter;
 import com.pj.oil.gasStation.AreaRegistry;
 import com.pj.oil.gasStation.ProductRegistry;
-import com.pj.oil.gasStation.entity.LowTop20Price;
+import com.pj.oil.gasStation.dto.LowTop20PriceDto;
 import com.pj.oil.gasStationApi.GasStationApiService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -58,14 +58,14 @@ public class LowTop20PriceBatchConfig {
 
     @Bean(name = "lowTop20PriceReader")
     @JobScope
-    public ItemReader<LowTop20Price> reader() {
+    public ItemReader<LowTop20PriceDto> reader() {
         return new ItemReader<>() {
-            private final Iterator<LowTop20Price> dataIterator;
+            private final Iterator<LowTop20PriceDto> dataIterator;
             {
-                List<LowTop20Price> data = new ArrayList<>();
+                List<LowTop20PriceDto> data = new ArrayList<>();
                 for (String area : areaRegistry.getAreaCodes()) {
                     for (String prod : productRegistry.getProductCodes()) {
-                        List<LowTop20Price> areaLowTop20ProdPrice = gasStationApiService.getAreaLowTop20ProdPrice(prod, area);
+                        List<LowTop20PriceDto> areaLowTop20ProdPrice = gasStationApiService.getAreaLowTop20ProdPrice(prod, area);
                         data.addAll(areaLowTop20ProdPrice);
                     }
                 }
@@ -73,7 +73,7 @@ public class LowTop20PriceBatchConfig {
             }
 
             @Override
-            public LowTop20Price read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+            public LowTop20PriceDto read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
                 if (dataIterator.hasNext()) {
                     return dataIterator.next();
                 } else {
@@ -84,14 +84,14 @@ public class LowTop20PriceBatchConfig {
     }
 
     @Bean(name = "lowTop20PriceWriter")
-    public ItemWriter<LowTop20Price> writer() {
+    public ItemWriter<LowTop20PriceDto> writer() {
         return new LowTop20PriceWriter(jdbcTemplate);
     }
 
     @Bean(name = "lowTop20PriceImportStep")
     public Step importStep() {
         return new StepBuilder("lowTop20PriceImport", jobRepository)
-                .<LowTop20Price, LowTop20Price>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
+                .<LowTop20PriceDto, LowTop20PriceDto>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
                 .reader(reader())
                 .writer(writer())
 //                .taskExecutor(taskExecutor())
