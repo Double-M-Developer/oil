@@ -1,5 +1,5 @@
 <h1>Oil Now</h1>
-<h3>Spring Batch와 docker-compose를 활용한 전국 기름값 현황 확인 웹 서비스</h3>
+<h3>공공 데이터를 활용한 전국 기름값 현황 확인 웹 서비스</h3>
 <p>인원: 2인</p>
 <p>Back-end  : 민성조, 문재승</p>
 <p>기간: 2024-01 ~ 2024-02</p>
@@ -50,6 +50,5 @@
 <img
   width="100%"
   height="100%"
-  alt="architecture"
-  src="https://github.com/Double-M-Developer/oil/assets/91239439/6a1eb7d5-aff1-40bb-9bf9-12b9b3cde9cd"
+  src=""
   >
