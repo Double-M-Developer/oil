@@ -12,7 +12,7 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 
 @Configuration
 @EnableRedisRepositories(
-        basePackages = "com.pj.oil.gasStation.repository.redis",
+        basePackages = "com.pj.oil.cache.gasStation.repository",
         redisTemplateRef = "gasStationRedisTemplate",
         enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP
 )

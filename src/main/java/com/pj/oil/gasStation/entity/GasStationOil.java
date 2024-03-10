@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter @Setter @ToString
 @Entity
 public class GasStationOil {
@@ -33,6 +35,9 @@ public class GasStationOil {
     @Schema(description = "업데이트 일자")
     @Column(name = "update_date")
     private String updateDate;
+
+    @OneToMany(mappedBy = "gasStationOil")
+    private List<PriceOil> priceOilList;
 }
 
 

@@ -17,8 +17,9 @@ public class PriceOil extends GasStationBase {
     private Long id;
 
     @Schema(description = "주유소 id")
-    @Column(name = "uni_id")
-    private String uniId;
+    @ManyToOne
+    @JoinColumn(name = "uni_id")
+    private GasStationOil uniId;
 
     // 고급 휘발유
     @Schema(description = "고급 휘발유 가격")

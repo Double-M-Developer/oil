@@ -29,34 +29,26 @@ public class AreaAverageRecentPrice extends GasStationBase {
         @JsonProperty("DATE")
         private String baseDate;
         @Schema(description = "주유소 지역 코드")
-        @Column(name = "area_code")
+        @ManyToOne
+        @JoinColumn(name = "area_code")
         @JsonProperty("AREA_CD")
-        private String areaCode;
+        private Area areaCode;
         @Schema(description = "제품구분 코드")
-        @Column(name = "product_code")
+        @ManyToOne
+        @JoinColumn(name = "product_code")
         @JsonProperty("PRODCD")
-        private String productCode;
+        private Product productCode;
         @Schema(description = "평균가격")
         @Column(name = "price_average")
         @JsonProperty("PRICE")
         private double priceAverage;
 
         @Builder
-        public AreaAverageRecentPrice(Long id, String baseDate, String areaCode, String productCode, double priceAverage) {
+        public AreaAverageRecentPrice(Long id, String baseDate, Area areaCode, Product productCode, double priceAverage) {
                 this.id = id;
                 this.baseDate = baseDate;
                 this.areaCode = areaCode;
                 this.productCode = productCode;
                 this.priceAverage = priceAverage;
-        }
-
-        public static AreaAverageRecentPrice transferRedisToEntity(AreaAverageRecentPriceRedis redis) {
-                return AreaAverageRecentPrice.builder()
-                        .id(redis.getAreaAverageRecentPriceId())
-                        .baseDate(redis.getBaseDate())
-                        .areaCode(redis.getAreaCode())
-                        .productCode(redis.getProductCode())
-                        .priceAverage(redis.getPriceAverage())
-                        .build();
         }
 }

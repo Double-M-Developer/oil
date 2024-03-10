@@ -59,18 +59,22 @@ public class LowTop20Price extends GasStationBase {
     /**
      * 반환되는 값이 없으므로, 호출시 사용한 매개변수를 사용하여 값을 지정해줘야 함
      */
-    @Schema(description = "제품 구분 코드")
-    @Column(name = "product_code")
-    private String productCode;
+    @Schema(description = "제품구분 코드")
+    @ManyToOne
+    @JoinColumn(name = "product_code")
+    @JsonProperty("PRODCD")
+    private Product productCode;
     /**
      * 반환되는 값이 없으므로, 호출시 사용한 매개변수를 사용하여 값을 지정해줘야 함
      */
     @Schema(description = "주유소 지역 코드")
-    @Column(name = "area_code")
-    private String areaCode;
+    @ManyToOne
+    @JoinColumn(name = "area_code")
+    @JsonProperty("AREA_CD")
+    private Area areaCode;
 
     @Builder
-    public LowTop20Price(Long id, String uniId, int priceCurrent, String pollDivCode, String osName, String vanAddress, String newAddress, Double gisXCoor, Double gisYCoor, String productCode, String areaCode) {
+    public LowTop20Price(Long id, String uniId, int priceCurrent, String pollDivCode, String osName, String vanAddress, String newAddress, Double gisXCoor, Double gisYCoor, Product productCode, Area areaCode) {
         this.id = id;
         this.uniId = uniId;
         this.priceCurrent = priceCurrent;
@@ -83,20 +87,4 @@ public class LowTop20Price extends GasStationBase {
         this.productCode = productCode;
         this.areaCode = areaCode;
     }
-
-    public static LowTop20Price transferRedisToEntity(LowTop20PriceRedis redis) {
-        return LowTop20Price.builder()
-                .uniId(redis.getUniId())
-                .priceCurrent(redis.getPriceCurrent())
-                .pollDivCode(redis.getPollDivCode())
-                .osName(redis.getOsName())
-                .vanAddress(redis.getVanAddress())
-                .newAddress(redis.getNewAddress())
-                .gisXCoor(redis.getGisXCoor())
-                .gisYCoor(redis.getGisYCoor())
-                .productCode(redis.getProductCode())
-                .areaCode(redis.getAreaCode())
-                .build();
-    }
-
 }

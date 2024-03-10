@@ -29,9 +29,10 @@ public class AverageAllPrice extends GasStationBase {
     @JsonProperty("TRADE_DT")
     private String tradeDate;
     @Schema(description = "제품구분 코드")
-    @Column(name = "product_code")
+    @ManyToOne
+    @JoinColumn(name = "product_code")
     @JsonProperty("PRODCD")
-    private String productCode;
+    private Product productCode;
     @Schema(description = "평균가격")
     @Column(name = "price_average")
     @JsonProperty("PRICE")
@@ -42,21 +43,11 @@ public class AverageAllPrice extends GasStationBase {
     private double priceChange;
 
     @Builder
-    public AverageAllPrice(Long id, String tradeDate, String productCode, double priceAverage, double priceChange) {
+    public AverageAllPrice(Long id, String tradeDate, Product productCode, double priceAverage, double priceChange) {
         this.id = id;
         this.tradeDate = tradeDate;
         this.productCode = productCode;
         this.priceAverage = priceAverage;
         this.priceChange = priceChange;
-    }
-
-    public static AverageAllPrice transferRedisToEntity(AverageAllPriceRedis redis) {
-        return AverageAllPrice.builder()
-                .id(redis.getAverageAllPriceId())
-                .tradeDate(redis.getTradeDate())
-                .productCode(redis.getProductCode())
-                .priceAverage(redis.getPriceAverage())
-                .priceChange(redis.getPriceChange())
-                .build();
     }
 }

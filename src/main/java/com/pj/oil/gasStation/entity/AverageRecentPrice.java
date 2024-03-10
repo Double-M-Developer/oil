@@ -29,28 +29,20 @@ public class AverageRecentPrice extends GasStationBase {
     @JsonProperty("DATE")
     private String date;
     @Schema(description = "제품구분 코드")
-    @Column(name = "product_code")
+    @ManyToOne
+    @JoinColumn(name = "product_code")
     @JsonProperty("PRODCD")
-    private String productCode;
+    private Product productCode;
     @Schema(description = "평균가격")
     @Column(name = "price_average")
     @JsonProperty("PRICE")
     private double priceAverage;
 
     @Builder
-    public AverageRecentPrice(Long id, String date, String productCode, double priceAverage) {
+    public AverageRecentPrice(Long id, String date, Product productCode, double priceAverage) {
         this.id = id;
         this.date = date;
         this.productCode = productCode;
         this.priceAverage = priceAverage;
-    }
-
-    public static AverageRecentPrice transferRedisToEntity(AverageRecentPriceRedis redis) {
-        return AverageRecentPrice.builder()
-                .id(redis.getAverageRecentPriceId())
-                .date(redis.getDate())
-                .productCode(redis.getProductCode())
-                .priceAverage(redis.getPriceAverage())
-                .build();
     }
 }
