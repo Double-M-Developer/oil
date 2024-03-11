@@ -46,9 +46,27 @@
 <p>Grafana, Prometheus, actuator를 사용하여 메트릭 데이터 시각화</p>
 <p>Jenkins-CI/CD pipeline를 구축하여 개발 편의성을 확보</p>
 
-<h2>아키텍처</h2>
+<h2>Jenkins CI/CD 파이프라인</h2>
 <img
   width="100%"
   height="100%"
-  src=""
+  src="https://github.com/Double-M-Developer/oil/assets/91239439/18a16631-b57b-40e5-a30f-da13408607f9"
+  >
+<h2>Spring Boot Actuator, Grafana 모니터링</h2>
+<img
+  width="100%"
+  height="100%"
+  src="https://github.com/Double-M-Developer/oil/assets/91239439/bbb9bcb2-91f5-4b45-8961-630ccfff49eb"
+  >
+<h2>주유소 정보 요청(Cache miss)</h2>
+<img
+  width="100%"
+  height="100%"
+  src="https://github.com/Double-M-Developer/oil/assets/91239439/169ef00d-8244-462a-982f-4f5d6130a80b"
+  >
+<h2>공공데이터를 활용한 Spring Batch Job</h2>
+<img
+  width="100%"
+  height="100%"
+  src="https://github.com/Double-M-Developer/oil/assets/91239439/bd96ae8f-216f-45b1-8de5-a76a4b5e1991"
   >
