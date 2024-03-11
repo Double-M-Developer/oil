@@ -29,7 +29,7 @@ public class AverageAllPrice extends GasStationBase {
     @JsonProperty("TRADE_DT")
     private String tradeDate;
     @Schema(description = "제품구분 코드")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_code")
     @JsonProperty("PRODCD")
     private Product productCode;

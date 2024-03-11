@@ -21,7 +21,7 @@ public class Token {
     @Setter
     private boolean revoked; // db 취소 관리 (로그아웃)
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 

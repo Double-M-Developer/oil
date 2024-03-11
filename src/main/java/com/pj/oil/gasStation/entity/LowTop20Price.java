@@ -60,7 +60,7 @@ public class LowTop20Price extends GasStationBase {
      * 반환되는 값이 없으므로, 호출시 사용한 매개변수를 사용하여 값을 지정해줘야 함
      */
     @Schema(description = "제품구분 코드")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_code")
     @JsonProperty("PRODCD")
     private Product productCode;
@@ -68,7 +68,7 @@ public class LowTop20Price extends GasStationBase {
      * 반환되는 값이 없으므로, 호출시 사용한 매개변수를 사용하여 값을 지정해줘야 함
      */
     @Schema(description = "주유소 지역 코드")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "area_code")
     @JsonProperty("AREA_CD")
     private Area areaCode;
