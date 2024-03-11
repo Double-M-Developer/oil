@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pj.oil.cache.gasStation.entity.AverageRecentPriceRedis;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 
 /**
@@ -15,6 +19,8 @@ import lombok.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AverageRecentPriceDto extends GasStationDtoBase {
 
+    @Schema(description = "전국 주유소 평균가격 id")
+    private Long id;
     @Schema(description = "기준일자")
     @JsonProperty("DATE")
     private String date;
@@ -26,7 +32,8 @@ public class AverageRecentPriceDto extends GasStationDtoBase {
     private double priceAverage;
 
     @Builder
-    public AverageRecentPriceDto(String date, String productCode, double priceAverage) {
+    public AverageRecentPriceDto(Long id, String date, String productCode, double priceAverage) {
+        this.id = id;
         this.date = date;
         this.productCode = productCode;
         this.priceAverage = priceAverage;

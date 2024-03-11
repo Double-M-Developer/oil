@@ -1,5 +1,6 @@
 package com.pj.oil.gasStation.repository;
 
+import com.pj.oil.gasStation.dto.AreaAverageRecentPriceDto;
 import com.pj.oil.gasStation.entity.AreaAverageRecentPrice;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,8 +17,14 @@ import java.util.List;
 @Repository
 public interface AreaAverageRecentPriceRepository extends JpaRepository<AreaAverageRecentPrice, Long> {
 
-        @Query("SELECT a FROM AreaAverageRecentPrice a WHERE a.areaCode = :areaCode AND a.productCode = :productCode AND a.baseDate BETWEEN :sevenDaysBefore AND :yesterday")
-        List<AreaAverageRecentPrice> findByLastSevenDays(String sevenDaysBefore, String yesterday, String areaCode, String productCode);
+        @Query("SELECT new com.pj.oil.gasStation.dto.AreaAverageRecentPriceDto(" +
+                "a.id, a.baseDate, a.areaCode.AreaCode, a.productCode.productCode, a.priceAverage) " +
+                "FROM AreaAverageRecentPrice a " +
+                "WHERE a.areaCode = :areaCode " +
+                "AND a.productCode = :productCode " +
+                "AND a.baseDate " +
+                "BETWEEN :sevenDaysBefore AND :yesterday")
+        List<AreaAverageRecentPriceDto> findByLastSevenDays(String sevenDaysBefore, String yesterday, String areaCode, String productCode);
 
         @Modifying
         @Query("DELETE FROM AreaAverageRecentPrice a WHERE a.baseDate = :baseDate")

@@ -1,6 +1,7 @@
 package com.pj.oil.cache.gasStation.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pj.oil.gasStation.dto.LowTop20PriceDto;
 import com.pj.oil.gasStation.entity.GasStationBase;
 import com.pj.oil.gasStation.entity.LowTop20Price;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -51,7 +52,7 @@ public class LowTop20PriceRedis extends GasStationBase {
     @Schema(description = "주유소 지역 코드")
     private String areaCode;
 
-    public static LowTop20PriceRedis transferDataToRedis(LowTop20Price dbEntity) {
+    public static LowTop20PriceRedis transferDataToRedis(LowTop20PriceDto dbEntity) {
         return new LowTop20PriceRedis(
                 dbEntity.getUniId(),
                 dbEntity.getPriceCurrent(),

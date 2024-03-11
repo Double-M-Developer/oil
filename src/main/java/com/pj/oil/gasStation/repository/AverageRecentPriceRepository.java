@@ -1,5 +1,6 @@
 package com.pj.oil.gasStation.repository;
 
+import com.pj.oil.gasStation.dto.AverageRecentPriceDto;
 import com.pj.oil.gasStation.entity.AverageRecentPrice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,6 +21,11 @@ public interface AverageRecentPriceRepository extends JpaRepository<AverageRecen
         @Query("DELETE FROM AverageRecentPrice a WHERE a.date = :date")
         void deleteByDate(@Param("date") String date);
 
-        @Query("SELECT a FROM AverageRecentPrice a WHERE a.productCode = :productCode AND a.date BETWEEN :sevenDaysBefore AND :yesterday")
-        List<AverageRecentPrice> findByLastSevenDays(String sevenDaysBefore, String yesterday, String productCode);
+        @Query("SELECT new com.pj.oil.gasStation.dto.AverageRecentPriceDto(" +
+                "a.id, a.date, a.productCode.productCode, a.priceAverage) " +
+                "FROM AverageRecentPrice a " +
+                "WHERE a.productCode = :productCode " +
+                "AND a.date " +
+                "BETWEEN :sevenDaysBefore AND :yesterday")
+        List<AverageRecentPriceDto> findByLastSevenDays(String sevenDaysBefore, String yesterday, String productCode);
 }

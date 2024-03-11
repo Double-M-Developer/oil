@@ -1,5 +1,6 @@
 package com.pj.oil.gasStation.repository;
 
+import com.pj.oil.gasStation.dto.LowTop20PriceDto;
 import com.pj.oil.gasStation.entity.LowTop20Price;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,7 +20,12 @@ public interface LowTop20PriceRepository extends JpaRepository<LowTop20Price, Lo
     @Query("DELETE FROM LowTop20Price")
     void deleteAllData();
 
-    @Query("SELECT l FROM LowTop20Price l WHERE l.areaCode = :areaCode AND l.productCode = :productCode ORDER BY l.priceCurrent ASC")
-    List<LowTop20Price> findLowTop20PriceByAreaCodeAndProductCode(@Param("areaCode") String areaCode, @Param("productCode") String productCode);
+    @Query("SELECT new com.pj.oil.gasStation.dto.LowTop20PriceDto(" +
+            "l.uniId, l.priceCurrent, l.pollDivCode, l.osName, l.vanAddress, l.newAddress, l.gisXCoor, l.gisYCoor, l.productCode.productCode, l.areaCode.AreaCode) " +
+            "FROM LowTop20Price l " +
+            "WHERE l.areaCode = :areaCode " +
+            "AND l.productCode = :productCode " +
+            "ORDER BY l.priceCurrent ASC")
+    List<LowTop20PriceDto> findLowTop20PriceByAreaCodeAndProductCode(@Param("areaCode") String areaCode, @Param("productCode") String productCode);
 
 }

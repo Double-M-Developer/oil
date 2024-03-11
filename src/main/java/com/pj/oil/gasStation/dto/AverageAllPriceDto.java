@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pj.oil.cache.gasStation.entity.AverageAllPriceRedis;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 
 /**
@@ -14,7 +18,8 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AverageAllPriceDto extends GasStationDtoBase {
-
+    @Schema(description = "전국 주유소 평균가격 id")
+    private Long id;
     @Schema(description = "해당일자")
     @JsonProperty("TRADE_DT")
     private String tradeDate;
@@ -29,7 +34,8 @@ public class AverageAllPriceDto extends GasStationDtoBase {
     private double priceChange;
 
     @Builder
-    public AverageAllPriceDto(String tradeDate, String productCode, double priceAverage, double priceChange) {
+    public AverageAllPriceDto(Long id, String tradeDate, String productCode, double priceAverage, double priceChange) {
+        this.id = id;
         this.tradeDate = tradeDate;
         this.productCode = productCode;
         this.priceAverage = priceAverage;

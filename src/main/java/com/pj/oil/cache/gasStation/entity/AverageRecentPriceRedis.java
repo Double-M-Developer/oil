@@ -1,6 +1,7 @@
 package com.pj.oil.cache.gasStation.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pj.oil.gasStation.dto.AverageRecentPriceDto;
 import com.pj.oil.gasStation.entity.AverageRecentPrice;
 import com.pj.oil.gasStation.entity.GasStationBase;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,7 +34,7 @@ public class AverageRecentPriceRedis extends GasStationBase {
     @JsonProperty("PRICE")
     private double priceAverage;
 
-    public static AverageRecentPriceRedis transferDataToRedis(AverageRecentPrice dbEntity) {
+    public static AverageRecentPriceRedis transferDataToRedis(AverageRecentPriceDto dbEntity) {
         return new AverageRecentPriceRedis(
                 dbEntity.getId(),
                 dbEntity.getDate(),
