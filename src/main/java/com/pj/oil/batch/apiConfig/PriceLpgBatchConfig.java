@@ -4,7 +4,7 @@ import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.CustomSkipPolicy;
 import com.pj.oil.batch.process.PriceLpgProcess;
 import com.pj.oil.batch.writer.PriceLpgWriter;
-import com.pj.oil.gasStation.entity.PriceLpg;
+import com.pj.oil.gasStation.dto.PriceLpgDto;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -55,8 +55,8 @@ public class PriceLpgBatchConfig {
 
     @Bean(name = "priceLpgReader")
     @StepScope
-    public FlatFileItemReader<PriceLpg> reader() {
-        FlatFileItemReader<PriceLpg> itemReader = new FlatFileItemReader<>();
+    public FlatFileItemReader<PriceLpgDto> reader() {
+        FlatFileItemReader<PriceLpgDto> itemReader = new FlatFileItemReader<>();
         String path = READER_PATH + "current-price-lpg.csv";
         itemReader.setResource(new FileSystemResource(path)); // api 나 파일로부터 작업을 처리하도록 할 수 있음
         itemReader.setName("csvReader"); // itemReader 이름 설정
@@ -72,16 +72,16 @@ public class PriceLpgBatchConfig {
     }
 
 
-    private LineMapper<PriceLpg> lineMapper() {
-        DefaultLineMapper<PriceLpg> lineMapper = new DefaultLineMapper<>();
+    private LineMapper<PriceLpgDto> lineMapper() {
+        DefaultLineMapper<PriceLpgDto> lineMapper = new DefaultLineMapper<>();
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
         lineTokenizer.setDelimiter(","); // 데이터 쉼표로 구분
         lineTokenizer.setStrict(false); // csv 와 필드 수가 달라도 예외 발생 x
         lineTokenizer.setIncludedFields(0, 6); // csv 에서 특정 열을 선택
         lineTokenizer.setNames("uniId", "lpg"); // 요소의 열을 구분
 //        고유번호,지역,상호,주소,상표,셀프여부,LPG
-        BeanWrapperFieldSetMapper<PriceLpg> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
-        fieldSetMapper.setTargetType(PriceLpg.class); // 파일을 객체로 변환할 수 있도록 도와주는 객체
+        BeanWrapperFieldSetMapper<PriceLpgDto> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+        fieldSetMapper.setTargetType(PriceLpgDto.class); // 파일을 객체로 변환할 수 있도록 도와주는 객체
         lineMapper.setLineTokenizer(lineTokenizer);
         lineMapper.setFieldSetMapper(fieldSetMapper);
 
@@ -89,7 +89,7 @@ public class PriceLpgBatchConfig {
     }
 
     @Bean(name = "lpgPriceWriter")
-    public ItemWriter<PriceLpg> writer() {
+    public ItemWriter<PriceLpgDto> writer() {
 
         return new PriceLpgWriter(jdbcTemplate);
     }
@@ -97,7 +97,7 @@ public class PriceLpgBatchConfig {
     @Bean(name = "priceLpgImportStep")
     public Step importStep() {
         return new StepBuilder("priceLpgCsvImport", jobRepository)
-                .<PriceLpg, PriceLpg>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
+                .<PriceLpgDto, PriceLpgDto>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
                 .faultTolerant()
                 .reader(reader())
                 .processor(processor())

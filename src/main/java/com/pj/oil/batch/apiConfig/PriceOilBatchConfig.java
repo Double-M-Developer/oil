@@ -4,7 +4,7 @@ import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.CustomSkipPolicy;
 import com.pj.oil.batch.process.PriceOilProcess;
 import com.pj.oil.batch.writer.PriceOilWriter;
-import com.pj.oil.gasStation.entity.PriceOil;
+import com.pj.oil.gasStation.dto.PriceOilDto;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -55,8 +55,8 @@ public class PriceOilBatchConfig {
 
     @Bean(name = "priceOilReader")
     @StepScope
-    public FlatFileItemReader<PriceOil> reader() {
-        FlatFileItemReader<PriceOil> itemReader = new FlatFileItemReader<>();
+    public FlatFileItemReader<PriceOilDto> reader() {
+        FlatFileItemReader<PriceOilDto> itemReader = new FlatFileItemReader<>();
         String path = READER_PATH + "current-price-oil.csv";
         itemReader.setResource(new FileSystemResource(path)); // api 나 파일로부터 작업을 처리하도록 할 수 있음
         itemReader.setName("csvReader"); // itemReader 이름 설정
@@ -72,16 +72,16 @@ public class PriceOilBatchConfig {
     }
 
 
-    private LineMapper<PriceOil> lineMapper() {
-        DefaultLineMapper<PriceOil> lineMapper = new DefaultLineMapper<>();
+    private LineMapper<PriceOilDto> lineMapper() {
+        DefaultLineMapper<PriceOilDto> lineMapper = new DefaultLineMapper<>();
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
         lineTokenizer.setDelimiter(","); // 데이터 쉼표로 구분
         lineTokenizer.setStrict(false);
         lineTokenizer.setIncludedFields(0, 6, 7, 8); // csv 에서 특정 열을 선택
         lineTokenizer.setNames("uniId", "preGasoline", "gasoline", "diesel"); // 요소의 열을 구분
 //        고유번호,지역,상호,주소,상표,셀프여부,고급휘발유,휘발유,경유,실내등유
-        BeanWrapperFieldSetMapper<PriceOil> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
-        fieldSetMapper.setTargetType(PriceOil.class); // 파일을 객체로 변환할 수 있도록 도와주는 객체
+        BeanWrapperFieldSetMapper<PriceOilDto> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+        fieldSetMapper.setTargetType(PriceOilDto.class); // 파일을 객체로 변환할 수 있도록 도와주는 객체
 
         lineMapper.setLineTokenizer(lineTokenizer);
         lineMapper.setFieldSetMapper(fieldSetMapper);
@@ -90,7 +90,7 @@ public class PriceOilBatchConfig {
     }
 
     @Bean(name = "priceOilWriter")
-    public ItemWriter<PriceOil> writer() {
+    public ItemWriter<PriceOilDto> writer() {
 
         return new PriceOilWriter(jdbcTemplate);
     }
@@ -98,7 +98,7 @@ public class PriceOilBatchConfig {
     @Bean(name = "priceOilImportStep")
     public Step importStep() {
         return new StepBuilder("priceOilCsvImport", jobRepository)
-                .<PriceOil, PriceOil>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
+                .<PriceOilDto, PriceOilDto>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())

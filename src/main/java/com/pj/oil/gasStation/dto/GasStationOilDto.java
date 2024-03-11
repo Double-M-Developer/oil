@@ -1,16 +1,16 @@
-package com.pj.oil.gasStation.entity;
+package com.pj.oil.gasStation.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.List;
-
 @Getter @Setter @ToString
 @Entity
-public class GasStationLpg {
+public class GasStationOilDto {
 
     @Schema(description = "전국 주유소 id")
     @Id @Column(name = "uni_id")
@@ -35,9 +35,6 @@ public class GasStationLpg {
     @Schema(description = "업데이트 일자")
     @Column(name = "update_date")
     private String updateDate;
-
-    @OneToMany(mappedBy = "gasStationOil")
-    private List<PriceLpg> priceLpgList;
 }
 
 

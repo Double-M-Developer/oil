@@ -1,38 +1,29 @@
-package com.pj.oil.gasStation.entity;
+package com.pj.oil.gasStation.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Schema(description = "고급 휘발유, 휘발유, 경유 가격")
 @Getter @Setter @ToString
-@Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PriceOil extends GasStationBase {
-
-    @Schema(description = "고급 휘발유, 휘발유, 경유 id")
-    @Column(name = "price_oil_id")
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class PriceOilDto extends GasStationDtoBase {
 
     @Schema(description = "주유소 id")
-    @ManyToOne
-    @JoinColumn(name = "uni_id")
-    private GasStationOil uniId;
+    private String uniId;
 
     // 고급 휘발유
     @Schema(description = "고급 휘발유 가격")
-    @Column(name = "pre_gasoline")
     private int preGasoline;
 
     // 휘발유
     @Schema(description = "휘발유 가격")
-    @Column(name = "gasoline")
     private int gasoline;
 
     // 경유
     @Schema(description = "경유 가격")
-    @Column(name = "diesel")
     private int diesel;
 }

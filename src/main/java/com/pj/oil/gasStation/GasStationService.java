@@ -1,5 +1,9 @@
 package com.pj.oil.gasStation;
 
+import com.pj.oil.gasStation.dto.AreaAverageRecentPriceDto;
+import com.pj.oil.gasStation.dto.AverageAllPriceDto;
+import com.pj.oil.gasStation.dto.AverageRecentPriceDto;
+import com.pj.oil.gasStation.dto.LowTop20PriceDto;
 import com.pj.oil.gasStation.entity.*;
 import com.pj.oil.cache.gasStation.entity.AreaAverageRecentPriceRedis;
 import com.pj.oil.cache.gasStation.entity.AverageAllPriceRedis;
@@ -71,7 +75,7 @@ public class GasStationService {
         return productRegistry.getProductName(code);
     }
 
-    private void transformStationCoordinates(LowTop20Price station) {
+    private void transformStationCoordinates(LowTop20PriceDto station) {
         ProjCoordinate transformedCoords = coordinateUtil.convertKATECToWGS84(station.getGisXCoor(), station.getGisYCoor());
         station.setGisXCoor(transformedCoords.x);
         station.setGisYCoor(transformedCoords.y);
@@ -94,7 +98,7 @@ public class GasStationService {
             return result;
         }
 
-        List<LowTop20Price> dbPrice = lowTop20PriceRepository.findLowTop20PriceByAreaCodeAndProductCode(areaCode, productCode);
+        List<LowTop20PriceDto> dbPrice = lowTop20PriceRepository.findLowTop20PriceByAreaCodeAndProductCode(areaCode, productCode);
         if (!dbPrice.isEmpty()) {
             LOGGER.info("[findLowTop20PriceByAreaCodeAndProductCode] db data does exist");
             result = dbPrice.stream()
@@ -129,7 +133,7 @@ public class GasStationService {
             return result;
         }
 
-        List<AverageAllPrice> dbPrice = averageAllPriceRepository.findByTradeDate(todayDateString);
+        List<AverageAllPriceDto> dbPrice = averageAllPriceRepository.findByTradeDate(todayDateString);
         if (!dbPrice.isEmpty()) { // maria 존재
             LOGGER.info("[findAverageAllPriceByTradeDate] db data does exist");
             result = dbPrice.stream()
@@ -165,7 +169,7 @@ public class GasStationService {
             return result;
         }
 
-        List<AreaAverageRecentPrice> dbPrice = areaAverageRecentPriceRepository.findByLastSevenDays(sevenDaysBeforeDateString, yesterdayDateString, areaCode, productCode);
+        List<AreaAverageRecentPriceDto> dbPrice = areaAverageRecentPriceRepository.findByLastSevenDays(sevenDaysBeforeDateString, yesterdayDateString, areaCode, productCode);
         if (!dbPrice.isEmpty()) { // maria 존재
             LOGGER.info("[findAreaAverageRecentPriceSevenDays] db data does exist");
             result = dbPrice.stream()
@@ -202,7 +206,7 @@ public class GasStationService {
             return result;
         }
 
-        List<AverageRecentPrice> dbPrice = averageRecentPriceRepository.findByLastSevenDays(sevenDaysBeforeDateString, yesterdayDateString, productCode);
+        List<AverageRecentPriceDto> dbPrice = averageRecentPriceRepository.findByLastSevenDays(sevenDaysBeforeDateString, yesterdayDateString, productCode);
         if (!dbPrice.isEmpty()) { // maria 존재
             LOGGER.info("[findAverageRecentPriceSevenDays] db data does exist");
             result = dbPrice.stream()

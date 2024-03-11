@@ -1,5 +1,6 @@
 package com.pj.oil.gasStation.repository;
 
+import com.pj.oil.gasStation.dto.AverageAllPriceDto;
 import com.pj.oil.gasStation.entity.AverageAllPrice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -15,7 +16,11 @@ import java.util.List;
 @Repository
 public interface AverageAllPriceRepository extends JpaRepository<AverageAllPrice, Long> {
 
-    List<AverageAllPrice> findByTradeDate(String tradeDate);
+    @Query("SELECT new com.pj.oil.gasStation.dto.AverageAllPriceDto(" +
+            "a.id, a.tradeDate, a.productCode.productCode, a.priceAverage, a.priceChange) " +
+            "FROM AverageAllPrice a " +
+            "WHERE a.tradeDate = :tradeDate")
+    List<AverageAllPriceDto> findByTradeDate(String tradeDate);
 
     @Modifying
     @Query("DELETE FROM AverageAllPrice a WHERE a.tradeDate = :tradeDate")

@@ -17,8 +17,9 @@ public class PriceLpg extends GasStationBase {
     private Long id;
 
     @Schema(description = "주유소 id")
-    @Column(name = "uni_id")
-    private String uniId;
+    @ManyToOne
+    @JoinColumn(name = "uni_id")
+    private GasStationLpg uniId;
 
     @Schema(description = "lpg 가격")
     @Column(name = "lpg")

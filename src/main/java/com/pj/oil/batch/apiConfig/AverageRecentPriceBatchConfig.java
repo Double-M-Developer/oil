@@ -2,7 +2,7 @@ package com.pj.oil.batch.apiConfig;
 
 import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.writer.AverageRecentPriceWriter;
-import com.pj.oil.gasStation.entity.AverageRecentPrice;
+import com.pj.oil.gasStation.dto.AverageRecentPriceDto;
 import com.pj.oil.gasStationApi.GasStationApiService;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.core.Job;
@@ -49,12 +49,12 @@ public class AverageRecentPriceBatchConfig {
 
     @Bean(name = "averageRecentPriceReader")
     @JobScope
-    public ItemReader<AverageRecentPrice> reader() {
+    public ItemReader<AverageRecentPriceDto> reader() {
         return new ItemReader<>() {
             String yesterday = DateUtil.getYesterdayDateString();
-            private final Iterator<AverageRecentPrice> dataIterator = gasStationApiService.getAvgRecentNDateAllProdPrice(yesterday).iterator();
+            private final Iterator<AverageRecentPriceDto> dataIterator = gasStationApiService.getAvgRecentNDateAllProdPrice(yesterday).iterator();
             @Override
-            public AverageRecentPrice read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+            public AverageRecentPriceDto read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
                 if (dataIterator.hasNext()) {
                     return dataIterator.next();
                 } else {
@@ -65,14 +65,14 @@ public class AverageRecentPriceBatchConfig {
     }
 
     @Bean(name = "averageRecentPriceWriter")
-    public ItemWriter<AverageRecentPrice> writer() {
+    public ItemWriter<AverageRecentPriceDto> writer() {
         return new AverageRecentPriceWriter(jdbcTemplate);
     }
 
     @Bean(name = "averageRecentPriceImportStep")
     public Step importStep() {
         return new StepBuilder("averageRecentPriceImport", jobRepository)
-                .<AverageRecentPrice, AverageRecentPrice>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
+                .<AverageRecentPriceDto, AverageRecentPriceDto>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
                 .reader(reader())
 //                .processor(processor())
                 .writer(writer())

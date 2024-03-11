@@ -3,7 +3,7 @@ package com.pj.oil.batch.apiConfig;
 import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.process.GasStationOilProcess;
 import com.pj.oil.batch.writer.GasStationOilWriter;
-import com.pj.oil.gasStation.entity.GasStationOil;
+import com.pj.oil.gasStation.dto.GasStationOilDto;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -54,8 +54,8 @@ public class OilBatchConfig {
 
     @Bean(name = "oilReader")
     @StepScope
-    public FlatFileItemReader<GasStationOil> reader() {
-        FlatFileItemReader<GasStationOil> itemReader = new FlatFileItemReader<>();
+    public FlatFileItemReader<GasStationOilDto> reader() {
+        FlatFileItemReader<GasStationOilDto> itemReader = new FlatFileItemReader<>();
         String path = READER_PATH + "basic-info-oil.csv";
         itemReader.setResource(new FileSystemResource(path)); // api 나 파일로부터 작업을 처리하도록 할 수 있음
         itemReader.setName("csvReader"); // itemReader 이름 설정
@@ -71,16 +71,16 @@ public class OilBatchConfig {
     }
 
 
-    private LineMapper<GasStationOil> lineMapper() {
-        DefaultLineMapper<GasStationOil> lineMapper = new DefaultLineMapper<>();
+    private LineMapper<GasStationOilDto> lineMapper() {
+        DefaultLineMapper<GasStationOilDto> lineMapper = new DefaultLineMapper<>();
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
         lineTokenizer.setDelimiter(","); // 데이터 쉼표로 구분
         lineTokenizer.setStrict(false);
         lineTokenizer.setNames("uniId", "area", "osName", "pollDivName", "newAddress"); // 요소의 열을 구분
         lineTokenizer.setIncludedFields(0, 1, 2, 3, 4); // csv 에서 특정 열을 선택
 //        고유번호,지역,상호,상표,주소,전화번호,셀프여부, 품질인증주유소, 전산보고주유소
-        BeanWrapperFieldSetMapper<GasStationOil> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
-        fieldSetMapper.setTargetType(GasStationOil.class); // 파일을 객체로 변환할 수 있도록 도와주는 객체
+        BeanWrapperFieldSetMapper<GasStationOilDto> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+        fieldSetMapper.setTargetType(GasStationOilDto.class); // 파일을 객체로 변환할 수 있도록 도와주는 객체
 
         lineMapper.setLineTokenizer(lineTokenizer);
         lineMapper.setFieldSetMapper(fieldSetMapper);
@@ -89,7 +89,7 @@ public class OilBatchConfig {
     }
 
     @Bean(name = "oilWriter")
-    public ItemWriter<GasStationOil> writer() {
+    public ItemWriter<GasStationOilDto> writer() {
 
         return new GasStationOilWriter(jdbcTemplate);
     }
@@ -97,7 +97,7 @@ public class OilBatchConfig {
     @Bean(name = "oilImportStep")
     public Step importStep() {
         return new StepBuilder("oilCsvImport", jobRepository)
-                .<GasStationOil, GasStationOil>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
+                .<GasStationOilDto, GasStationOilDto>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())

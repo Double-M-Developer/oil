@@ -1,6 +1,6 @@
 package com.pj.oil.batch.writer;
 
-import com.pj.oil.gasStation.entity.GasStationLpg;
+import com.pj.oil.gasStation.dto.GasStationLpgDto;
 import com.pj.oil.util.DateUtil;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 
-public class GasStationLpgWriter implements ItemWriter<GasStationLpg> {
+public class GasStationLpgWriter implements ItemWriter<GasStationLpgDto> {
     private final JdbcTemplate jdbcTemplate;
     public GasStationLpgWriter(
             @Qualifier("gasStationJdbcTemplate") JdbcTemplate jdbcTemplate
@@ -22,15 +22,15 @@ public class GasStationLpgWriter implements ItemWriter<GasStationLpg> {
     }
 
     @Override
-    public void write(Chunk<? extends GasStationLpg> chunk) throws Exception {
-        List<? extends GasStationLpg> items = chunk.getItems(); // Chunk에서 아이템 리스트를 가져옴
+    public void write(Chunk<? extends GasStationLpgDto> chunk) throws Exception {
+        List<? extends GasStationLpgDto> items = chunk.getItems(); // Chunk에서 아이템 리스트를 가져옴
         String sql = "INSERT INTO GasStationLpg (uni_id, area, os_name, poll_div_name, new_address, update_date) VALUES (?, ?, ?, ?, ?, ?) " +
                 "ON DUPLICATE KEY UPDATE update_date = VALUES(update_date)";
 
         jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
-                GasStationLpg item = items.get(i);
+                GasStationLpgDto item = items.get(i);
                 ps.setString(1, item.getUniId());
                 ps.setString(2, item.getArea());
                 ps.setString(3, item.getOsName());

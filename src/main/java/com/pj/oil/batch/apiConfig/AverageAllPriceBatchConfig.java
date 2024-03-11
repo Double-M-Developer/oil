@@ -2,7 +2,7 @@ package com.pj.oil.batch.apiConfig;
 
 import com.pj.oil.batch.BeforeJobExecutionListener;
 import com.pj.oil.batch.writer.AverageAllPriceWriter;
-import com.pj.oil.gasStation.entity.AverageAllPrice;
+import com.pj.oil.gasStation.dto.AverageAllPriceDto;
 import com.pj.oil.gasStationApi.GasStationApiService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -48,11 +48,11 @@ public class AverageAllPriceBatchConfig {
 
     @Bean(name = "averageAllPriceReader")
     @JobScope
-    public ItemReader<AverageAllPrice> reader() {
+    public ItemReader<AverageAllPriceDto> reader() {
         return new ItemReader<>() {
-            private final Iterator<AverageAllPrice> dataIterator = gasStationApiService.getAvgAllPrice().iterator();
+            private final Iterator<AverageAllPriceDto> dataIterator = gasStationApiService.getAvgAllPrice().iterator();
             @Override
-            public AverageAllPrice read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+            public AverageAllPriceDto read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
                 if (dataIterator.hasNext()) {
                     return dataIterator.next();
                 } else {
@@ -63,14 +63,14 @@ public class AverageAllPriceBatchConfig {
     }
 
     @Bean(name = "averageAllPriceWriter")
-    public ItemWriter<AverageAllPrice> writer() {
+    public ItemWriter<AverageAllPriceDto> writer() {
         return new AverageAllPriceWriter(jdbcTemplate);
     }
 
     @Bean(name = "averageAllPriceImportStep")
     public Step importStep() {
         return new StepBuilder("averageAllPriceImport", jobRepository)
-                .<AverageAllPrice, AverageAllPrice>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
+                .<AverageAllPriceDto, AverageAllPriceDto>chunk(1000, platformTransactionManager) // 한번에 처리하려는 레코드 라인 수
                 .reader(reader())
 //                .processor(processor())
                 .writer(writer())
