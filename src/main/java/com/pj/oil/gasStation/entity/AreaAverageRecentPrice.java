@@ -29,12 +29,12 @@ public class AreaAverageRecentPrice extends GasStationBase {
         @JsonProperty("DATE")
         private String baseDate;
         @Schema(description = "주유소 지역 코드")
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "area_code")
         @JsonProperty("AREA_CD")
         private Area areaCode;
         @Schema(description = "제품구분 코드")
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "product_code")
         @JsonProperty("PRODCD")
         private Product productCode;

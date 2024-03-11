@@ -17,7 +17,7 @@ public class PriceOil extends GasStationBase {
     private Long id;
 
     @Schema(description = "주유소 id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uni_id")
     private GasStationOil uniId;
 
