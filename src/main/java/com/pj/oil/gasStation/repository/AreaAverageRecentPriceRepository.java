@@ -18,10 +18,12 @@ import java.util.List;
 public interface AreaAverageRecentPriceRepository extends JpaRepository<AreaAverageRecentPrice, Long> {
 
         @Query("SELECT new com.pj.oil.gasStation.dto.AreaAverageRecentPriceDto(" +
-                "a.id, a.baseDate, a.areaCode.AreaCode, a.productCode.productCode, a.priceAverage) " +
+                "a.id, a.baseDate, a.areaCode.areaCode, a.productCode.productCode, a.priceAverage) " +
                 "FROM AreaAverageRecentPrice a " +
-                "WHERE a.areaCode = :areaCode " +
-                "AND a.productCode = :productCode " +
+                "JOIN FETCH a.areaCode ac " +
+                "JOIN FETCH a.productCode pc " +
+                "WHERE ac.areaCode = :areaCode " +
+                "AND pc.productCode = :productCode " +
                 "AND a.baseDate " +
                 "BETWEEN :sevenDaysBefore AND :yesterday")
         List<AreaAverageRecentPriceDto> findByLastSevenDays(String sevenDaysBefore, String yesterday, String areaCode, String productCode);

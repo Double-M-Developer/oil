@@ -19,6 +19,7 @@ public interface AverageAllPriceRepository extends JpaRepository<AverageAllPrice
     @Query("SELECT new com.pj.oil.gasStation.dto.AverageAllPriceDto(" +
             "a.id, a.tradeDate, a.productCode.productCode, a.priceAverage, a.priceChange) " +
             "FROM AverageAllPrice a " +
+            "JOIN FETCH a.productCode pc " +
             "WHERE a.tradeDate = :tradeDate")
     List<AverageAllPriceDto> findByTradeDate(String tradeDate);
 

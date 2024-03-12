@@ -6,9 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Getter @Setter @ToString
+@Getter @Setter
 @Entity
 public class GasStationOil {
 
@@ -37,7 +38,7 @@ public class GasStationOil {
     private String updateDate;
 
     @OneToMany(mappedBy = "gasStationOil")
-    private List<PriceOil> priceOilList;
+    private List<PriceOil> priceOilList = new ArrayList<>();
 }
 
 

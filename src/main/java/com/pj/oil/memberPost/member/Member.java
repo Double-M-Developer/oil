@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class Member implements UserDetails{
     private Role role;
 
     @OneToMany(mappedBy = "member")
-    private List<Token> tokens;
+    private List<Token> tokens = new ArrayList<>();
 
     @Builder
     public Member(Long id, String email, String name, String password, Role role) {

@@ -21,10 +21,12 @@ public interface LowTop20PriceRepository extends JpaRepository<LowTop20Price, Lo
     void deleteAllData();
 
     @Query("SELECT new com.pj.oil.gasStation.dto.LowTop20PriceDto(" +
-            "l.uniId, l.priceCurrent, l.pollDivCode, l.osName, l.vanAddress, l.newAddress, l.gisXCoor, l.gisYCoor, l.productCode.productCode, l.areaCode.AreaCode) " +
+            "l.uniId, l.priceCurrent, l.pollDivCode, l.osName, l.vanAddress, l.newAddress, l.gisXCoor, l.gisYCoor, l.productCode.productCode, l.areaCode.areaCode) " +
             "FROM LowTop20Price l " +
-            "WHERE l.areaCode = :areaCode " +
-            "AND l.productCode = :productCode " +
+            "JOIN FETCH l.areaCode ac " +
+            "JOIN FETCH l.productCode pc " +
+            "WHERE ac.areaCode = :areaCode " +
+            "AND pc.productCode = :productCode " +
             "ORDER BY l.priceCurrent ASC")
     List<LowTop20PriceDto> findLowTop20PriceByAreaCodeAndProductCode(@Param("areaCode") String areaCode, @Param("productCode") String productCode);
 

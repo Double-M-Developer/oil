@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Schema(description = "lpg 가격")
-@Getter @Setter @ToString
+@Getter @Setter
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PriceLpg extends GasStationBase {
