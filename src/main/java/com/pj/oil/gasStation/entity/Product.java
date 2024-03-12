@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter @ToString
@@ -23,14 +24,14 @@ public class Product {
     private String ProductName;
 
     @OneToMany(mappedBy = "product")
-    private List<AreaAverageRecentPrice> areaAverageRecentPriceList;
+    private List<AreaAverageRecentPrice> areaAverageRecentPriceList = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-    private List<AverageAllPrice> averageAllPriceList;
+    private List<AverageAllPrice> averageAllPriceList = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-    private List<AverageRecentPrice> averageRecentPriceList;
+    private List<AverageRecentPrice> averageRecentPriceList = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
-    private List<LowTop20Price> lowTop20PricesList;
+    private List<LowTop20Price> lowTop20PricesList = new ArrayList<>();
 }
