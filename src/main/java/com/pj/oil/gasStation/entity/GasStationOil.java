@@ -9,7 +9,7 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter @Setter @ToString
+@Getter @Setter
 @Entity
 public class GasStationOil {
 

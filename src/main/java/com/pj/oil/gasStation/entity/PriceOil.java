@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Schema(description = "고급 휘발유, 휘발유, 경유 가격")
-@Getter @Setter @ToString
+@Getter @Setter
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PriceOil extends GasStationBase {
