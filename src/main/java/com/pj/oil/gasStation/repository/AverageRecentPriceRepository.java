@@ -24,7 +24,8 @@ public interface AverageRecentPriceRepository extends JpaRepository<AverageRecen
         @Query("SELECT new com.pj.oil.gasStation.dto.AverageRecentPriceDto(" +
                 "a.id, a.date, a.productCode.productCode, a.priceAverage) " +
                 "FROM AverageRecentPrice a " +
-                "WHERE a.productCode = :productCode " +
+                "JOIN FETCH a.productCode pc " +
+                "WHERE pc.productCode = :productCode " +
                 "AND a.date " +
                 "BETWEEN :sevenDaysBefore AND :yesterday")
         List<AverageRecentPriceDto> findByLastSevenDays(String sevenDaysBefore, String yesterday, String productCode);

@@ -14,9 +14,9 @@ public class Area {
 
     @Schema(description = "주유소 지역코드")
     @Id @Column(name = "area_code")
-    private String AreaCode;
+    private String areaCode;
 
     @Schema(description = "주유소 지역명")
     @Column(name = "area_name")
-    private String AreaName;
+    private String areaName;
 }
