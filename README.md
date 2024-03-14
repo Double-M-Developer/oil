@@ -46,6 +46,13 @@
 <p>Grafana, Prometheus, actuator를 사용하여 메트릭 데이터 시각화</p>
 <p>Jenkins-CI/CD pipeline를 구축하여 개발 편의성을 확보</p>
 
+<h2>프로젝트 구조</h2>
+<img
+  width="100%"
+  height="100%"
+  src="https://github.com/Double-M-Developer/oil/assets/91239439/f03410ae-3a52-46f3-8f76-7f8b5f08b016"
+  >
+
 <h2>Jenkins CI/CD 파이프라인</h2>
 <img
   width="100%"
