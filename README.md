@@ -12,6 +12,10 @@
   width="33%"
   src ="https://github.com/Double-M-Developer/oil/assets/91239439/135c9c85-2e4a-48bf-b4bd-1bfda92fb0f6"
   >
+<img
+  width="33%"
+  src ="https://github.com/Double-M-Developer/oil/assets/91239439/ed57cde7-63aa-4406-9ab4-1deaac91717e"
+  >
 <h2>기술스택</h2>
 <table>
   <tbody>
